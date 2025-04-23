@@ -4,6 +4,8 @@ import morgan from 'morgan';
 import { env } from './config/env';
 import { openAPIRouter } from './docs/openAPIRouter';
 import { rateLimiter } from './middlewares/rate-limiter';
+import cookieParser from 'cookie-parser';
+import { errorMiddleware } from '@packages/middlewares/error-handler';
 
 const app = express();
 
@@ -19,6 +21,7 @@ app.use(
 app.use(morgan(env.NODE_ENV === 'development' ? 'dev' : 'combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser());
 
 // Rate limiting
 app.use(rateLimiter);
@@ -32,6 +35,9 @@ app.get('/health', (req, res) => {
 
 // Swagger UI
 app.use(openAPIRouter);
+
+// Error handling
+app.use(errorMiddleware);
 
 const port = env.PORT || 3001;
 const server = app.listen(port, () => {
