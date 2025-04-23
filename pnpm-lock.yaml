@@ -175,7 +175,30 @@ importers:
 
   apps/api-gateway-e2e: {}
 
-  apps/auth-service: {}
+  apps/auth-service:
+    dependencies:
+      cors:
+        specifier: ^2.8.5
+        version: 2.8.5
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
+      envalid:
+        specifier: ^8.0.0
+        version: 8.0.0
+      express-rate-limit:
+        specifier: ^7.5.0
+        version: 7.5.0(express@4.21.2)
+      morgan:
+        specifier: ^1.10.0
+        version: 1.10.0
+    devDependencies:
+      '@types/cors':
+        specifier: ^2.8.17
+        version: 2.8.17
+      '@types/morgan':
+        specifier: ^1.9.9
+        version: 1.9.9
 
   apps/auth-service-e2e: {}
 
@@ -8067,7 +8090,7 @@ snapshots:
 
   dotenv-expand@11.0.7:
     dependencies:
-      dotenv: 16.4.7
+      dotenv: 16.5.0
 
   dotenv@16.4.7: {}
 

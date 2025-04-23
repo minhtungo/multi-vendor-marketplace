@@ -41,9 +41,9 @@ app.use('/', proxy(env.AUTH_SERVICE_URL));
 // Swagger UI
 app.use(openAPIRouter);
 
-const port = env.PORT || 8080;
+const port = env.PORT || 3000;
 const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
+  console.log(`Listening at http://localhost:${port}`);
 });
 
 server.on('error', console.error);
