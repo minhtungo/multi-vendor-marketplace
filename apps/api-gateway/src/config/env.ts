@@ -16,4 +16,6 @@ export const env = cleanEnv(process.env, {
   // Rate Limiter
   COMMON_RATE_LIMIT_MAX_REQUESTS: num({ default: 100 }),
   COMMON_RATE_LIMIT_WINDOW_MS: num({ default: 15 * 60 * 1000 }),
+  // Service url
+  AUTH_SERVICE_URL: str({ default: 'http://localhost:3001' }),
 });

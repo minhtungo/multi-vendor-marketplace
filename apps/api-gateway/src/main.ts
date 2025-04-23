@@ -5,6 +5,9 @@ import { env } from './config/env';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { rateLimiter } from './middlewares/rate-limiter';
+import proxy from 'express-http-proxy';
+import { openAPIRouter } from './docs/openAPIRouter';
+
 const app = express();
 
 app.use(
@@ -29,12 +32,18 @@ app.set('trust proxy', true);
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-app.get('/api', (req, res) => {
+app.get('/health', (req, res) => {
   res.send({ message: 'Welcome to api-gateway!' });
 });
 
-const port = process.env.PORT || 8080;
+app.use('/', proxy(env.AUTH_SERVICE_URL));
+
+// Swagger UI
+app.use(openAPIRouter);
+
+const port = env.PORT || 8080;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
 });
+
 server.on('error', console.error);
