@@ -17,6 +17,8 @@ export const SignUpSchema = z.object({
   role: z.enum(['seller', 'customer']),
 });
 
+export type SignUpSchema = z.infer<typeof SignUpSchema>;
+
 export const VerifyEmailSchema = z.object({
   token: z.string(),
 });

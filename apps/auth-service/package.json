@@ -77,18 +77,23 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.3.0",
-    "@prisma/client": "^6.6.0",
+    "argon2": "^0.43.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.43.1",
+    "drizzle-zod": "^0.7.1",
     "envalid": "^8.0.0",
     "express-rate-limit": "^7.5.0",
     "morgan": "^1.10.0",
-    "prisma": "^6.6.0"
+    "pg": "^8.15.6"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
-    "@types/morgan": "^1.9.9"
+    "@types/morgan": "^1.9.9",
+    "@types/pg": "^8.11.14",
+    "drizzle-kit": "^0.31.0",
+    "tsx": "^4.19.3"
   }
 }

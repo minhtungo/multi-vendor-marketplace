@@ -1,6 +1,8 @@
 import { paths } from '@/configs/paths';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
-import { SignUpSchema } from '@/lib/schemas';
+import { SignUpSchema } from '@/modules/auth-model';
+import { handleSignUp } from '@/modules/auth-controller';
+import { validateRequest } from '@/utils/http-handlers';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { type Router } from 'express';
 import z from 'zod';
@@ -27,5 +29,5 @@ authRegistry.registerPath({
 authRouter.post(
   paths.signUp,
   validateRequest(z.object({ body: SignUpSchema })),
-  authController.signUp
+  handleSignUp
 );
