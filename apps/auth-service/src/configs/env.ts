@@ -16,4 +16,6 @@ export const env = cleanEnv(process.env, {
   // Rate Limiter
   COMMON_RATE_LIMIT_MAX_REQUESTS: num({ default: 100 }),
   COMMON_RATE_LIMIT_WINDOW_MS: num({ default: 15 * 60 * 1000 }),
+  // Token
+  ACCESS_TOKEN_SECRET: str(),
 });

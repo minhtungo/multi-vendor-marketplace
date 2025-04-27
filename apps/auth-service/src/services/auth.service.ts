@@ -1,9 +1,14 @@
+import { env } from '@/configs/env';
+import { tokenConfig } from '@/configs/token';
 import { ServiceResponse } from '@/lib/service-response';
-import { SignUpInput } from '@/models/auth.model';
+import { SignInInput, SignUpInput } from '@/models/auth.model';
 import { TokenRepository } from '@/repositories/token.repository';
 import { UserRepository } from '@/repositories/user.repository';
+import { verifyPassword } from '@/utils/password';
+import { generateAccessToken, generateRefreshToken } from '@/utils/token';
 import { createTransaction } from '@/utils/transaction';
 import { logger } from '@packages/utils/logger';
+import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 export class AuthService {
@@ -96,6 +101,92 @@ export class AuthService {
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
+  }
+
+  async signIn(data: SignInInput): Promise<{
+    refreshToken: string;
+    serviceResponse: ServiceResponse<{
+      accessToken: string;
+      convertedUser: { id: string };
+    } | null>;
+  }> {
+    try {
+      const user = await this.userRepository.getUserByEmail(data.email);
+
+      if (!user || !user.emailVerified || !user.id || !user.password) {
+        return {
+          refreshToken: '',
+          serviceResponse: ServiceResponse.failure(
+            'Invalid credentials',
+            null,
+            StatusCodes.UNAUTHORIZED
+          ),
+        };
+      }
+
+      const isPasswordValid = await verifyPassword(
+        user.password,
+        data.password
+      );
+
+      if (!isPasswordValid) {
+        return {
+          refreshToken: '',
+          serviceResponse: ServiceResponse.failure(
+            'Invalid credentials',
+            null,
+            StatusCodes.UNAUTHORIZED
+          ),
+        };
+      }
+
+      const { token: refreshToken, sessionId } = await generateRefreshToken(
+        user.id
+      );
+
+      const accessToken = generateAccessToken({
+        sub: user.id,
+        email: user.email,
+        userId: user.id,
+        sessionId,
+      });
+
+      return {
+        refreshToken,
+        serviceResponse: ServiceResponse.success(
+          'Signed in successfully',
+          {
+            accessToken,
+            convertedUser: {
+              id: user.id,
+            },
+          },
+          StatusCodes.OK
+        ),
+      };
+    } catch (ex) {
+      const errorMessage = `Error signing in: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+
+      return {
+        refreshToken: '',
+        serviceResponse: ServiceResponse.failure(
+          'An error occurred while signing in.',
+          null,
+          StatusCodes.INTERNAL_SERVER_ERROR
+        ),
+      };
+    }
+  }
+
+  setRefreshTokenToCookie(res: Response, refreshToken: string) {
+    res.cookie(tokenConfig.refreshToken.cookieName, refreshToken, {
+      httpOnly: env.NODE_ENV === 'production',
+      secure: env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + tokenConfig.refreshToken.maxAge),
+      path: '/',
+      sameSite: 'lax',
+    });
   }
 }
 

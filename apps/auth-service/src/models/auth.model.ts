@@ -18,3 +18,10 @@ export const SignUpSchema = z.object({
 });
 
 export type SignUpInput = z.infer<typeof SignUpSchema>;
+
+export const SignInSchema = z.object({
+  email: commonValidations.email,
+  password: commonValidations.password,
+});
+
+export type SignInInput = z.infer<typeof SignInSchema>;
