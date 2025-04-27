@@ -25,3 +25,9 @@ export const SignInSchema = z.object({
 });
 
 export type SignInInput = z.infer<typeof SignInSchema>;
+
+export const ForgotPasswordSchema = z.object({
+  email: commonValidations.email,
+});
+
+export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;

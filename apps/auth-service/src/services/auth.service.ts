@@ -179,6 +179,45 @@ export class AuthService {
     }
   }
 
+  async forgotPassword(email: string): Promise<ServiceResponse> {
+    try {
+      const user = await this.userRepository.getUserByEmail(email);
+
+      if (!user || !user.emailVerified || !user.id) {
+        return ServiceResponse.success(
+          'If a matching account is found, a password reset email will be sent to you shortly',
+          null,
+          StatusCodes.OK
+        );
+      }
+
+      const resetPasswordToken =
+        await this.tokenRepository.createResetPasswordToken(user.id);
+
+      // await emailService.sendPasswordResetEmail(
+      //   email,
+      //   user.name!,
+      //   resetPasswordToken
+      // );
+
+      return ServiceResponse.success(
+        'If a matching account is found, a password reset email will be sent to you shortly',
+        null,
+        StatusCodes.OK
+      );
+    } catch (ex) {
+      const errorMessage = `Error forgetting password: ${
+        (ex as Error).message
+      }`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        'An error occurred while forgetting password',
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
   setRefreshTokenToCookie(res: Response, refreshToken: string) {
     res.cookie(tokenConfig.refreshToken.cookieName, refreshToken, {
       httpOnly: env.NODE_ENV === 'production',

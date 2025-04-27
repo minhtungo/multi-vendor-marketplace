@@ -1,7 +1,11 @@
 import { paths } from '@/configs/paths';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
-import { SignInSchema, SignUpSchema } from '@/models/auth.model';
-import { handleSignIn, handleSignUp } from '@/controllers/auth.controller';
+import {
+  ForgotPasswordSchema,
+  SignInSchema,
+  SignUpSchema,
+} from '@/models/auth.model';
+import { handleForgotPassword, handleSignIn, handleSignUp } from '@/controllers/auth.controller';
 import { validateRequest } from '@/utils/http-handlers';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { type Router } from 'express';
@@ -52,4 +56,26 @@ authRouter.post(
   paths.signIn,
   validateRequest(z.object({ body: SignInSchema })),
   handleSignIn
+);
+
+authRegistry.registerPath({
+  method: 'post',
+  path: `/auth/${paths.forgotPassword}`,
+  tags: ['Auth'],
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: ForgotPasswordSchema,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+authRouter.post(
+  paths.forgotPassword,
+  validateRequest(z.object({ body: ForgotPasswordSchema })),
+  handleForgotPassword
 );
