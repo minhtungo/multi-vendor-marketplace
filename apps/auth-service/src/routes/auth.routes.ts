@@ -5,6 +5,7 @@ import {
   ResetPasswordSchema,
   SignInSchema,
   SignUpSchema,
+  VerifyEmailSchema,
 } from '@/models/auth.model';
 import {
   handleForgotPassword,
@@ -13,6 +14,7 @@ import {
   handleSignIn,
   handleSignOut,
   handleSignUp,
+  handleVerifyEmail,
 } from '@/controllers/auth.controller';
 import { validateRequest } from '@/utils/http-handlers';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
@@ -86,6 +88,28 @@ authRouter.post(
   paths.forgotPassword,
   validateRequest(z.object({ body: ForgotPasswordSchema })),
   handleForgotPassword
+);
+
+authRegistry.registerPath({
+  method: 'put',
+  path: `/auth/${paths.verifyEmail}`,
+  tags: ['Auth'],
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: VerifyEmailSchema,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+authRouter.put(
+  paths.verifyEmail,
+  validateRequest(z.object({ body: VerifyEmailSchema })),
+  handleVerifyEmail
 );
 
 authRegistry.registerPath({

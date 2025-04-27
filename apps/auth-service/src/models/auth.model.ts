@@ -38,3 +38,9 @@ export const ResetPasswordSchema = z.object({
 });
 
 export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
+
+export const VerifyEmailSchema = z.object({
+  token: z.string(),
+});
+
+export type VerifyEmailInput = z.infer<typeof VerifyEmailSchema>;

@@ -4,6 +4,7 @@ import {
   ResetPasswordSchema,
   SignInSchema,
   SignUpSchema,
+  VerifyEmailSchema,
 } from '@/models/auth.model';
 import { authService } from '@/services/auth.service';
 import { handleServiceResponse } from '@/utils/http-handlers';
@@ -32,6 +33,13 @@ export const handleSignIn = async (req: Request, res: Response) => {
 export const handleForgotPassword = async (req: Request, res: Response) => {
   const data = ForgotPasswordSchema.parse(req.body);
   const serviceResponse = await authService.forgotPassword(data.email);
+
+  handleServiceResponse(serviceResponse, res);
+};
+
+export const handleVerifyEmail = async (req: Request, res: Response) => {
+  const data = VerifyEmailSchema.parse(req.body);
+  const serviceResponse = await authService.verifyEmail(data.token);
 
   handleServiceResponse(serviceResponse, res);
 };
