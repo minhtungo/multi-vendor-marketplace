@@ -18,4 +18,5 @@ export const env = cleanEnv(process.env, {
   COMMON_RATE_LIMIT_WINDOW_MS: num({ default: 15 * 60 * 1000 }),
   // Token
   ACCESS_TOKEN_SECRET: str(),
+  REFRESH_TOKEN_SECRET: str(),
 });

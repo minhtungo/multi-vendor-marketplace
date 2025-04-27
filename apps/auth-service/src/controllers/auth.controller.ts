@@ -1,3 +1,4 @@
+import { tokenConfig } from '@/configs/token';
 import {
   ForgotPasswordSchema,
   ResetPasswordSchema,
@@ -43,5 +44,30 @@ export const handleResetPassword = async (req: Request, res: Response) => {
     data.password
   );
 
+  handleServiceResponse(serviceResponse, res);
+};
+
+export const handleRefreshToken = async (req: Request, res: Response) => {
+  const refreshToken = req.cookies?.[tokenConfig.refreshToken.cookieName];
+
+  const { refreshToken: newRefreshToken, serviceResponse } =
+    await authService.refreshToken(refreshToken);
+
+  if (serviceResponse.success && newRefreshToken) {
+    authService.setRefreshTokenToCookie(res, newRefreshToken);
+  }
+
+  if (!serviceResponse.success) {
+    res.clearCookie(tokenConfig.refreshToken.cookieName);
+  }
+
+  handleServiceResponse(serviceResponse, res);
+};
+
+export const handleSignOut = async (req: Request, res: Response) => {
+  const refreshToken = req.cookies[tokenConfig.refreshToken.cookieName];
+  const serviceResponse = await authService.signOut(refreshToken);
+
+  res.clearCookie(tokenConfig.refreshToken.cookieName);
   handleServiceResponse(serviceResponse, res);
 };

@@ -8,8 +8,10 @@ import {
 } from '@/models/auth.model';
 import {
   handleForgotPassword,
+  handleRefreshToken,
   handleResetPassword,
   handleSignIn,
+  handleSignOut,
   handleSignUp,
 } from '@/controllers/auth.controller';
 import { validateRequest } from '@/utils/http-handlers';
@@ -107,3 +109,21 @@ authRouter.post(
   validateRequest(z.object({ body: ResetPasswordSchema })),
   handleResetPassword
 );
+
+authRegistry.registerPath({
+  method: 'put',
+  path: `/auth/${paths.refreshToken}`,
+  tags: ['Auth'],
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+authRouter.put(paths.refreshToken, handleRefreshToken);
+
+authRegistry.registerPath({
+  method: 'post',
+  path: `/auth/${paths.signOut}`,
+  tags: ['Auth'],
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+authRouter.post(paths.signOut, handleSignOut);

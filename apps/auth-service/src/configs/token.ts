@@ -10,6 +10,7 @@ export const tokenConfig = {
     length: 32,
     maxAge: 1000 * 60 * 60 * 24 * 15, // 30 days
     cookieName: 'refreshToken',
+    secret: env.REFRESH_TOKEN_SECRET,
   },
   verificationToken: {
     length: 32,

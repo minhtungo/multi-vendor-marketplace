@@ -4,12 +4,14 @@ import { ServiceResponse } from '@/lib/service-response';
 import { SignInInput, SignUpInput } from '@/models/auth.model';
 import { TokenRepository } from '@/repositories/token.repository';
 import { UserRepository } from '@/repositories/user.repository';
+import { RefreshTokenPayload } from '@/types/token';
 import { verifyPassword } from '@/utils/password';
 import { generateAccessToken, generateRefreshToken } from '@/utils/token';
 import { createTransaction } from '@/utils/transaction';
 import { logger } from '@packages/utils/logger';
 import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { verify } from 'jsonwebtoken';
 
 export class AuthService {
   private userRepository: UserRepository;
@@ -259,6 +261,95 @@ export class AuthService {
     }
   }
 
+  async refreshToken(refreshToken: string): Promise<{
+    refreshToken: string;
+    serviceResponse: ServiceResponse<{
+      accessToken: string;
+      userId: string;
+    } | null>;
+  }> {
+    if (!refreshToken) {
+      return {
+        refreshToken: '',
+        serviceResponse: ServiceResponse.failure(
+          'Refresh token not found',
+          null,
+          StatusCodes.UNAUTHORIZED
+        ),
+      };
+    }
+    try {
+      const payload = verify(
+        refreshToken,
+        tokenConfig.refreshToken.secret
+      ) as RefreshTokenPayload;
+
+      // const isBlacklisted = await this.tokenRepository.isTokenBlacklisted(
+      //   payload.sessionId
+      // );
+
+      if (isBlacklisted) {
+        return {
+          refreshToken: '',
+          serviceResponse: ServiceResponse.failure(
+            'Token has been revoked',
+            null,
+            StatusCodes.UNAUTHORIZED
+          ),
+        };
+      }
+
+      const user = await this.userRepository.getUserById(payload.sub);
+
+      if (!user) {
+        return {
+          refreshToken: '',
+          serviceResponse: ServiceResponse.failure(
+            'User not found',
+            null,
+            StatusCodes.UNAUTHORIZED
+          ),
+        };
+      }
+      const { token: newRefreshToken, sessionId } = await generateRefreshToken(
+        user.id
+      );
+
+      const accessToken = generateAccessToken({
+        sub: user.id,
+        email: user.email,
+        userId: user.id,
+        sessionId,
+      });
+
+      // Blacklist the old session
+      // await this.tokenRepository.addTokenToBlacklist(
+      //   payload.sessionId,
+      //   tokenConfig.refreshToken.maxAge
+      // );
+
+      return {
+        refreshToken: newRefreshToken,
+        serviceResponse: ServiceResponse.success(
+          'Token refreshed',
+          { accessToken, userId: user.id },
+          StatusCodes.OK
+        ),
+      };
+    } catch (ex) {
+      const errorMessage = `Error refreshing token: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return {
+        refreshToken: '',
+        serviceResponse: ServiceResponse.failure(
+          'Invalid refresh token',
+          null,
+          StatusCodes.UNAUTHORIZED
+        ),
+      };
+    }
+  }
+
   setRefreshTokenToCookie(res: Response, refreshToken: string) {
     res.cookie(tokenConfig.refreshToken.cookieName, refreshToken, {
       httpOnly: env.NODE_ENV === 'production',
@@ -267,6 +358,32 @@ export class AuthService {
       path: '/',
       sameSite: 'lax',
     });
+  }
+
+  async signOut(refreshToken: string): Promise<ServiceResponse> {
+    try {
+      const payload = verify(
+        refreshToken,
+        tokenConfig.refreshToken.secret
+      ) as RefreshTokenPayload;
+      // await this.tokenRepository.addTokenToBlacklist(
+      //   payload.sessionId,
+      //   tokenConfig.refreshToken.maxAge
+      // );
+      return ServiceResponse.success(
+        'Signed out successfully',
+        null,
+        StatusCodes.OK
+      );
+    } catch (ex) {
+      const errorMessage = `Error signing out: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        'An error occurred while signing out.',
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 }
 
