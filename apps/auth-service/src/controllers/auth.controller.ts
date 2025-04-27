@@ -1,5 +1,6 @@
 import {
   ForgotPasswordSchema,
+  ResetPasswordSchema,
   SignInSchema,
   SignUpSchema,
 } from '@/models/auth.model';
@@ -30,6 +31,17 @@ export const handleSignIn = async (req: Request, res: Response) => {
 export const handleForgotPassword = async (req: Request, res: Response) => {
   const data = ForgotPasswordSchema.parse(req.body);
   const serviceResponse = await authService.forgotPassword(data.email);
+
+  handleServiceResponse(serviceResponse, res);
+};
+
+export const handleResetPassword = async (req: Request, res: Response) => {
+  const data = ResetPasswordSchema.parse(req.body);
+
+  const serviceResponse = await authService.resetPassword(
+    data.token,
+    data.password
+  );
 
   handleServiceResponse(serviceResponse, res);
 };

@@ -31,3 +31,10 @@ export const ForgotPasswordSchema = z.object({
 });
 
 export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;
+
+export const ResetPasswordSchema = z.object({
+  token: z.string(),
+  password: commonValidations.password,
+});
+
+export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;

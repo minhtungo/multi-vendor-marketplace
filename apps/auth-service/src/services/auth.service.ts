@@ -218,6 +218,47 @@ export class AuthService {
     }
   }
 
+  async resetPassword(
+    token: string,
+    password: string
+  ): Promise<ServiceResponse> {
+    try {
+      const existingToken =
+        await this.tokenRepository.getResetPasswordTokenByToken(token);
+
+      if (!existingToken || existingToken.expires < new Date()) {
+        return ServiceResponse.failure(
+          'Invalid token',
+          null,
+          StatusCodes.BAD_REQUEST
+        );
+      }
+
+      await createTransaction(async (trx) => {
+        await this.userRepository.updateUserPassword(
+          existingToken.userId,
+          password,
+          trx
+        );
+        await this.tokenRepository.deleteResetPasswordTokenByToken(token, trx);
+      });
+
+      return ServiceResponse.success(
+        'Password reset successfully',
+        null,
+        StatusCodes.OK
+      );
+    } catch (ex) {
+      const errorMessage = `Error resetting password: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        'An error occurred while resetting password',
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
   setRefreshTokenToCookie(res: Response, refreshToken: string) {
     res.cookie(tokenConfig.refreshToken.cookieName, refreshToken, {
       httpOnly: env.NODE_ENV === 'production',
