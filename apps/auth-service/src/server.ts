@@ -6,7 +6,7 @@ import { rateLimiter } from './middlewares/rate-limiter';
 import cookieParser from 'cookie-parser';
 import { errorMiddleware } from '@packages/middlewares/error-handler';
 import { requestLogger } from '@packages/middlewares/error-logger';
-import { authRouter } from '@/modules/auth-router';
+import { authRouter } from './routes/auth.routes';
 
 const app: Express = express();
 
