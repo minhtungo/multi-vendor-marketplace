@@ -2,6 +2,7 @@ import { emailService } from '@/lib/emails';
 import { getRedisClient } from '@/lib/redis';
 import { generateOtp } from '@/utils/otp';
 import { ValidationError } from '@packages/utils/error-handler';
+import { NextFunction } from 'express';
 
 const OTP_EXPIRY = 60 * 5;
 const OTP_TIME_LIMIT = 60;
@@ -21,7 +22,7 @@ export const sendOtp = async (name: string, email: string) => {
 
 export const checkOtpRestrictions = async (
   email: string,
-  next: NewableFunction
+  next: NextFunction
 ) => {
   const redis = getRedisClient();
 
@@ -41,5 +42,27 @@ export const checkOtpRestrictions = async (
     );
   }
 
-  next();
+  if (await redis.get(`otp_cooldown:${email}`)) {
+    return next(
+      new ValidationError('Please wait 1 minute before requesting another OTP.')
+    );
+  }
+};
+
+export const trackOtpRequests = async (email: string, next: NextFunction) => {
+  const redis = getRedisClient();
+  const otpRequestsKey = `otp_requests:${email}`;
+
+  const otpRequests = parseInt((await redis.get(otpRequestsKey)) || '0');
+
+  if (otpRequests >= 2) {
+    await redis.set(`otp_spam_lock:${email}`, 'locked', 'EX', 3600);
+    return next(
+      new ValidationError(
+        'Too many OTP requests. Please wait 1 hour before requesting another OTP.'
+      )
+    );
+  }
+
+  await redis.set(otpRequestsKey, otpRequests + 1, 'EX', 60);
 };

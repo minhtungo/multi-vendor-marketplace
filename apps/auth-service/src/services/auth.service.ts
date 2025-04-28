@@ -1,6 +1,6 @@
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
-import { sendOtp } from '@/lib/auth';
+import { checkOtpRestrictions, sendOtp, trackOtpRequests } from '@/lib/auth';
 import { emailService } from '@/lib/emails';
 import { ServiceResponse } from '@/lib/service-response';
 import { SignInInput, SignUpInput } from '@/models/auth.model';
@@ -16,7 +16,7 @@ import {
 } from '@/utils/token';
 import { createTransaction } from '@/utils/transaction';
 import { logger } from '@packages/utils/logger';
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { verify } from 'jsonwebtoken';
 
@@ -32,7 +32,10 @@ export class AuthService {
     this.tokenRepository = tokenRepo;
   }
 
-  async signUp(data: SignUpInput): Promise<ServiceResponse> {
+  async signUp(
+    data: SignUpInput,
+    next: NextFunction
+  ): Promise<ServiceResponse> {
     try {
       const existingUser = await this.userRepository.getUserByEmail(data.email);
 
@@ -69,6 +72,9 @@ export class AuthService {
         }
       }
 
+      await checkOtpRestrictions(data.email, next);
+      await trackOtpRequests(data.email, next);
+
       await createTransaction(async (trx) => {
         const newUser = await this.userRepository.createUser(data, trx);
 
@@ -91,7 +97,10 @@ export class AuthService {
     }
   }
 
-  async signIn(data: SignInInput): Promise<{
+  async signIn(
+    data: SignInInput,
+    next: NextFunction
+  ): Promise<{
     refreshToken: string;
     serviceResponse: ServiceResponse<{
       accessToken: string;
