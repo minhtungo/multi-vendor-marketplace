@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "types": ["node"],
+    "jsx": "react",
     "rootDir": "../../",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "baseUrl": ".",
@@ -11,7 +12,7 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "../../packages/**/*.ts"],
+  "include": ["src/**/*", "../../packages/**/*"],
   "exclude": [
     "out-tsc",
     "dist",

@@ -1,5 +1,7 @@
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
+import { sendOtp } from '@/lib/auth';
+import { emailService } from '@/lib/emails';
 import { ServiceResponse } from '@/lib/service-response';
 import { SignInInput, SignUpInput } from '@/models/auth.model';
 import { TokenRepository } from '@/repositories/token.repository';
@@ -56,18 +58,7 @@ export class AuthService {
               trx
             );
 
-            // Create new token
-            const newToken =
-              await this.tokenRepository.createVerificationEmailToken(
-                existingUser.id,
-                trx
-              );
-
-            // await emailService.sendVerificationEmail(
-            //   email,
-            //   existingUser.name!,
-            //   newToken
-            // );
+            await sendOtp(existingUser.name, existingUser.email);
 
             return ServiceResponse.success(
               'If your email is not registered, you will receive a verification email shortly',
@@ -81,17 +72,7 @@ export class AuthService {
       await createTransaction(async (trx) => {
         const newUser = await this.userRepository.createUser(data, trx);
 
-        const verificationToken =
-          await this.tokenRepository.createVerificationEmailToken(
-            newUser.id,
-            trx
-          );
-
-        // await emailService.sendVerificationEmail(
-        //   email,
-        //   newUser.name!,
-        //   verificationToken
-        // );
+        await sendOtp(newUser.name, newUser.email);
       });
 
       return ServiceResponse.success(
@@ -201,11 +182,11 @@ export class AuthService {
       const resetPasswordToken =
         await this.tokenRepository.createResetPasswordToken(user.id);
 
-      // await emailService.sendPasswordResetEmail(
-      //   email,
-      //   user.name!,
-      //   resetPasswordToken
-      // );
+      await emailService.sendPasswordResetEmail(
+        user.email,
+        user.name,
+        resetPasswordToken
+      );
 
       return ServiceResponse.success(
         'If a matching account is found, a password reset email will be sent to you shortly',

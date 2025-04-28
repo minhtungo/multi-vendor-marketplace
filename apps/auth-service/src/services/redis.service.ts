@@ -15,13 +15,10 @@ export class RedisService {
       const userSessionKey = `user:${userId}:sessions`;
       const sessionKey = `session:${sessionId}`;
 
-      // Store token with session data
       await redis.set(sessionKey, token, 'EX', this.TOKEN_EXPIRY);
 
-      // Add session to user's sessions set
       await redis.sadd(userSessionKey, sessionId);
 
-      // Set expiry on user's sessions set
       await redis.expire(userSessionKey, this.TOKEN_EXPIRY);
     } catch (error) {
       logger.error(`Error storing refresh token: ${(error as Error).message}`);
@@ -49,9 +46,6 @@ export class RedisService {
     }
   }
 
-  /**
-   * Invalidate a refresh token
-   */
   async invalidateRefreshToken(
     userId: string,
     sessionId: string

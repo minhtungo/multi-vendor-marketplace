@@ -24,4 +24,11 @@ export const env = cleanEnv(process.env, {
   REDIS_PORT: port({ default: 6379 }),
   REDIS_PASSWORD: str({ default: '' }),
   REDIS_DB_NUMBER: num({ default: 0 }),
+  // SMTP Config
+  SMTP_HOST: host({ default: 'localhost' }),
+  SMTP_PORT: port({ default: 1025 }),
+  SMTP_USER: str({ default: 'user' }),
+  SMTP_PASSWORD: str({ default: 'password' }),
+  SMTP_SERVICE: str({ default: 'gmail' }),
+  EMAIL_FROM: str({ default: 'noreply@example.com' }),
 });

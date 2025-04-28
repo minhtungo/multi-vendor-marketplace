@@ -56,28 +56,6 @@ export class TokenRepository {
       .where(eq(twoFactorConfirmations.id, id));
   }
 
-  async createVerificationEmailToken(userId: string, trx: typeof db = db) {
-    const token = await generateToken(tokenConfig.verificationToken.length);
-    const expires = new Date(Date.now() + tokenConfig.verificationToken.maxAge);
-
-    await trx
-      .insert(verificationTokens)
-      .values({
-        userId,
-        token,
-        expires,
-      })
-      .onConflictDoUpdate({
-        target: verificationTokens.id,
-        set: {
-          token,
-          expires,
-        },
-      });
-
-    return token;
-  }
-
   async createTwoFactorConfirmation(userId: string, trx: typeof db = db) {
     await trx.insert(twoFactorConfirmations).values({
       userId,
