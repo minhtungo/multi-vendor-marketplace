@@ -2,7 +2,7 @@ import { env } from '@/configs/env';
 import { app } from '@/server';
 import { logger } from '@packages/utils/logger';
 import { createServer } from 'http';
-import { getRedisClient, closeRedisConnection } from './lib/redis';
+import { getRedisClient, closeRedisConnection } from '@/db/redis';
 
 const httpServer = createServer(app);
 

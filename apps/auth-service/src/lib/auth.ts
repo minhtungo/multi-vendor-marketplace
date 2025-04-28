@@ -1,5 +1,5 @@
+import { getRedisClient } from '@/db/redis';
 import { emailService } from '@/lib/emails';
-import { getRedisClient } from '@/lib/redis';
 import { generateOtp } from '@/utils/otp';
 import { ValidationError } from '@packages/utils/error-handler';
 import { NextFunction } from 'express';

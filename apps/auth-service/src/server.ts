@@ -6,7 +6,8 @@ import { rateLimiter } from './middlewares/rate-limiter';
 import cookieParser from 'cookie-parser';
 import { errorMiddleware } from '@packages/middlewares/error-handler';
 import { requestLogger } from '@packages/middlewares/error-logger';
-import { authRouter } from './routes/auth.routes';
+import { authRouter } from './routes/auth.route';
+import { healthCheckRouter } from '@/routes/health-check.route';
 
 const app: Express = express();
 
@@ -31,9 +32,7 @@ app.use(rateLimiter);
 app.use(requestLogger);
 
 //Routes
-app.get('/health', (req, res) => {
-  res.send({ message: 'Welcome to auth service!' });
-});
+app.use('/health-check', healthCheckRouter);
 app.use('/api/auth', authRouter);
 
 // Swagger UI
