@@ -19,4 +19,9 @@ export const env = cleanEnv(process.env, {
   // Token
   ACCESS_TOKEN_SECRET: str(),
   REFRESH_TOKEN_SECRET: str(),
+  // Redis Config
+  REDIS_HOST: host({ default: 'localhost' }),
+  REDIS_PORT: port({ default: 6379 }),
+  REDIS_PASSWORD: str({ default: '' }),
+  REDIS_DB_NUMBER: num({ default: 0 }),
 });

@@ -6,7 +6,12 @@ import { TokenRepository } from '@/repositories/token.repository';
 import { UserRepository } from '@/repositories/user.repository';
 import { RefreshTokenPayload } from '@/types/token';
 import { verifyPassword } from '@/utils/password';
-import { generateAccessToken, generateRefreshToken } from '@/utils/token';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  invalidateRefreshToken,
+  validateRefreshToken,
+} from '@/utils/token';
 import { createTransaction } from '@/utils/transaction';
 import { logger } from '@packages/utils/logger';
 import { Response } from 'express';
@@ -284,9 +289,10 @@ export class AuthService {
         tokenConfig.refreshToken.secret
       ) as RefreshTokenPayload;
 
-      // const isBlacklisted = await this.tokenRepository.isTokenBlacklisted(
-      //   payload.sessionId
-      // );
+      const isBlacklisted = await validateRefreshToken(
+        payload.sessionId,
+        refreshToken
+      );
 
       if (isBlacklisted) {
         return {
@@ -323,10 +329,7 @@ export class AuthService {
       });
 
       // Blacklist the old session
-      // await this.tokenRepository.addTokenToBlacklist(
-      //   payload.sessionId,
-      //   tokenConfig.refreshToken.maxAge
-      // );
+      await invalidateRefreshToken(user.id, payload.sessionId);
 
       return {
         refreshToken: newRefreshToken,

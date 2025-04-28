@@ -1,8 +1,11 @@
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
+import { RedisService } from '@/services/redis.service';
 import { AccessTokenPayload } from '@/types/token';
 import crypto from 'crypto';
 import { sign } from 'jsonwebtoken';
+
+const redisService = new RedisService();
 
 export const generateToken = async (length = 32): Promise<string> => {
   const buffer = await crypto.randomBytes(Math.ceil(length * 0.75));
@@ -25,24 +28,39 @@ export const generateRefreshToken = async (
   sessionId: string;
 }> => {
   const sessionId = crypto.randomUUID();
-  const expiresAt = new Date(
-    Date.now() + appConfig.token.refreshToken.expiresIn
-  );
+  const expiresAt = new Date(Date.now() + tokenConfig.refreshToken.maxAge);
 
   const token = sign(
     {
       sub: userId,
       sessionId,
     },
-    appConfig.token.refreshToken.secret,
+    tokenConfig.refreshToken.secret,
     {
-      expiresIn: appConfig.token.refreshToken.expiresIn,
+      expiresIn: Math.floor(tokenConfig.refreshToken.maxAge / 1000),
     }
   );
+
+  // Store the refresh token in Redis
+  await redisService.storeRefreshToken(userId, sessionId, token);
 
   return {
     token,
     expiresAt,
     sessionId,
   };
+};
+
+export const validateRefreshToken = async (
+  sessionId: string,
+  token: string
+): Promise<boolean> => {
+  return await redisService.validateRefreshToken(sessionId, token);
+};
+
+export const invalidateRefreshToken = async (
+  userId: string,
+  sessionId: string
+): Promise<void> => {
+  await redisService.invalidateRefreshToken(userId, sessionId);
 };
