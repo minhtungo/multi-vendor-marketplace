@@ -1,11 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "out-tsc/auth-service",
     "types": ["node"],
     "jsx": "react",
     "rootDir": "../../",
-    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "tsBuildInfoFile": "out-tsc/auth-service/tsconfig.app.tsbuildinfo",
     "baseUrl": ".",
     "paths": {
       "@packages/*": ["../../packages/*"],

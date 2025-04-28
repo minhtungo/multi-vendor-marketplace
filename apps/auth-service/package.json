@@ -1,9 +1,14 @@
 {
-  "name": "@multivendor-ecommerce/auth-service",
+  "name": "@repo/auth-service",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "dev": "node src/index.ts"
+  },
   "nx": {
     "name": "auth-service",
+    "type": "application",
+    "sourceRoot": "auth-service/src",
     "targets": {
       "build": {
         "executor": "@nx/esbuild:esbuild",
