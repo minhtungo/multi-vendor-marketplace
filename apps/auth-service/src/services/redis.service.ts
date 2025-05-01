@@ -1,163 +1,97 @@
-import { tokenConfig } from '@/configs/token';
-import { getRedisClient } from '@/db/redis';
-import { logger } from '@packages/utils/logger';
+import { tokenConfig } from "@/configs/token";
+import { getRedisClient } from "@/db/redis";
+import { logger } from "@/utils/logger";
 
-export const storeRefreshToken = async (
-  userId: string,
-  sessionId: string,
-  token: string
-): Promise<void> => {
-  try {
-    const redis = getRedisClient();
-    const userSessionKey = `user:${userId}:sessions`;
-    const sessionKey = `session:${sessionId}`;
+export class RedisService {
+	private redis = getRedisClient();
 
-    await redis.set(
-      sessionKey,
-      token,
-      'EX',
-      tokenConfig.refreshToken.maxAgeInSeconds
-    );
+	async storeRefreshToken(userId: string, sessionId: string, token: string): Promise<void> {
+		try {
+			const userSessionKey = `user:${userId}:sessions`;
+			const sessionKey = `session:${sessionId}`;
 
-    await redis.sadd(userSessionKey, sessionId);
+			await this.redis.set(sessionKey, token, "EX", tokenConfig.refreshToken.maxAgeInSeconds);
+			await this.redis.sadd(userSessionKey, sessionId);
+			await this.redis.expire(userSessionKey, tokenConfig.refreshToken.maxAgeInSeconds);
+		} catch (error) {
+			logger.error(`Error storing refresh token: ${(error as Error).message}`);
+			throw error;
+		}
+	}
 
-    await redis.expire(
-      userSessionKey,
-      tokenConfig.refreshToken.maxAgeInSeconds
-    );
-  } catch (error) {
-    logger.error(`Error storing refresh token: ${(error as Error).message}`);
-    throw error;
-  }
-};
+	async validateRefreshToken(sessionId: string, token: string): Promise<boolean> {
+		try {
+			const sessionKey = `session:${sessionId}`;
+			const storedToken = await this.redis.get(sessionKey);
+			return storedToken === token;
+		} catch (error) {
+			logger.error(`Error validating refresh token: ${(error as Error).message}`);
+			return false;
+		}
+	}
 
-export const validateRefreshToken = async (
-  sessionId: string,
-  token: string
-): Promise<boolean> => {
-  try {
-    const redis = getRedisClient();
-    const sessionKey = `session:${sessionId}`;
+	async invalidateRefreshToken(userId: string, sessionId: string): Promise<void> {
+		try {
+			const sessionKey = `session:${sessionId}`;
+			const userSessionKey = `user:${userId}:sessions`;
 
-    // Get stored token
-    const storedToken = await redis.get(sessionKey);
+			await this.redis.del(sessionKey);
+			await this.redis.srem(userSessionKey, sessionId);
+		} catch (error) {
+			logger.error(`Error invalidating refresh token: ${(error as Error).message}`);
+			throw error;
+		}
+	}
 
-    return storedToken === token;
-  } catch (error) {
-    logger.error(`Error validating refresh token: ${(error as Error).message}`);
-    return false;
-  }
-};
+	async invalidateAllUserSessions(userId: string): Promise<void> {
+		try {
+			const userSessionKey = `user:${userId}:sessions`;
+			const sessionIds = await this.redis.smembers(userSessionKey);
 
-export const invalidateRefreshToken = async (
-  userId: string,
-  sessionId: string
-): Promise<void> => {
-  try {
-    const redis = getRedisClient();
-    const sessionKey = `session:${sessionId}`;
-    const userSessionKey = `user:${userId}:sessions`;
+			if (sessionIds.length > 0) {
+				const sessionKeys = sessionIds.map((id) => `session:${id}`);
+				await this.redis.del(...sessionKeys);
+				await this.redis.del(userSessionKey);
+			}
+		} catch (error) {
+			logger.error(`Error invalidating all user sessions: ${(error as Error).message}`);
+			throw error;
+		}
+	}
 
-    // Delete session
-    await redis.del(sessionKey);
+	async storeRateLimit(ip: string, hits: number, resetTime: Date): Promise<void> {
+		try {
+			const key = `ratelimit:${ip}`;
+			const data = JSON.stringify({ hits, resetTime: resetTime.getTime() });
+			const ttl = Math.ceil((resetTime.getTime() - Date.now()) / 1000);
 
-    // Remove from user's sessions
-    await redis.srem(userSessionKey, sessionId);
-  } catch (error) {
-    logger.error(
-      `Error invalidating refresh token: ${(error as Error).message}`
-    );
-    throw error;
-  }
-};
+			await this.redis.set(key, data, "EX", ttl > 0 ? ttl : 1);
+		} catch (error) {
+			logger.error(`Error storing rate limit data: ${(error as Error).message}`);
+			// Don't throw to prevent disrupting the request flow
+		}
+	}
 
-/**
- * Invalidate all sessions for a user
- */
-export const invalidateAllUserSessions = async (
-  userId: string
-): Promise<void> => {
-  try {
-    const redis = getRedisClient();
-    const userSessionKey = `user:${userId}:sessions`;
+	async getRateLimit(ip: string): Promise<{ hits: number; resetTime: Date } | null> {
+		try {
+			const key = `ratelimit:${ip}`;
+			const data = await this.redis.get(key);
 
-    // Get all session IDs for user
-    const sessionIds = await redis.smembers(userSessionKey);
+			if (data) {
+				const parsed = JSON.parse(data);
+				return {
+					hits: parsed.hits,
+					resetTime: new Date(parsed.resetTime),
+				};
+			}
 
-    if (sessionIds.length > 0) {
-      // Create an array of session keys
-      const sessionKeys = sessionIds.map((id) => `session:${id}`);
+			return null;
+		} catch (error) {
+			logger.error(`Error getting rate limit data: ${(error as Error).message}`);
+			return null;
+		}
+	}
+}
 
-      // Delete all sessions
-      await redis.del(...sessionKeys);
-
-      // Delete user's sessions set
-      await redis.del(userSessionKey);
-    }
-  } catch (error) {
-    logger.error(
-      `Error invalidating all user sessions: ${(error as Error).message}`
-    );
-    throw error;
-  }
-};
-
-/**
- * Store rate limit data
- */
-export const storeRateLimit = async (
-  ip: string,
-  hits: number,
-  resetTime: Date
-): Promise<void> => {
-  try {
-    const redis = getRedisClient();
-    const key = `ratelimit:${ip}`;
-    const data = JSON.stringify({ hits, resetTime: resetTime.getTime() });
-
-    // Calculate TTL in seconds
-    const ttl = Math.ceil((resetTime.getTime() - Date.now()) / 1000);
-
-    await redis.set(key, data, 'EX', ttl > 0 ? ttl : 1);
-  } catch (error) {
-    logger.error(`Error storing rate limit data: ${(error as Error).message}`);
-    // Don't throw to prevent disrupting the request flow
-  }
-};
-
-/**
- * Get rate limit data
- */
-export const getRateLimit = async (
-  ip: string
-): Promise<{ hits: number; resetTime: Date } | null> => {
-  try {
-    const redis = getRedisClient();
-    const key = `ratelimit:${ip}`;
-
-    const data = await redis.get(key);
-
-    if (data) {
-      const parsed = JSON.parse(data);
-      return {
-        hits: parsed.hits,
-        resetTime: new Date(parsed.resetTime),
-      };
-    }
-
-    return null;
-  } catch (error) {
-    logger.error(`Error getting rate limit data: ${(error as Error).message}`);
-    return null;
-  }
-};
-
-// For backward compatibility
-export const redisService = {
-  storeRefreshToken,
-  validateRefreshToken,
-  invalidateRefreshToken,
-  invalidateAllUserSessions,
-  storeRateLimit,
-  getRateLimit,
-};
+// Create a singleton instance for backward compatibility
+export const redisService = new RedisService();

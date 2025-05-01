@@ -1,92 +1,73 @@
-import { tokenConfig } from '@/configs/token';
+import { tokenConfig } from "@/configs/token";
 import {
-  ForgotPasswordSchema,
-  ResetPasswordSchema,
-  SignInSchema,
-  SignUpSchema,
-  VerifyEmailSchema,
-} from '@/models/auth.model';
-import { authService } from '@/services/auth.service';
-import { handleServiceResponse } from '@/utils/http-handlers';
-import { NextFunction, Request, Response } from 'express';
+	ForgotPasswordSchema,
+	ResetPasswordSchema,
+	SignInSchema,
+	SignUpSchema,
+	VerifyEmailSchema,
+} from "@/models/auth.model";
+import { authService } from "@/services/auth.service";
+import { handleServiceResponse } from "@/utils/httpHandlers";
+import type { NextFunction, Request, RequestHandler, Response } from "express";
 
-export const handleSignUp = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const data = SignUpSchema.parse(req.body);
+class AuthController {
+	public signUp: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+		const data = SignUpSchema.parse(req.body);
+		const serviceResponse = await authService.signUp(data, next);
+		handleServiceResponse(serviceResponse, res);
+	};
 
-  const serviceResponse = await authService.signUp(data, next);
+	public signIn: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+		const data = SignInSchema.parse(req.body);
+		const { serviceResponse, refreshToken } = await authService.signIn(data, next);
 
-  handleServiceResponse(serviceResponse, res);
-};
+		if (serviceResponse.success && refreshToken) {
+			authService.setRefreshTokenToCookie(res, refreshToken);
+		}
 
-export const handleSignIn = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const data = SignInSchema.parse(req.body);
+		handleServiceResponse(serviceResponse, res);
+	};
 
-  const { serviceResponse, refreshToken } = await authService.signIn(
-    data,
-    next
-  );
+	public forgotPassword: RequestHandler = async (req: Request, res: Response) => {
+		const data = ForgotPasswordSchema.parse(req.body);
+		const serviceResponse = await authService.forgotPassword(data.email);
+		handleServiceResponse(serviceResponse, res);
+	};
 
-  if (serviceResponse.success && refreshToken) {
-    authService.setRefreshTokenToCookie(res, refreshToken);
-  }
+	public verifyEmail: RequestHandler = async (req: Request, res: Response) => {
+		const data = VerifyEmailSchema.parse(req.body);
+		const serviceResponse = await authService.verifyEmail(data.token);
+		handleServiceResponse(serviceResponse, res);
+	};
 
-  handleServiceResponse(serviceResponse, res);
-};
+	public resetPassword: RequestHandler = async (req: Request, res: Response) => {
+		const data = ResetPasswordSchema.parse(req.body);
+		const serviceResponse = await authService.resetPassword(data.token, data.password);
+		handleServiceResponse(serviceResponse, res);
+	};
 
-export const handleForgotPassword = async (req: Request, res: Response) => {
-  const data = ForgotPasswordSchema.parse(req.body);
-  const serviceResponse = await authService.forgotPassword(data.email);
+	public refreshToken: RequestHandler = async (req: Request, res: Response) => {
+		const refreshToken = req.cookies?.[tokenConfig.refreshToken.cookieName];
+		const { refreshToken: newRefreshToken, serviceResponse } = await authService.refreshToken(refreshToken);
 
-  handleServiceResponse(serviceResponse, res);
-};
+		if (serviceResponse.success && newRefreshToken) {
+			authService.setRefreshTokenToCookie(res, newRefreshToken);
+		}
 
-export const handleVerifyEmail = async (req: Request, res: Response) => {
-  const data = VerifyEmailSchema.parse(req.body);
-  const serviceResponse = await authService.verifyEmail(data.token);
+		if (!serviceResponse.success) {
+			res.clearCookie(tokenConfig.refreshToken.cookieName);
+		}
 
-  handleServiceResponse(serviceResponse, res);
-};
+		handleServiceResponse(serviceResponse, res);
+	};
 
-export const handleResetPassword = async (req: Request, res: Response) => {
-  const data = ResetPasswordSchema.parse(req.body);
+	public signOut: RequestHandler = async (req: Request, res: Response) => {
+		const refreshToken = req.cookies[tokenConfig.refreshToken.cookieName];
+		const serviceResponse = await authService.signOut(refreshToken);
 
-  const serviceResponse = await authService.resetPassword(
-    data.token,
-    data.password
-  );
+		res.clearCookie(tokenConfig.refreshToken.cookieName);
+		handleServiceResponse(serviceResponse, res);
+	};
+}
 
-  handleServiceResponse(serviceResponse, res);
-};
-
-export const handleRefreshToken = async (req: Request, res: Response) => {
-  const refreshToken = req.cookies?.[tokenConfig.refreshToken.cookieName];
-
-  const { refreshToken: newRefreshToken, serviceResponse } =
-    await authService.refreshToken(refreshToken);
-
-  if (serviceResponse.success && newRefreshToken) {
-    authService.setRefreshTokenToCookie(res, newRefreshToken);
-  }
-
-  if (!serviceResponse.success) {
-    res.clearCookie(tokenConfig.refreshToken.cookieName);
-  }
-
-  handleServiceResponse(serviceResponse, res);
-};
-
-export const handleSignOut = async (req: Request, res: Response) => {
-  const refreshToken = req.cookies[tokenConfig.refreshToken.cookieName];
-  const serviceResponse = await authService.signOut(refreshToken);
-
-  res.clearCookie(tokenConfig.refreshToken.cookieName);
-  handleServiceResponse(serviceResponse, res);
-};
+export const authController = new AuthController();

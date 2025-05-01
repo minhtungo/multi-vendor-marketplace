@@ -1,14 +1,15 @@
-import { integer, pgTable, text } from "drizzle-orm/pg-core";
-import { accountTypeSchema } from "../constants";
-import { users } from "../users";
+import { accountTypeSchema } from '@/db/schemas/constants';
+import { users } from '@/db/schemas/users';
+import crypto from 'crypto';
+import { integer, pgTable, text } from 'drizzle-orm/pg-core';
 
-export const accounts = pgTable("accounts", {
+export const accounts = pgTable('accounts', {
   id: text()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   userId: text()
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => users.id, { onDelete: 'cascade' }),
   type: accountTypeSchema().notNull(),
   provider: text().notNull(),
   providerAccountId: text().notNull(),

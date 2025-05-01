@@ -7,19 +7,11 @@ import {
   SignUpSchema,
   VerifyEmailSchema,
 } from '@/models/auth.model';
-import {
-  handleForgotPassword,
-  handleRefreshToken,
-  handleResetPassword,
-  handleSignIn,
-  handleSignOut,
-  handleSignUp,
-  handleVerifyEmail,
-} from '@/controllers/auth.controller';
-import { validateRequest } from '@/utils/http-handlers';
+import { validateRequest } from '@/utils/httpHandlers';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { type Router } from 'express';
 import z from 'zod';
+import { authController } from '@/controllers/auth.controller';
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();
@@ -40,11 +32,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-authRouter.post(
-  paths.signUp,
-  validateRequest(z.object({ body: SignUpSchema })),
-  handleSignUp
-);
+authRouter.post(paths.signUp, validateRequest(z.object({ body: SignUpSchema })), authController.signUp);
 
 authRegistry.registerPath({
   method: 'post',
@@ -62,11 +50,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-authRouter.post(
-  paths.signIn,
-  validateRequest(z.object({ body: SignInSchema })),
-  handleSignIn
-);
+authRouter.post(paths.signIn, validateRequest(z.object({ body: SignInSchema })), authController.signIn);
 
 authRegistry.registerPath({
   method: 'post',
@@ -87,7 +71,7 @@ authRegistry.registerPath({
 authRouter.post(
   paths.forgotPassword,
   validateRequest(z.object({ body: ForgotPasswordSchema })),
-  handleForgotPassword
+  authController.forgotPassword
 );
 
 authRegistry.registerPath({
@@ -106,11 +90,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-authRouter.put(
-  paths.verifyEmail,
-  validateRequest(z.object({ body: VerifyEmailSchema })),
-  handleVerifyEmail
-);
+authRouter.put(paths.verifyEmail, validateRequest(z.object({ body: VerifyEmailSchema })), authController.verifyEmail);
 
 authRegistry.registerPath({
   method: 'post',
@@ -131,7 +111,7 @@ authRegistry.registerPath({
 authRouter.post(
   paths.resetPassword,
   validateRequest(z.object({ body: ResetPasswordSchema })),
-  handleResetPassword
+  authController.resetPassword
 );
 
 authRegistry.registerPath({
@@ -141,7 +121,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-authRouter.put(paths.refreshToken, handleRefreshToken);
+authRouter.put(paths.refreshToken, authController.refreshToken);
 
 authRegistry.registerPath({
   method: 'post',
@@ -150,4 +130,4 @@ authRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-authRouter.post(paths.signOut, handleSignOut);
+authRouter.post(paths.signOut, authController.signOut);

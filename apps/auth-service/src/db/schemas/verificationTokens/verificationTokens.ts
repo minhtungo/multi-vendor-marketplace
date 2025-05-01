@@ -1,13 +1,14 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { users } from "../users/users";
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import crypto from 'crypto';
+import { users } from '@/db/schemas/users';
 
-export const verificationTokens = pgTable("verificationTokens", {
+export const verificationTokens = pgTable('verificationTokens', {
   id: text()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   token: text().notNull(),
-  expires: timestamp({ mode: "date" }).notNull(),
+  expires: timestamp({ mode: 'date' }).notNull(),
   userId: text()
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => users.id, { onDelete: 'cascade' }),
 });

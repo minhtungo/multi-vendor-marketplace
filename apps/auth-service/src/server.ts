@@ -1,44 +1,39 @@
-import cors from 'cors';
-import express, { type Express } from 'express';
-import { env } from './configs/env';
-import { openAPIRouter } from './docs/openAPIRouter';
-import { rateLimiter } from './middlewares/rate-limiter';
-import cookieParser from 'cookie-parser';
-import { errorMiddleware } from '@packages/middlewares/error-handler';
-import { requestLogger } from '@packages/middlewares/error-logger';
-import { authRouter } from './routes/auth.route';
-import { healthCheckRouter } from '@/routes/health-check.route';
+import cors from "cors";
+import express, { type Express } from "express";
+import helmet from "helmet";
+import { pino } from "pino";
+
+import { env } from "@/configs/env";
+import { openAPIRouter } from "@/docs/openAPIRouter";
+import errorHandler from "@/middlewares/errorHandler";
+import rateLimiter from "@/middlewares/rateLimiter";
+import requestLogger from "@/middlewares/requestLogger";
+import { authRouter } from "@/routes/auth.route";
+import { healthCheckRouter } from "@/routes/health-check.route";
 
 const app: Express = express();
 
-app.use(
-  cors({
-    origin: env.APP_ORIGIN,
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  })
-);
-
 // Set the application to trust the reverse proxy
-app.set('trust proxy', true);
+app.set("trust proxy", true);
 
 // Middlewares
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
+app.use(helmet());
 app.use(rateLimiter);
 
-//Request Logging
+// Request logging
 app.use(requestLogger);
 
-//Routes
-app.use('/health-check', healthCheckRouter);
-app.use('/api/auth', authRouter);
+// Routes
+app.use("/api/health-check", healthCheckRouter);
+app.use("/api/auth", authRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
 
-// Error handling
-app.use(errorMiddleware);
+// Error handlers
+app.use(errorHandler());
 
 export { app };

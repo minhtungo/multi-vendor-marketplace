@@ -1,12 +1,21 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    }
-  ]
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"jsx": "react",
+		"baseUrl": "./src",
+		"paths": {
+			"@/*": ["*"]
+		},
+		"moduleResolution": "Node",
+		"outDir": "dist",
+		"importsNotUsedAsValues": "remove",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"types": ["vitest/globals"]
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules"]
 }

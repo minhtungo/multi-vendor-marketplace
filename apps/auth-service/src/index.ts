@@ -1,31 +1,26 @@
-import { env } from '@/configs/env';
-import { app } from '@/server';
-import { logger } from '@packages/utils/logger';
-import { createServer } from 'http';
-import { getRedisClient, closeRedisConnection } from '@/db/redis';
+import { env } from "@/configs/env";
+import { closeRedisConnection, getRedisClient } from "@/db/redis";
+import { app } from "@/server";
+import { logger } from "@/utils/logger";
 
-const httpServer = createServer(app);
+const server = app.listen(env.PORT, () => {
+	const { NODE_ENV, HOST, PORT } = env;
+	logger.info(`Server (${NODE_ENV}) running on port http://${HOST}:${PORT}`);
 
-const server = httpServer.listen(env.PORT, () => {
-  const { NODE_ENV, HOST, PORT } = env;
-  logger.info(`Server (${NODE_ENV}) running on port http://${HOST}:${PORT}`);
-
-  // Initialize Redis connection
-  getRedisClient();
+	// Initialize Redis connection
+	getRedisClient();
 });
 
-const shutdown = async () => {
-  logger.info('Shutting down server...');
+const onCloseSignal = async () => {
+	logger.info("sigint received, shutting down");
 
-  // Close Redis connection
-  await closeRedisConnection();
-
-  server.close(() => {
-    logger.info('Server closed');
-    process.exit(0);
-  });
+	await closeRedisConnection();
+	server.close(() => {
+		logger.info("server closed");
+		process.exit();
+	});
+	setTimeout(() => process.exit(1), 10000).unref(); // Force shutdown after 10s
 };
 
-// Handle graceful shutdown
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);
+process.on("SIGINT", onCloseSignal);
+process.on("SIGTERM", onCloseSignal);
