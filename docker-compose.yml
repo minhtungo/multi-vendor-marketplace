@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Auth service database
   auth-db:
@@ -12,7 +10,7 @@ services:
       POSTGRES_PASSWORD: auth_password
       POSTGRES_DB: auth_db
     volumes:
-      - docker-data/auth-db-data:/var/lib/postgresql/data
+      - ./docker-data/auth-db-data:/var/lib/postgresql/data
     networks:
       - backend-network
 
@@ -23,7 +21,7 @@ services:
     ports:
       - '6379:6379'
     volumes:
-      - docker-data/redis-data:/data
+      - ./docker-data/redis-data:/data
     networks:
       - backend-network
 
@@ -35,7 +33,7 @@ services:
       - '1025:1025' # SMTP server
       - '8025:8025' # Web UI
     volumes:
-      - docker-data/mailhog-data:/var/lib/mailhog
+      - ./docker-data/mailhog-data:/var/lib/mailhog
     networks:
       - backend-network
 

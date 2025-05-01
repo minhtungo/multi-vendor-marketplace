@@ -45,3 +45,6 @@ test-output
 
 *.env
 *.env.local
+
+# Docker
+/docker-data/*
