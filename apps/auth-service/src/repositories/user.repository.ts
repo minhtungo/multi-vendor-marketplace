@@ -21,7 +21,7 @@ export class UserRepository {
   async createUser(
     user: InsertUser,
     trx: typeof db = this.dbInstance
-  ): Promise<User> {
+  ) {
     const { password, ...data } = user;
     const hashedPassword = password ? await hashPassword(password) : undefined;
 

@@ -57,6 +57,9 @@ export class AuthService {
 
 			await createTransaction(async (trx) => {
 				const newUser = await this.userRepository.createUser(data, trx);
+				if (!newUser) {
+					throw new Error("Failed to create user");
+				}
 				await sendOtp(newUser.name, newUser.email);
 			});
 
@@ -74,7 +77,6 @@ export class AuthService {
 
 	async signIn(
 		data: SignInInput,
-		next: NextFunction,
 	): Promise<{
 		refreshToken: string;
 		serviceResponse: ServiceResponse<{

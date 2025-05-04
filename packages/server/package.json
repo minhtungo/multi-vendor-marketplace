@@ -1,0 +1,25 @@
+{
+  "name": "@repo/server",
+  "version": "1.0.0",
+  "description": "",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+   "build": "tsc --build && npx tsc --project tsconfig.cjs.json",
+    "dev": "tsc --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.10.0"
+}

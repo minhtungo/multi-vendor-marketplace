@@ -17,9 +17,9 @@ class AuthController {
 		handleServiceResponse(serviceResponse, res);
 	};
 
-	public signIn: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+	public signIn: RequestHandler = async (req: Request, res: Response) => {
 		const data = SignInSchema.parse(req.body);
-		const { serviceResponse, refreshToken } = await authService.signIn(data, next);
+		const { serviceResponse, refreshToken } = await authService.signIn(data);
 
 		if (serviceResponse.success && refreshToken) {
 			authService.setRefreshTokenToCookie(res, refreshToken);

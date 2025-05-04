@@ -1,9 +1,9 @@
 import VerificationEmail from '@/lib/emails/templates/VerificationEmail';
 import PasswordResetEmail from '@/lib/emails/templates/PasswordResetEmail';
 import { env } from '@/configs/env';
-import { logger } from '@packages/utils/logger';
 import { render } from '@react-email/components';
 import nodemailer from 'nodemailer';
+import { logger } from '@/utils/logger';
 
 // Configure MailHog transport
 const transporter = nodemailer.createTransport({

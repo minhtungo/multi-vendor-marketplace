@@ -1,5 +1,5 @@
 {
-  "name": "express-typescript-boilerplate",
+  "name": "@repo/api-gateway",
   "version": "1.0.14",
   "description": "An Express boilerplate backend",
   "author": "Edwin Hernandez",
@@ -15,7 +15,9 @@
     "format": "biome format --write",
     "test": "vitest run",
     "test:cov": "vitest run --coverage",
-    "check": "pnpm lint && pnpm format && pnpm build && pnpm test"
+    "check": "pnpm lint && pnpm format && pnpm build && pnpm test",
+    "clean": "rm -rf node_modules dist",
+    "prebuild": "pnpm --filter '../../packages/**' build"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.0",

@@ -1,7 +1,6 @@
 import cors from "cors";
 import express, { type Express } from "express";
 import helmet from "helmet";
-import { pino } from "pino";
 
 import { env } from "@/configs/env";
 import { openAPIRouter } from "@/docs/openAPIRouter";
