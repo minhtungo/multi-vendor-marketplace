@@ -1,4 +1,4 @@
-import { ServiceResponse } from "@/lib/service-response";
+import { ServiceResponse } from "@repo/server/lib/service-response";
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import type { ZodError, ZodSchema } from "zod";

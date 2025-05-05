@@ -1,5 +1,5 @@
 import { createApiResponse } from "@/docs/openAPIResponseBuilders";
-import { ServiceResponse } from "@/lib/service-response";
+import { ServiceResponse } from "@repo/server/lib/service-response";
 import { handleServiceResponse } from "@/utils/httpHandlers";
 
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";

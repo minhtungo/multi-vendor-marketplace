@@ -4,11 +4,11 @@ import helmet from "helmet";
 
 import { env } from "@/configs/env";
 import { openAPIRouter } from "@/docs/openAPIRouter";
-import errorHandler from "@/middlewares/errorHandler";
+import errorHandler from '@repo/server/middlewares/error-handler';
 import rateLimiter from "@/middlewares/rateLimiter";
-import requestLogger from "@/middlewares/requestLogger";
 import { authRouter } from "@/routes/auth.route";
 import { healthCheckRouter } from "@/routes/health-check.route";
+import { createRequestLogger } from "@repo/server/middlewares/request-logger";
 
 const app: Express = express();
 
@@ -23,7 +23,7 @@ app.use(helmet());
 app.use(rateLimiter);
 
 // Request logging
-app.use(requestLogger);
+app.use(createRequestLogger(env));
 
 // Routes
 app.use("/api/health-check", healthCheckRouter);
@@ -36,3 +36,4 @@ app.use(openAPIRouter);
 app.use(errorHandler());
 
 export { app };
+

@@ -2,12 +2,12 @@
   "extends": "../../tsconfig",
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "NodeNext",
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
     },
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "outDir": "dist",
     "importsNotUsedAsValues": "remove",
     "strict": true,

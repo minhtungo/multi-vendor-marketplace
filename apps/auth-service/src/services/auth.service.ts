@@ -2,7 +2,7 @@ import { env } from "@/configs/env";
 import { tokenConfig } from "@/configs/token";
 import { checkOtpRestrictions, sendOtp, trackOtpRequests } from "@/lib/auth";
 import { emailService } from "@/lib/emails";
-import { ServiceResponse } from "@/lib/service-response";
+import { ServiceResponse } from "@repo/server/lib/service-response";
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from "@/lib/token";
 import type { SignInInput, SignUpInput } from "@/models/auth.model";
 import { tokenRepository } from "@/repositories/token.repository";
