@@ -1,6 +1,6 @@
 import { createApiResponse } from "@/docs/openAPIResponseBuilders";
 import { ServiceResponse } from "@repo/server/lib/service-response";
-import { handleServiceResponse } from "@/utils/httpHandlers";
+import { handleServiceResponse } from "@repo/server/lib/http-handlers";
 
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Request, type Response, type Router } from "express";

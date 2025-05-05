@@ -1,7 +1,7 @@
 import { getRedisClient } from "@/db/redis";
 import { emailService } from "@/lib/emails";
-import { ValidationError } from "@/utils/errorHandlers";
 import { generateOtp } from "@/utils/otp";
+import { ValidationError } from "@repo/server/lib/error-handlers";
 import type { NextFunction } from "express";
 
 const OTP_EXPIRY = 60 * 5;

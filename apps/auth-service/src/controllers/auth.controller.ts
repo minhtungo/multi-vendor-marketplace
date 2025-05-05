@@ -7,7 +7,7 @@ import {
 	VerifyEmailSchema,
 } from "@/models/auth.model";
 import { authService } from "@/services/auth.service";
-import { handleServiceResponse } from "@/utils/httpHandlers";
+import { handleServiceResponse } from "@repo/server/lib/http-handlers";
 import type { NextFunction, Request, RequestHandler, Response } from "express";
 
 class AuthController {

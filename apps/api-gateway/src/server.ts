@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import proxy from 'express-http-proxy';
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
-import rateLimiter from '@/middlewares/rateLimiter';
+import rateLimiter from '@/middlewares/rate-limiter';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import {createRequestLogger} from '@repo/server/middlewares/request-logger';
 import errorHandler from '@repo/server/middlewares/error-handler';

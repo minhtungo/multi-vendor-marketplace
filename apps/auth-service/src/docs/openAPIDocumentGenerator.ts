@@ -2,8 +2,6 @@ import { authRegistry } from "@/routes/auth.route";
 import { healthCheckRegistry } from "@/routes/health-check.route";
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 
-
-
 export type OpenAPIDocument = ReturnType<OpenApiGeneratorV3["generateDocument"]>;
 
 export function generateOpenAPIDocument(): OpenAPIDocument {

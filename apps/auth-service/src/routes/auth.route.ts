@@ -7,7 +7,7 @@ import {
   SignUpSchema,
   VerifyEmailSchema,
 } from '@/models/auth.model';
-import { validateRequest } from '@/utils/httpHandlers';
+import { validateRequest } from '@repo/server/lib/http-handlers';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { type Router } from 'express';
 import z from 'zod';

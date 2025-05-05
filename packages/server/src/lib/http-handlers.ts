@@ -1,6 +1,6 @@
-import { ServiceResponse } from "@repo/server/lib/service-response";
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { ServiceResponse } from "./service-response";
 import type { ZodError, ZodSchema } from "zod";
 
 export const handleServiceResponse = <T>(serviceResponse: ServiceResponse<T>, response: Response) => {
