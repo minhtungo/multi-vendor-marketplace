@@ -5,7 +5,7 @@ import {
   ResetPasswordSchema,
   SignInSchema,
   SignUpSchema,
-  VerifyEmailSchema,
+  VerifyUserSchema,
 } from '@/models/auth.model';
 import { validateRequest } from '@repo/server/lib/http-handlers';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
@@ -76,13 +76,13 @@ authRouter.post(
 
 authRegistry.registerPath({
   method: 'put',
-  path: `/auth/${paths.verifyEmail}`,
+  path: `/auth/${paths.verifyUser}`,
   tags: ['Auth'],
   request: {
     body: {
       content: {
         'application/json': {
-          schema: VerifyEmailSchema,
+          schema: VerifyUserSchema,
         },
       },
     },
@@ -90,7 +90,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-authRouter.put(paths.verifyEmail, validateRequest(z.object({ body: VerifyEmailSchema })), authController.verifyEmail);
+authRouter.put(paths.verifyUser, validateRequest(z.object({ body: VerifyUserSchema })), authController.verifyUser);
 
 authRegistry.registerPath({
   method: 'post',

@@ -39,8 +39,10 @@ export const ResetPasswordSchema = z.object({
 
 export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
 
-export const VerifyEmailSchema = z.object({
-  token: z.string(),
+export const VerifyUserSchema = z.object({
+  email: commonValidations.email,
+  password: commonValidations.password,
+  otp: z.string().length(6, 'OTP must be 6 digits'),
 });
 
-export type VerifyEmailInput = z.infer<typeof VerifyEmailSchema>;
+export type VerifyUserInput = z.infer<typeof VerifyUserSchema>;

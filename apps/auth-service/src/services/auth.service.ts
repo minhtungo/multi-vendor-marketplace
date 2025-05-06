@@ -1,15 +1,16 @@
 import { env } from "@/configs/env";
 import { tokenConfig } from "@/configs/token";
+import { getRedisClient } from "@/db/redis";
 import { checkOtpRestrictions, sendOtp, trackOtpRequests } from "@/lib/auth";
 import { emailService } from "@/lib/emails";
 import { ServiceResponse } from "@repo/server/lib/service-response";
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from "@/lib/token";
-import type { SignInInput, SignUpInput } from "@/models/auth.model";
+import type { SignInInput, SignUpInput, VerifyUserInput } from "@/models/auth.model";
 import { tokenRepository } from "@/repositories/token.repository";
-import { UserRepository } from "@/repositories/user.repository";
+import { userRepository, UserRepository } from "@/repositories/user.repository";
 import type { RefreshTokenPayload } from "@/types/token";
 import { logger } from "@/utils/logger";
-import { verifyPassword } from "@/utils/password";
+import { hashPassword, verifyPassword } from "@/utils/password";
 import { createTransaction } from "@/utils/transaction";
 import type { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -27,14 +28,6 @@ export class AuthService {
 			const existingUser = await this.userRepository.getUserByEmail(data.email);
 
 			if (existingUser) {
-				if (existingUser.emailVerified) {
-					return ServiceResponse.success(
-						"If your email is not registered, you will receive a verification email shortly",
-						null,
-						StatusCodes.OK,
-					);
-				}
-
 				const existingToken = await tokenRepository.getVerificationTokenByUserId(existingUser.id);
 
 				if (existingToken && existingToken.expires < new Date()) {
@@ -87,7 +80,7 @@ export class AuthService {
 		try {
 			const user = await this.userRepository.getUserByEmail(data.email);
 
-			if (!user || !user.emailVerified || !user.id || !user.password) {
+			if (!user || !user.id || !user.password) {
 				return {
 					refreshToken: "",
 					serviceResponse: ServiceResponse.failure("Invalid credentials", null, StatusCodes.UNAUTHORIZED),
@@ -144,7 +137,7 @@ export class AuthService {
 		try {
 			const user = await this.userRepository.getUserByEmail(email);
 
-			if (!user || !user.emailVerified || !user.id) {
+			if (!user || !user.id) {
 				return ServiceResponse.success(
 					"If a matching account is found, a password reset email will be sent to you shortly",
 					null,
@@ -255,20 +248,45 @@ export class AuthService {
 		}
 	}
 
-	async verifyEmail(token: string): Promise<ServiceResponse> {
+	async verifyUser({
+		email,
+		password,
+		otp,
+	}: VerifyUserInput): Promise<ServiceResponse> {
 		try {
-			const existingToken = await tokenRepository.getVerificationTokenByToken(token);
+			const redis = getRedisClient();
+			const storedOtp = await redis.get(`otp:${email}`);
 
-			if (!existingToken || existingToken.expires < new Date()) {
-				return ServiceResponse.failure("Invalid token", null, StatusCodes.BAD_REQUEST);
+			if (!storedOtp) {
+				return ServiceResponse.failure("Invalid OTP", null, StatusCodes.BAD_REQUEST);
 			}
 
-			await createTransaction(async (trx) => {
-				await this.userRepository.updateUserEmailVerified(existingToken.userId, trx);
-				await tokenRepository.deleteVerificationTokenByToken(token, trx);
-			});
+			const failedAttemptsKey = `otp_attempts:${email}`;
+			const failedAttempts = parseInt(await redis.get(failedAttemptsKey) || "0");
 
-			return ServiceResponse.success("Email verified", null, StatusCodes.OK);
+			if(storedOtp !== otp) {
+				if(failedAttempts >= 2) {
+					await redis.set(`otp_lock:${email}`, "locked", "EX", 1800);
+					await redis.del(`otp:${email}`, failedAttemptsKey);
+					return ServiceResponse.failure("Account locked due to multiple OTP requests. Try again after 30 minutes.", null, StatusCodes.TOO_MANY_REQUESTS);
+				}
+
+				await redis.set(failedAttemptsKey, failedAttempts + 1, "EX", 300);
+				return ServiceResponse.failure("Invalid OTP", null, StatusCodes.BAD_REQUEST);
+			}
+
+			await redis.del(`otp:${email}`, failedAttemptsKey);
+
+            const hashedPassword = password ? await hashPassword(password) : undefined;
+
+			await userRepository.createUser({
+				email,
+				password: hashedPassword,
+				name: 'New user'
+			})
+
+			return ServiceResponse.success("User created successfully", null, StatusCodes.CREATED);
+
 		} catch (ex) {
 			const errorMessage = `Error verifying email: ${(ex as Error).message}`;
 			logger.error(errorMessage);

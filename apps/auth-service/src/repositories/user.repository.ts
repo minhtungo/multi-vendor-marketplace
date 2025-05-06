@@ -22,12 +22,9 @@ export class UserRepository {
     user: InsertUser,
     trx: typeof db = this.dbInstance
   ) {
-    const { password, ...data } = user;
-    const hashedPassword = password ? await hashPassword(password) : undefined;
-
     const [newUser] = await trx
       .insert(users)
-      .values({ ...data, password: hashedPassword })
+      .values({ ...user})
       .returning();
 
     return newUser;

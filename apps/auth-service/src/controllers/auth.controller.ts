@@ -4,7 +4,7 @@ import {
 	ResetPasswordSchema,
 	SignInSchema,
 	SignUpSchema,
-	VerifyEmailSchema,
+	VerifyUserSchema,
 } from "@/models/auth.model";
 import { authService } from "@/services/auth.service";
 import { handleServiceResponse } from "@repo/server/lib/http-handlers";
@@ -34,9 +34,9 @@ class AuthController {
 		handleServiceResponse(serviceResponse, res);
 	};
 
-	public verifyEmail: RequestHandler = async (req: Request, res: Response) => {
-		const data = VerifyEmailSchema.parse(req.body);
-		const serviceResponse = await authService.verifyEmail(data.token);
+	public verifyUser: RequestHandler = async (req: Request, res: Response) => {
+		const data = VerifyUserSchema.parse(req.body);
+		const serviceResponse = await authService.verifyUser(data);
 		handleServiceResponse(serviceResponse, res);
 	};
 
