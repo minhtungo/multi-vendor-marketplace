@@ -131,7 +131,7 @@ export class AuthService {
 		}
 	}
 
-	async forgotPassword(email: string): Promise<ServiceResponse> {
+	async forgotPassword(email: string, next: NextFunction): Promise<ServiceResponse> {
 		try {
 			const user = await this.userRepository.getUserByEmail(email);
 
@@ -142,6 +142,9 @@ export class AuthService {
 					StatusCodes.OK,
 				);
 			}
+
+			await checkOtpRestrictions(user.email, next);
+			await trackOtpRequests(user.email, next);
 
 			const resetPasswordToken = await tokenRepository.createResetPasswordToken(user.id);
 

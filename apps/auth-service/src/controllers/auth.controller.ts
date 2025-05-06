@@ -28,9 +28,9 @@ class AuthController {
 		handleServiceResponse(serviceResponse, res);
 	};
 
-	public forgotPassword: RequestHandler = async (req: Request, res: Response) => {
+	public forgotPassword: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
 		const data = ForgotPasswordSchema.parse(req.body);
-		const serviceResponse = await authService.forgotPassword(data.email);
+		const serviceResponse = await authService.forgotPassword(data.email, next);
 		handleServiceResponse(serviceResponse, res);
 	};
 

@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev:auth-service": "pnpm --filter @repo/auth-service dev",
 		"dev:api-gateway": "pnpm --filter @repo/api-gateway dev",
-		"dev": "pnpm build:packages && concurrently -n auth-service,api-gateway -c green,magenta \"pnpm dev:auth-service\" \"pnpm dev:api-gateway\"",
+		"dev:site": "pnpm --filter @repo/site dev",
+		"dev": "pnpm build:packages && concurrently -n auth-service,api-gateway,site -c green,magenta,blue \"pnpm dev:auth-service\" \"pnpm dev:api-gateway\" \"pnpm dev:site\"",
 		"build": "pnpm run --parallel build",
 		"build:packages": "pnpm --filter './packages/**' build",
 		"lint": "pnpm run --parallel lint",
