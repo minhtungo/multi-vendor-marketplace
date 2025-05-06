@@ -1,8 +1,9 @@
+import { tokenConfig } from "@/configs/token";
 import { getRedisClient } from "@/db/redis";
 import { emailService } from "@/lib/emails";
 import { generateOtp } from "@/utils/otp";
 import { ValidationError } from "@repo/server/lib/error-handlers";
-import type { NextFunction } from "express";
+import type { NextFunction, Response } from "express";
 
 const OTP_EXPIRY = 60 * 5;
 const OTP_TIME_LIMIT = 60;
@@ -48,4 +49,13 @@ export const trackOtpRequests = async (email: string, next: NextFunction) => {
 	}
 
 	await redis.set(otpRequestsKey, otpRequests + 1, "EX", 60);
+};
+
+export const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
+	res.cookie("refresh_token", refreshToken, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		sameSite: "strict",
+		maxAge: tokenConfig.refreshToken.maxAgeInSeconds / 1000,
+	});
 };

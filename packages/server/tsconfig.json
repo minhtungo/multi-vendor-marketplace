@@ -1,17 +1,17 @@
 {
-    "extends": "../../tsconfig",
-    "compilerOptions": {
-        "baseUrl": "./src",
-        "paths": {
-            "@/*": ["./*"]
-        },
-        "outDir": "./dist",
-        "isolatedModules": true,
-        "declaration": true,
-        "declarationMap": true,
-        "sourceMap": true,
-        "removeComments": false
-    },
-    "include": ["./src/**/*"],
-    "exclude": ["node_modules", "dist"]
+	"extends": "../../tsconfig",
+	"compilerOptions": {
+		"baseUrl": "./src",
+		"paths": {
+			"@/*": ["./*"]
+		},
+		"outDir": "./dist",
+		"isolatedModules": true,
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"removeComments": false
+	},
+	"include": ["./src/**/*"],
+	"exclude": ["node_modules", "dist"]
 }

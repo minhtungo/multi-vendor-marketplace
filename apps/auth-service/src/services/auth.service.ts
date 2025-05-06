@@ -68,9 +68,7 @@ export class AuthService {
 		}
 	}
 
-	async signIn(
-		data: SignInInput,
-	): Promise<{
+	async signIn(data: SignInInput): Promise<{
 		refreshToken: string;
 		serviceResponse: ServiceResponse<{
 			accessToken: string;
@@ -248,11 +246,7 @@ export class AuthService {
 		}
 	}
 
-	async verifyUser({
-		email,
-		password,
-		otp,
-	}: VerifyUserInput): Promise<ServiceResponse> {
+	async verifyUser({ email, password, otp }: VerifyUserInput): Promise<ServiceResponse> {
 		try {
 			const redis = getRedisClient();
 			const storedOtp = await redis.get(`otp:${email}`);
@@ -262,13 +256,17 @@ export class AuthService {
 			}
 
 			const failedAttemptsKey = `otp_attempts:${email}`;
-			const failedAttempts = parseInt(await redis.get(failedAttemptsKey) || "0");
+			const failedAttempts = parseInt((await redis.get(failedAttemptsKey)) || "0");
 
-			if(storedOtp !== otp) {
-				if(failedAttempts >= 2) {
+			if (storedOtp !== otp) {
+				if (failedAttempts >= 2) {
 					await redis.set(`otp_lock:${email}`, "locked", "EX", 1800);
 					await redis.del(`otp:${email}`, failedAttemptsKey);
-					return ServiceResponse.failure("Account locked due to multiple OTP requests. Try again after 30 minutes.", null, StatusCodes.TOO_MANY_REQUESTS);
+					return ServiceResponse.failure(
+						"Account locked due to multiple OTP requests. Try again after 30 minutes.",
+						null,
+						StatusCodes.TOO_MANY_REQUESTS,
+					);
 				}
 
 				await redis.set(failedAttemptsKey, failedAttempts + 1, "EX", 300);
@@ -277,16 +275,15 @@ export class AuthService {
 
 			await redis.del(`otp:${email}`, failedAttemptsKey);
 
-            const hashedPassword = password ? await hashPassword(password) : undefined;
+			const hashedPassword = password ? await hashPassword(password) : undefined;
 
 			await userRepository.createUser({
 				email,
 				password: hashedPassword,
-				name: 'New user'
-			})
+				name: "New user",
+			});
 
 			return ServiceResponse.success("User created successfully", null, StatusCodes.CREATED);
-
 		} catch (ex) {
 			const errorMessage = `Error verifying email: ${(ex as Error).message}`;
 			logger.error(errorMessage);

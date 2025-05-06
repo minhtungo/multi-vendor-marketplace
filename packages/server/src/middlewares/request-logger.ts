@@ -5,54 +5,54 @@ import pino from "pino";
 import pinoHttp from "pino-http";
 
 export function createRequestLogger(env: { isProduction: boolean }) {
-  const logger = pino({
-    level: env.isProduction ? "info" : "debug",
-    transport: env.isProduction ? undefined : { target: "pino-pretty" },
-  });
+	const logger = pino({
+		level: env.isProduction ? "info" : "debug",
+		transport: env.isProduction ? undefined : { target: "pino-pretty" },
+	});
 
-  const getLogLevel = (status: number) => {
-    if (status >= StatusCodes.INTERNAL_SERVER_ERROR) return "error";
-    if (status >= StatusCodes.BAD_REQUEST) return "warn";
-    return "info";
-  };
+	const getLogLevel = (status: number) => {
+		if (status >= StatusCodes.INTERNAL_SERVER_ERROR) return "error";
+		if (status >= StatusCodes.BAD_REQUEST) return "warn";
+		return "info";
+	};
 
-  const addRequestId = (req: Request, res: Response, next: NextFunction) => {
-    const existingId = req.headers["x-request-id"] as string;
-    const requestId = existingId || randomUUID();
+	const addRequestId = (req: Request, res: Response, next: NextFunction) => {
+		const existingId = req.headers["x-request-id"] as string;
+		const requestId = existingId || randomUUID();
 
-    // Set for downstream use
-    req.headers["x-request-id"] = requestId;
-    res.setHeader("X-Request-Id", requestId);
+		// Set for downstream use
+		req.headers["x-request-id"] = requestId;
+		res.setHeader("X-Request-Id", requestId);
 
-    next();
-  };
+		next();
+	};
 
-  const httpLogger = pinoHttp({
-    logger,
-    genReqId: (req) => req.headers["x-request-id"] as string,
-    customLogLevel: (_req, res) => getLogLevel(res.statusCode),
-    customSuccessMessage: (req) => `${req.method} ${req.url} completed`,
-    customErrorMessage: (_req, res) => `Request failed with status code: ${res.statusCode}`,
-    // Only log response bodies in development
-    serializers: {
-      req: (req) => ({
-        method: req.method,
-        url: req.url,
-        id: req.id,
-      }),
-    },
-  });
+	const httpLogger = pinoHttp({
+		logger,
+		genReqId: (req) => req.headers["x-request-id"] as string,
+		customLogLevel: (_req, res) => getLogLevel(res.statusCode),
+		customSuccessMessage: (req) => `${req.method} ${req.url} completed`,
+		customErrorMessage: (_req, res) => `Request failed with status code: ${res.statusCode}`,
+		// Only log response bodies in development
+		serializers: {
+			req: (req) => ({
+				method: req.method,
+				url: req.url,
+				id: req.id,
+			}),
+		},
+	});
 
-  const captureResponseBody = (_req: Request, res: Response, next: NextFunction) => {
-    if (!env.isProduction) {
-      const originalSend = res.send;
-      res.send = function (body) {
-        res.locals.responseBody = body;
-        return originalSend.call(this, body);
-      };
-    }
-    next();
-  };
+	const captureResponseBody = (_req: Request, res: Response, next: NextFunction) => {
+		if (!env.isProduction) {
+			const originalSend = res.send;
+			res.send = function (body) {
+				res.locals.responseBody = body;
+				return originalSend.call(this, body);
+			};
+		}
+		next();
+	};
 
-  return [addRequestId, captureResponseBody, httpLogger];
+	return [addRequestId, captureResponseBody, httpLogger];
 }

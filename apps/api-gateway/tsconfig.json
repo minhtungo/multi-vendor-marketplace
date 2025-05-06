@@ -1,21 +1,21 @@
 {
-  "extends": "../../tsconfig",
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["*"]
-    },
-    "moduleResolution": "NodeNext",
-    "outDir": "dist",
-    "importsNotUsedAsValues": "remove",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": ["vitest/globals"]
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+	"extends": "../../tsconfig",
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "NodeNext",
+		"baseUrl": "./src",
+		"paths": {
+			"@/*": ["*"]
+		},
+		"moduleResolution": "NodeNext",
+		"outDir": "dist",
+		"importsNotUsedAsValues": "remove",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"types": ["vitest/globals"]
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules"]
 }
