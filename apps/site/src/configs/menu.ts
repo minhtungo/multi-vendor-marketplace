@@ -1,16 +1,16 @@
 export const menu = {
-	header: [
+	main: [
 		{
-			title: "About",
-			href: "/about",
+			title: "Shop",
+			href: "/shop",
 		},
 		{
-			title: "Features",
-			href: "/features",
+			title: "Offers",
+			href: "/offers",
 		},
 		{
-			title: "Pricing",
-			href: "/pricing",
+			title: "Become a seller",
+			href: "/become-a-seller",
 		},
 	],
 	footer: [

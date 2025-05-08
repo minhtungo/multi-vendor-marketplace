@@ -15,7 +15,7 @@ export function MobileMenu({ className }: MobileMenuProps) {
       </PopoverTrigger>
       <PopoverContent className='p-1 w-56' align='end' side='bottom'>
         <ul className='flex flex-col w-full'>
-          {menu.header.map((item) => (
+          {menu.main.map((item) => (
             <li key={`mobile-menu-${item.title}`}>
               <Link href={item.href} className={cn(buttonVariants({ variant: 'ghost' }), 'w-full justify-start')}>
                 {item.title}
