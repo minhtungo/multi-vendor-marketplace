@@ -13,4 +13,18 @@ export const menu = {
 			href: "/pricing",
 		},
 	],
+	footer: [
+		{
+			title: "About",
+			href: "/about",
+		},
+		{
+			title: "Features",
+			href: "/features",
+		},
+		{
+			title: "Pricing",
+			href: "/pricing",
+		},
+	],
 };

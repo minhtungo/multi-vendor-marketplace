@@ -10,9 +10,12 @@ type HeaderProps = React.ComponentProps<'div'>;
 export function Header({ className }: HeaderProps) {
   return (
     <header
-      className={cn('fixed z-20 w-full h-14 flex items-center transition-all duration-100 backdrop-blur-md', className)}
+      className={cn(
+        'sticky z-20 w-full h-14 flex items-center transition-all duration-100 backdrop-blur-md',
+        className
+      )}
     >
-      <div className={cn('mx-auto w-full container transition-all duration-300')}>
+      <div className={cn('container transition-all duration-300')}>
         <div className='relative flex flex-wrap items-center justify-between gap-6 lg:gap-0'>
           <div className='flex w-full justify-between lg:w-auto'>
             <Link href='/' aria-label='home' className='text-secondary-foreground'>
