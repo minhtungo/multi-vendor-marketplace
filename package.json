@@ -1,34 +1,27 @@
 {
-	"name": "root",
-	"version": "1.0.0",
-	"private": true,
-	"description": "Monorepo for Express microservices",
-	"scripts": {
-		"dev:auth-service": "pnpm --filter @repo/auth-service dev",
-		"dev:api-gateway": "pnpm --filter @repo/api-gateway dev",
-		"dev:site": "pnpm --filter @repo/site dev",
-		"dev": "pnpm build:packages && concurrently -n auth-service,api-gateway,site -c green,magenta,blue \"pnpm dev:auth-service\" \"pnpm dev:api-gateway\" \"pnpm dev:site\"",
-		"build": "pnpm run --parallel build",
-		"build:packages": "pnpm --filter './packages/**' build",
-		"lint": "pnpm run --parallel lint",
-		"test": "pnpm run --parallel test",
-		"clean": "pnpm run --parallel clean",
-		"docker:up": "docker-compose up -d",
-		"docker:down": "docker-compose down",
-		"docker:logs": "docker-compose logs -f",
-		"db:migrate": "pnpm run --filter @repo/auth-service db:migrate",
-		"db:push": "pnpm run --filter @repo/auth-service db:push",
-		"db:studio": "pnpm run --filter @repo/auth-service db:studio",
-		"format": "biome format --write .",
-		"lint:biome": "biome check .",
-		"lint:fix": "biome check --apply .",
-		"ui:add": "pnpm --filter @repo/ui dlx shadcn@canary add"
-	},
-	"packageManager": "pnpm@10.10.0",
-	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
-		"@types/node": "^22.15.3",
-		"concurrently": "^9.1.2",
-		"typescript": "5.8.3"
-	}
+  "name": "multi-tenant-ecommerce",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "clean": "turbo run clean",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "check-types": "turbo run check-types",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "db:migrate": "pnpm run --filter @repo/auth-service db:migrate",
+    "db:push": "pnpm run --filter @repo/auth-service db:push",
+    "db:studio": "pnpm run --filter @repo/auth-service db:studio"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "turbo": "^2.5.3"
+  },
+  "packageManager": "pnpm@10.10.0",
+  "engines": {
+    "node": ">=18"
+  }
 }
