@@ -21,7 +21,8 @@
 		"db:studio": "pnpm run --filter @repo/auth-service db:studio",
 		"format": "biome format --write .",
 		"lint:biome": "biome check .",
-		"lint:fix": "biome check --apply ."
+		"lint:fix": "biome check --apply .",
+		"ui:add": "pnpm --filter @repo/ui dlx shadcn@canary add"
 	},
 	"packageManager": "pnpm@10.10.0",
 	"devDependencies": {

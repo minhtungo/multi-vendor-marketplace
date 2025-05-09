@@ -4,6 +4,7 @@ import '@repo/ui/globals.css';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { siteConfig } from '@/configs/site';
+import { QueryClientProviders } from '@/providers/query-client-providers';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -29,13 +30,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}>
-        <div className='grid grid-rows-[auto_1fr_auto] min-h-screen'>
-          <Header />
-          <main className='container'>{children}</main>
-          <Footer />
-        </div>
-      </body>
+      <QueryClientProviders>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}>
+          <div className='grid grid-rows-[auto_1fr_auto] min-h-screen'>
+            <Header />
+            <main className='container'>{children}</main>
+            <Footer />
+          </div>
+        </body>
+      </QueryClientProviders>
     </html>
   );
 }
