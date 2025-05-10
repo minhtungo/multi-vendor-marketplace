@@ -116,12 +116,12 @@ authRouter.post(
 
 authRegistry.registerPath({
   method: 'put',
-  path: `/auth/${paths.refreshToken}`,
+  path: `/auth/${paths.renewToken}`,
   tags: ['Auth'],
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-authRouter.put(paths.refreshToken, authController.refreshToken);
+authRouter.put(paths.renewToken, authController.renewToken);
 
 authRegistry.registerPath({
   method: 'post',

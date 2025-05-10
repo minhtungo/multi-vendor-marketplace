@@ -5,5 +5,5 @@ export const paths = {
   verifyUser: '/verify-user',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
-  refreshToken: '/refresh-token',
+  renewToken: '/renew-token',
 };

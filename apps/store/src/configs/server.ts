@@ -9,6 +9,7 @@ export const server = {
       verifyUser: `${authPath}/verify-user`,
       forgotPassword: `${authPath}/forgot-password`,
       resetPassword: `${authPath}/reset-password`,
+      renewToken: `${authPath}/renew-token`,
     },
   },
 };
