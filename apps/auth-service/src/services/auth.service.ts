@@ -15,6 +15,8 @@ import { createTransaction } from '@/utils/transaction';
 import type { NextFunction, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { verify } from 'jsonwebtoken';
+import type { User } from '@/db/schemas/users';
+import type { Request } from 'express';
 
 export class AuthService {
   private userRepository: UserRepository;
@@ -266,6 +268,17 @@ export class AuthService {
       const errorMessage = `Error signing out: ${(ex as Error).message}`;
       logger.error(errorMessage);
       return ServiceResponse.failure('An error occurred while signing out.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async getMe(req: Request): Promise<ServiceResponse<User | null>> {
+    try {
+      const user = req.user as User;
+      return ServiceResponse.success('User fetched successfully', user, StatusCodes.OK);
+    } catch (ex) {
+      const errorMessage = `Error fetching user: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure('An error occurred while fetching user.', null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }

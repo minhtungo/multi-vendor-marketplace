@@ -6,4 +6,5 @@ export const paths = {
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
   renewToken: '/renew-token',
+  me: '/me',
 };

@@ -12,6 +12,7 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { type Router } from 'express';
 import z from 'zod';
 import { authController } from '@/controllers/auth.controller';
+import assertAuthentication from '@/middlewares/assertAuthentication';
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();
@@ -131,3 +132,12 @@ authRegistry.registerPath({
 });
 
 authRouter.post(paths.signOut, authController.signOut);
+
+authRegistry.registerPath({
+  method: 'get',
+  path: `/auth/${paths.me}`,
+  tags: ['Auth'],
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+authRouter.get(paths.me, assertAuthentication, authController.getMe);

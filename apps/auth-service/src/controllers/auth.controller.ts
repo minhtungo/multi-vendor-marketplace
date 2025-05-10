@@ -55,6 +55,11 @@ class AuthController {
     res.clearCookie(tokenConfig.refreshToken.cookieName);
     handleServiceResponse(serviceResponse, res);
   };
+
+  public getMe: RequestHandler = async (req: Request, res: Response) => {
+    const serviceResponse = await authService.getMe(req);
+    handleServiceResponse(serviceResponse, res);
+  };
 }
 
 export const authController = new AuthController();
