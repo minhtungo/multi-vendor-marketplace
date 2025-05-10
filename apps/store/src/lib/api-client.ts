@@ -1,4 +1,5 @@
 import { env } from '@/configs/env';
+import { refreshToken } from './auth';
 
 type RequestOptions = {
   method?: string;
@@ -8,6 +9,7 @@ type RequestOptions = {
   params?: Record<string, string | number | boolean | undefined | null>;
   cache?: RequestCache;
   next?: NextFetchRequestConfig;
+  skipAuth?: boolean;
 };
 
 function buildUrlWithParams(url: string, params?: RequestOptions['params']): string {
@@ -23,7 +25,8 @@ function buildUrlWithParams(url: string, params?: RequestOptions['params']): str
 class ApiError extends Error {
   constructor(
     public status: number,
-    message: string
+    message: string,
+    public isAuthError: boolean = false
   ) {
     super(message);
     this.name = 'ApiError';
@@ -50,7 +53,7 @@ export function getServerCookies() {
 }
 
 async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T> {
-  const { method = 'GET', headers = {}, body, cookie, params, cache = 'no-store', next } = options;
+  const { method = 'GET', headers = {}, body, cookie, params, cache = 'no-store', next, skipAuth = false } = options;
 
   // Get cookies from the request when running on server
   let cookieHeader = cookie;
@@ -60,26 +63,49 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
 
   const fullUrl = buildUrlWithParams(`${env.NEXT_PUBLIC_SERVER_URL}${url}`, params);
 
-  const response = await fetch(fullUrl, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      ...headers,
-      ...(cookieHeader ? { Cookie: cookieHeader } : {}),
-    },
-    body: body ? JSON.stringify(body) : undefined,
-    credentials: 'include',
-    cache,
-    next,
-  });
+  try {
+    const response = await fetch(fullUrl, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        ...headers,
+        ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+      credentials: 'include',
+      cache,
+      next,
+    });
 
-  if (!response.ok) {
-    const message = (await response.json()).message || response.statusText;
-    throw new ApiError(response.status, message);
+    if (!response.ok) {
+      const errorData = await response.json();
+      const message = errorData.message || response.statusText;
+
+      // Check if it's an authentication error (401) and not already trying to refresh
+      if (response.status === 401 && !skipAuth) {
+        try {
+          // Try to refresh the token
+          await refreshToken();
+
+          // Retry the original request
+          return fetchApi<T>(url, { ...options, skipAuth: true });
+        } catch (refreshError) {
+          // If refresh fails, throw the original error
+          throw new ApiError(response.status, message, true);
+        }
+      }
+
+      throw new ApiError(response.status, message, response.status === 401);
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, error instanceof Error ? error.message : 'Unknown error occurred');
   }
-
-  return response.json();
 }
 
 export const api = {
