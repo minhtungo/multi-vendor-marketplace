@@ -1,10 +1,10 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import '@repo/ui/globals.css';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { siteConfig } from '@/configs/site';
-import { QueryClientProviders } from '@/providers/query-client-providers';
+import { Providers } from '@/providers';
+import '@repo/ui/globals.css';
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <QueryClientProviders>
+      <Providers>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}>
           <div className='grid grid-rows-[auto_1fr_auto] min-h-screen'>
             <Header />
@@ -38,7 +38,7 @@ export default function RootLayout({
             <Footer />
           </div>
         </body>
-      </QueryClientProviders>
+      </Providers>
     </html>
   );
 }

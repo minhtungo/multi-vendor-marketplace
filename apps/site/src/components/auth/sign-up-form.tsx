@@ -8,8 +8,11 @@ import { FormResponse } from '@repo/ui/components/form-response';
 import { Input } from '@repo/ui/components/input';
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { PasswordInput } from '@repo/ui/components/password-input';
+import { cn } from '@repo/ui/lib/utils';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { OTPForm } from './otp-form';
 
 const signUpInputSchema = signUpSchema
   .extend({
@@ -20,7 +23,11 @@ const signUpInputSchema = signUpSchema
     path: ['confirm_password'],
   });
 
-export function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
+function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
+  const [showOTP, setShowOTP] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const form = useForm<z.infer<typeof signUpInputSchema>>({
     resolver: zodResolver(signUpInputSchema),
     defaultValues: {
@@ -30,72 +37,92 @@ export function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>)
     },
   });
 
-  const { mutate: signUp, isPending, isSuccess, isError, error } = useSignUpMutation();
+  const {
+    mutate: signUp,
+    isPending: isSignUpPending,
+    isSuccess: isSignUpSuccess,
+    isError: isSignUpError,
+    error: signUpError,
+  } = useSignUpMutation();
 
   const onSubmit = (data: z.infer<typeof signUpInputSchema>) => {
+    setEmail(data.email);
+    setPassword(data.password);
     signUp(data);
   };
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-        <OAuthActions />
-        <div className='after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t'>
-          <span className='bg-background text-muted-foreground relative z-10 px-2'>or</span>
-        </div>
-        <div className='space-y-4'>
-          <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input {...field} autoFocus />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='password'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <PasswordInput {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='confirm_password'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <PasswordInput {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        {isSuccess && (
-          <FormResponse
-            title='Success'
-            variant='success'
-            description='If the email you provided is not already in use, you will receive a verification email. The verification link expires in 10 minutes.'
-          />
-        )}
+  if (isSignUpSuccess && !showOTP) {
+    setShowOTP(true);
+  }
 
-        <LoaderButton isPending={isPending} className='w-full'>
-          Sign Up
-        </LoaderButton>
-      </form>
-    </Form>
+  return (
+    <div className={cn(className)}>
+      {!showOTP ? (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+            <OAuthActions />
+            <div className='after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t'>
+              <span className='bg-background text-muted-foreground relative z-10 px-2'>or</span>
+            </div>
+            <div className='space-y-4'>
+              <FormField
+                control={form.control}
+                name='email'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} autoFocus />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='confirm_password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            {isSignUpError && (
+              <FormResponse
+                title='Error'
+                variant='destructive'
+                description={signUpError?.message || 'An error occurred while signing up.'}
+              />
+            )}
+
+            <LoaderButton isPending={isSignUpPending} className='w-full'>
+              Sign Up
+            </LoaderButton>
+          </form>
+        </Form>
+      ) : (
+        <OTPForm email={email} password={password} />
+      )}
+    </div>
   );
 }
+
+export { SignUpForm };

@@ -1,0 +1,39 @@
+import { server } from '@/configs/server';
+import { commonValidations } from '@/lib/validations';
+import type { ApiResponse } from '@/types/api';
+import { useMutation } from '@tanstack/react-query';
+import { z } from 'zod';
+
+export const verifyUserSchema = z.object({
+  email: commonValidations.email,
+  password: commonValidations.password,
+  otp: z.string().length(6, 'OTP must be 6 digits'),
+});
+
+export type VerifyUserInput = z.infer<typeof verifyUserSchema>;
+
+async function verifyUserWithOTP(data: VerifyUserInput): Promise<ApiResponse<null>> {
+  const response = await fetch(`${server.auth}/auth/verify-user`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to verify user');
+  }
+
+  return response.json();
+}
+
+export function useVerifyUserMutation() {
+  return useMutation({
+    mutationFn: verifyUserWithOTP,
+    onError: (error: Error) => {
+      console.error(error);
+    },
+  });
+}
