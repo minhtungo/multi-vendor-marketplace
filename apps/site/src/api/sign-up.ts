@@ -1,5 +1,5 @@
-import { env } from '@/configs/env';
 import { server } from '@/configs/server';
+import { api } from '@/lib/api-client';
 import { commonValidations } from '@/lib/validations';
 import type { ApiResponse } from '@/types/api';
 import type { User } from '@/types/user';
@@ -19,22 +19,11 @@ export async function signUpWithEmailAndPassWord(data: SignUpInput): Promise<
     user: User;
   }>
 > {
-  const response = await fetch(`${env.SERVER_URL}${server.path.auth.signUp}`, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.json();
+  return api.post(server.path.auth.signUp, data);
 }
 
 export function useSignUpMutation() {
   return useMutation({
     mutationFn: signUpWithEmailAndPassWord,
-    onError: (error: Error) => {
-      console.error(error);
-    },
   });
 }

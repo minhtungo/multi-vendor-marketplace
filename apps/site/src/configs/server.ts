@@ -1,11 +1,12 @@
 const basePath = '/api';
+const authPath = `${basePath}/auth`;
 
 export const server = {
   path: {
     auth: {
-      signUp: `${basePath}/sign-up`,
-      signIn: `${basePath}/sign-in`,
-      verifyUser: `${basePath}/verify-user`,
+      signUp: `${authPath}/sign-up`,
+      signIn: `${authPath}/sign-in`,
+      verifyUser: `${authPath}/verify-user`,
     },
   },
 };

@@ -30,7 +30,7 @@ const defaultUserInput: z.infer<typeof signUpInputSchema> = {
 };
 
 function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
-  const [showOTP, setShowOTP] = useState(true);
+  const [showOTP, setShowOTP] = useState(false);
   const [userInput, setUserInput] = useState<z.infer<typeof signUpInputSchema>>(defaultUserInput);
 
   const form = useForm<z.infer<typeof signUpInputSchema>>({

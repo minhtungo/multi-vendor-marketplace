@@ -1,5 +1,5 @@
-import { env } from '@/configs/env';
 import { server } from '@/configs/server';
+import { api } from '@/lib/api-client';
 import { commonValidations } from '@/lib/validations';
 import type { ApiResponse } from '@/types/api';
 import { useMutation } from '@tanstack/react-query';
@@ -14,20 +14,7 @@ export const verifyUserSchema = z.object({
 export type VerifyUserInput = z.infer<typeof verifyUserSchema>;
 
 async function verifyUserWithOTP(data: VerifyUserInput): Promise<ApiResponse<null>> {
-  const response = await fetch(`${env.SERVER_URL}${server.path.auth.verifyUser}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Failed to verify user');
-  }
-
-  return response.json();
+  return api.put(server.path.auth.verifyUser, data);
 }
 
 export function useVerifyUserMutation() {

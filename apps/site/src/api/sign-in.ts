@@ -1,5 +1,6 @@
 import { env } from '@/configs/env';
 import { server } from '@/configs/server';
+import { api } from '@/lib/api-client';
 import { commonValidations } from '@/lib/validations';
 import type { ApiResponse } from '@/types/api';
 import type { User } from '@/types/user';
@@ -19,16 +20,7 @@ export async function signInWithEmailAndPassWord(data: SignInInput): Promise<
     user: User;
   }>
 > {
-  const response = await fetch(`${env.SERVER_URL}${server.path.auth.signIn}`, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  });
-
-  return response.json();
+  return api.post(server.path.auth.signIn, data);
 }
 
 export function useSignInMutation() {
