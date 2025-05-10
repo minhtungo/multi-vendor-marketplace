@@ -7,6 +7,8 @@ export const server = {
       signUp: `${authPath}/sign-up`,
       signIn: `${authPath}/sign-in`,
       verifyUser: `${authPath}/verify-user`,
+      forgotPassword: `${authPath}/forgot-password`,
+      resetPassword: `${authPath}/reset-password`,
     },
   },
 };

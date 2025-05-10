@@ -5,7 +5,7 @@ import { Providers } from '@/providers';
 import '@repo/ui/globals.css';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-
+import { Toaster } from '@repo/ui/components/sonner';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -36,6 +36,7 @@ export default function RootLayout({
             <Header />
             <main className='container'>{children}</main>
             <Footer />
+            <Toaster />
           </div>
         </body>
       </Providers>

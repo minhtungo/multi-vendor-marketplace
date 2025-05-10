@@ -1,4 +1,4 @@
-import { hello } from './../../../packages/server/src/index';
+import { hello } from '@repo/server';
 import { env } from '@/configs/env';
 import { closeRedisConnection, getRedisClient } from '@/db/redis';
 import { app } from '@/server';

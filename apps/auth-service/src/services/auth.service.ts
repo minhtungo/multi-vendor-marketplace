@@ -1,324 +1,305 @@
-import { env } from "@/configs/env";
-import { tokenConfig } from "@/configs/token";
-import { getRedisClient } from "@/db/redis";
-import { checkOtpRestrictions, sendOtp, trackOtpRequests } from "@/lib/auth";
-import { emailService } from "@/lib/emails";
-import { ServiceResponse } from "@repo/server/lib/service-response";
-import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from "@/lib/token";
-import type { SignInInput, SignUpInput, VerifyUserInput } from "@/models/auth.model";
-import { tokenRepository } from "@/repositories/token.repository";
-import { userRepository, UserRepository } from "@/repositories/user.repository";
-import type { RefreshTokenPayload } from "@/types/token";
-import { logger } from "@/utils/logger";
-import { hashPassword, verifyPassword } from "@/utils/password";
-import { createTransaction } from "@/utils/transaction";
-import type { NextFunction, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { verify } from "jsonwebtoken";
+import { env } from '@/configs/env';
+import { tokenConfig } from '@/configs/token';
+import { getRedisClient } from '@/db/redis';
+import { checkOtpRestrictions, sendOtp, trackOtpRequests } from '@/lib/auth';
+import { emailService } from '@/lib/emails';
+import { ServiceResponse } from '@repo/server/lib/service-response';
+import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
+import type { SignInInput, SignUpInput, VerifyUserInput } from '@/models/auth.model';
+import { tokenRepository } from '@/repositories/token.repository';
+import { userRepository, UserRepository } from '@/repositories/user.repository';
+import type { RefreshTokenPayload } from '@/types/token';
+import { logger } from '@/utils/logger';
+import { hashPassword, verifyPassword } from '@/utils/password';
+import { createTransaction } from '@/utils/transaction';
+import type { NextFunction, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { verify } from 'jsonwebtoken';
 
 export class AuthService {
-	private userRepository: UserRepository;
+  private userRepository: UserRepository;
 
-	constructor(repository: UserRepository = new UserRepository()) {
-		this.userRepository = repository;
-	}
+  constructor(repository: UserRepository = new UserRepository()) {
+    this.userRepository = repository;
+  }
 
-	async signUp(data: SignUpInput, next: NextFunction): Promise<ServiceResponse> {
-		try {
-			const existingUser = await this.userRepository.getUserByEmail(data.email);
+  async signUp(data: SignUpInput, next: NextFunction): Promise<ServiceResponse> {
+    try {
+      const existingUser = await this.userRepository.getUserByEmail(data.email);
 
-			if (existingUser) {
-				const existingToken = await tokenRepository.getVerificationTokenByUserId(existingUser.id);
+      if (existingUser) {
+        return ServiceResponse.success(
+          'If your email is not registered, you will receive an email with a otp shortly',
+          null,
+          StatusCodes.OK
+        );
+      }
 
-				if (existingToken && existingToken.expires < new Date()) {
-					await createTransaction(async (trx) => {
-						await tokenRepository.deleteVerificationTokenByToken(existingToken.token, trx);
+      await checkOtpRestrictions(data.email, next);
+      await trackOtpRequests(data.email, next);
 
-						await sendOtp(existingUser.name, existingUser.email);
+      await sendOtp(data.email);
 
-						return ServiceResponse.success(
-							"If your email is not registered, you will receive a verification email shortly",
-							null,
-							StatusCodes.OK,
-						);
-					});
-				}
-			}
+      return ServiceResponse.success(
+        'If your email is not registered, you will receive an email with a otp shortly',
+        null,
+        StatusCodes.OK
+      );
+    } catch (ex) {
+      const errorMessage = `Error signing up: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure('An error occurred while signing up.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
 
-			await checkOtpRestrictions(data.email, next);
-			await trackOtpRequests(data.email, next);
+  async signIn(data: SignInInput): Promise<{
+    refreshToken: string;
+    serviceResponse: ServiceResponse<{
+      accessToken: string;
+      convertedUser: { id: string };
+    } | null>;
+  }> {
+    try {
+      const user = await this.userRepository.getUserByEmail(data.email);
 
-			await createTransaction(async (trx) => {
-				const newUser = await this.userRepository.createUser(data, trx);
-				if (!newUser) {
-					throw new Error("Failed to create user");
-				}
-				await sendOtp(newUser.name, newUser.email);
-			});
+      if (!user || !user.id || !user.password) {
+        return {
+          refreshToken: '',
+          serviceResponse: ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED),
+        };
+      }
 
-			return ServiceResponse.success(
-				"If your email is not registered, you will receive a verification email shortly",
-				null,
-				StatusCodes.OK,
-			);
-		} catch (ex) {
-			const errorMessage = `Error signing up: ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return ServiceResponse.failure("An error occurred while signing up.", null, StatusCodes.INTERNAL_SERVER_ERROR);
-		}
-	}
+      const isPasswordValid = await verifyPassword(user.password, data.password);
 
-	async signIn(data: SignInInput): Promise<{
-		refreshToken: string;
-		serviceResponse: ServiceResponse<{
-			accessToken: string;
-			convertedUser: { id: string };
-		} | null>;
-	}> {
-		try {
-			const user = await this.userRepository.getUserByEmail(data.email);
+      if (!isPasswordValid) {
+        return {
+          refreshToken: '',
+          serviceResponse: ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED),
+        };
+      }
 
-			if (!user || !user.id || !user.password) {
-				return {
-					refreshToken: "",
-					serviceResponse: ServiceResponse.failure("Invalid credentials", null, StatusCodes.UNAUTHORIZED),
-				};
-			}
+      const { token: refreshToken, sessionId } = await generateRefreshToken(user.id);
 
-			const isPasswordValid = await verifyPassword(user.password, data.password);
+      const accessToken = generateAccessToken({
+        sub: user.id,
+        email: user.email,
+        userId: user.id,
+        sessionId,
+      });
 
-			if (!isPasswordValid) {
-				return {
-					refreshToken: "",
-					serviceResponse: ServiceResponse.failure("Invalid credentials", null, StatusCodes.UNAUTHORIZED),
-				};
-			}
+      return {
+        refreshToken,
+        serviceResponse: ServiceResponse.success(
+          'Signed in successfully',
+          {
+            accessToken,
+            convertedUser: {
+              id: user.id,
+            },
+          },
+          StatusCodes.OK
+        ),
+      };
+    } catch (ex) {
+      const errorMessage = `Error signing in: ${(ex as Error).message}`;
+      logger.error(errorMessage);
 
-			const { token: refreshToken, sessionId } = await generateRefreshToken(user.id);
+      return {
+        refreshToken: '',
+        serviceResponse: ServiceResponse.failure(
+          'An error occurred while signing in.',
+          null,
+          StatusCodes.INTERNAL_SERVER_ERROR
+        ),
+      };
+    }
+  }
 
-			const accessToken = generateAccessToken({
-				sub: user.id,
-				email: user.email,
-				userId: user.id,
-				sessionId,
-			});
+  async forgotPassword(email: string, next: NextFunction): Promise<ServiceResponse> {
+    try {
+      const user = await this.userRepository.getUserByEmail(email);
 
-			return {
-				refreshToken,
-				serviceResponse: ServiceResponse.success(
-					"Signed in successfully",
-					{
-						accessToken,
-						convertedUser: {
-							id: user.id,
-						},
-					},
-					StatusCodes.OK,
-				),
-			};
-		} catch (ex) {
-			const errorMessage = `Error signing in: ${(ex as Error).message}`;
-			logger.error(errorMessage);
+      if (!user || !user.id) {
+        return ServiceResponse.success(
+          'If a matching account is found, a password reset email will be sent to you shortly',
+          null,
+          StatusCodes.OK
+        );
+      }
 
-			return {
-				refreshToken: "",
-				serviceResponse: ServiceResponse.failure(
-					"An error occurred while signing in.",
-					null,
-					StatusCodes.INTERNAL_SERVER_ERROR,
-				),
-			};
-		}
-	}
+      const resetPasswordToken = await tokenRepository.createResetPasswordToken(user.id);
 
-	async forgotPassword(email: string, next: NextFunction): Promise<ServiceResponse> {
-		try {
-			const user = await this.userRepository.getUserByEmail(email);
+      await emailService.sendPasswordResetEmail(user.email, user.name, resetPasswordToken);
 
-			if (!user || !user.id) {
-				return ServiceResponse.success(
-					"If a matching account is found, a password reset email will be sent to you shortly",
-					null,
-					StatusCodes.OK,
-				);
-			}
+      return ServiceResponse.success(
+        'If a matching account is found, a password reset email will be sent to you shortly',
+        null,
+        StatusCodes.OK
+      );
+    } catch (ex) {
+      const errorMessage = `Error forgetting password: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        'An error occurred while forgetting password',
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 
-			await checkOtpRestrictions(user.email, next);
-			await trackOtpRequests(user.email, next);
+  async resetPassword(token: string, password: string): Promise<ServiceResponse> {
+    try {
+      const existingToken = await tokenRepository.getResetPasswordTokenByToken(token);
 
-			const resetPasswordToken = await tokenRepository.createResetPasswordToken(user.id);
+      if (!existingToken || existingToken.expires < new Date()) {
+        return ServiceResponse.failure('Invalid token', null, StatusCodes.BAD_REQUEST);
+      }
 
-			await emailService.sendPasswordResetEmail(user.email, user.name, resetPasswordToken);
+      await createTransaction(async (trx) => {
+        await this.userRepository.updateUserPassword(existingToken.userId, password, trx);
+        await tokenRepository.deleteResetPasswordTokenByToken(token, trx);
+      });
 
-			return ServiceResponse.success(
-				"If a matching account is found, a password reset email will be sent to you shortly",
-				null,
-				StatusCodes.OK,
-			);
-		} catch (ex) {
-			const errorMessage = `Error forgetting password: ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return ServiceResponse.failure(
-				"An error occurred while forgetting password",
-				null,
-				StatusCodes.INTERNAL_SERVER_ERROR,
-			);
-		}
-	}
+      return ServiceResponse.success('Password reset successfully', null, StatusCodes.OK);
+    } catch (ex) {
+      const errorMessage = `Error resetting password: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        'An error occurred while resetting password',
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 
-	async resetPassword(token: string, password: string): Promise<ServiceResponse> {
-		try {
-			const existingToken = await tokenRepository.getResetPasswordTokenByToken(token);
+  async refreshToken(refreshToken: string): Promise<{
+    refreshToken: string;
+    serviceResponse: ServiceResponse<{
+      accessToken: string;
+      userId: string;
+    } | null>;
+  }> {
+    if (!refreshToken) {
+      return {
+        refreshToken: '',
+        serviceResponse: ServiceResponse.failure('Refresh token not found', null, StatusCodes.UNAUTHORIZED),
+      };
+    }
+    try {
+      const payload = verify(refreshToken, tokenConfig.refreshToken.secret) as RefreshTokenPayload;
 
-			if (!existingToken || existingToken.expires < new Date()) {
-				return ServiceResponse.failure("Invalid token", null, StatusCodes.BAD_REQUEST);
-			}
+      const isBlacklisted = await validateRefreshToken(payload.sessionId, refreshToken);
 
-			await createTransaction(async (trx) => {
-				await this.userRepository.updateUserPassword(existingToken.userId, password, trx);
-				await tokenRepository.deleteResetPasswordTokenByToken(token, trx);
-			});
+      if (isBlacklisted) {
+        return {
+          refreshToken: '',
+          serviceResponse: ServiceResponse.failure('Token has been revoked', null, StatusCodes.UNAUTHORIZED),
+        };
+      }
 
-			return ServiceResponse.success("Password reset successfully", null, StatusCodes.OK);
-		} catch (ex) {
-			const errorMessage = `Error resetting password: ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return ServiceResponse.failure(
-				"An error occurred while resetting password",
-				null,
-				StatusCodes.INTERNAL_SERVER_ERROR,
-			);
-		}
-	}
+      const user = await this.userRepository.getUserById(payload.sub);
 
-	async refreshToken(refreshToken: string): Promise<{
-		refreshToken: string;
-		serviceResponse: ServiceResponse<{
-			accessToken: string;
-			userId: string;
-		} | null>;
-	}> {
-		if (!refreshToken) {
-			return {
-				refreshToken: "",
-				serviceResponse: ServiceResponse.failure("Refresh token not found", null, StatusCodes.UNAUTHORIZED),
-			};
-		}
-		try {
-			const payload = verify(refreshToken, tokenConfig.refreshToken.secret) as RefreshTokenPayload;
+      if (!user) {
+        return {
+          refreshToken: '',
+          serviceResponse: ServiceResponse.failure('User not found', null, StatusCodes.UNAUTHORIZED),
+        };
+      }
+      const { token: newRefreshToken, sessionId } = await generateRefreshToken(user.id);
 
-			const isBlacklisted = await validateRefreshToken(payload.sessionId, refreshToken);
+      const accessToken = generateAccessToken({
+        sub: user.id,
+        email: user.email,
+        userId: user.id,
+        sessionId,
+      });
 
-			if (isBlacklisted) {
-				return {
-					refreshToken: "",
-					serviceResponse: ServiceResponse.failure("Token has been revoked", null, StatusCodes.UNAUTHORIZED),
-				};
-			}
+      await invalidateRefreshToken(user.id, payload.sessionId);
 
-			const user = await this.userRepository.getUserById(payload.sub);
+      return {
+        refreshToken: newRefreshToken,
+        serviceResponse: ServiceResponse.success('Token refreshed', { accessToken, userId: user.id }, StatusCodes.OK),
+      };
+    } catch (ex) {
+      const errorMessage = `Error refreshing token: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return {
+        refreshToken: '',
+        serviceResponse: ServiceResponse.failure('Invalid refresh token', null, StatusCodes.UNAUTHORIZED),
+      };
+    }
+  }
 
-			if (!user) {
-				return {
-					refreshToken: "",
-					serviceResponse: ServiceResponse.failure("User not found", null, StatusCodes.UNAUTHORIZED),
-				};
-			}
-			const { token: newRefreshToken, sessionId } = await generateRefreshToken(user.id);
+  async verifyUser({ email, password, otp }: VerifyUserInput): Promise<ServiceResponse> {
+    try {
+      const redis = getRedisClient();
+      const storedOtp = await redis.get(`otp:${email}`);
 
-			const accessToken = generateAccessToken({
-				sub: user.id,
-				email: user.email,
-				userId: user.id,
-				sessionId,
-			});
+      if (!storedOtp) {
+        return ServiceResponse.failure('Invalid OTP', null, StatusCodes.BAD_REQUEST);
+      }
 
-			await invalidateRefreshToken(user.id, payload.sessionId);
+      const failedAttemptsKey = `otp_attempts:${email}`;
+      const failedAttempts = parseInt((await redis.get(failedAttemptsKey)) || '0');
 
-			return {
-				refreshToken: newRefreshToken,
-				serviceResponse: ServiceResponse.success("Token refreshed", { accessToken, userId: user.id }, StatusCodes.OK),
-			};
-		} catch (ex) {
-			const errorMessage = `Error refreshing token: ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return {
-				refreshToken: "",
-				serviceResponse: ServiceResponse.failure("Invalid refresh token", null, StatusCodes.UNAUTHORIZED),
-			};
-		}
-	}
+      if (storedOtp !== otp) {
+        if (failedAttempts >= 2) {
+          await redis.set(`otp_lock:${email}`, 'locked', 'EX', 1800);
+          await redis.del(`otp:${email}`, failedAttemptsKey);
+          return ServiceResponse.failure(
+            'Account locked due to multiple OTP requests. Try again after 30 minutes.',
+            null,
+            StatusCodes.TOO_MANY_REQUESTS
+          );
+        }
 
-	async verifyUser({ email, password, otp }: VerifyUserInput): Promise<ServiceResponse> {
-		try {
-			const redis = getRedisClient();
-			const storedOtp = await redis.get(`otp:${email}`);
+        await redis.set(failedAttemptsKey, failedAttempts + 1, 'EX', 300);
+        return ServiceResponse.failure('Invalid OTP', null, StatusCodes.BAD_REQUEST);
+      }
 
-			if (!storedOtp) {
-				return ServiceResponse.failure("Invalid OTP", null, StatusCodes.BAD_REQUEST);
-			}
+      await redis.del(`otp:${email}`, failedAttemptsKey);
 
-			const failedAttemptsKey = `otp_attempts:${email}`;
-			const failedAttempts = parseInt((await redis.get(failedAttemptsKey)) || "0");
+      const hashedPassword = password ? await hashPassword(password) : undefined;
 
-			if (storedOtp !== otp) {
-				if (failedAttempts >= 2) {
-					await redis.set(`otp_lock:${email}`, "locked", "EX", 1800);
-					await redis.del(`otp:${email}`, failedAttemptsKey);
-					return ServiceResponse.failure(
-						"Account locked due to multiple OTP requests. Try again after 30 minutes.",
-						null,
-						StatusCodes.TOO_MANY_REQUESTS,
-					);
-				}
+      await userRepository.createUser({
+        email,
+        password: hashedPassword,
+        name: 'New user',
+      });
 
-				await redis.set(failedAttemptsKey, failedAttempts + 1, "EX", 300);
-				return ServiceResponse.failure("Invalid OTP", null, StatusCodes.BAD_REQUEST);
-			}
+      return ServiceResponse.success('User created successfully', null, StatusCodes.CREATED);
+    } catch (ex) {
+      const errorMessage = `Error verifying email: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        'An error occurred while verifying email',
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 
-			await redis.del(`otp:${email}`, failedAttemptsKey);
+  setRefreshTokenToCookie(res: Response, refreshToken: string): void {
+    res.cookie(tokenConfig.refreshToken.cookieName, refreshToken, {
+      httpOnly: env.NODE_ENV === 'production',
+      secure: env.NODE_ENV === 'production',
+      maxAge: tokenConfig.refreshToken.maxAgeInSeconds * 1000,
+      path: '/',
+      sameSite: 'lax',
+    });
+  }
 
-			const hashedPassword = password ? await hashPassword(password) : undefined;
-
-			await userRepository.createUser({
-				email,
-				password: hashedPassword,
-				name: "New user",
-			});
-
-			return ServiceResponse.success("User created successfully", null, StatusCodes.CREATED);
-		} catch (ex) {
-			const errorMessage = `Error verifying email: ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return ServiceResponse.failure(
-				"An error occurred while verifying email",
-				null,
-				StatusCodes.INTERNAL_SERVER_ERROR,
-			);
-		}
-	}
-
-	setRefreshTokenToCookie(res: Response, refreshToken: string): void {
-		res.cookie(tokenConfig.refreshToken.cookieName, refreshToken, {
-			httpOnly: env.NODE_ENV === "production",
-			secure: env.NODE_ENV === "production",
-			maxAge: tokenConfig.refreshToken.maxAgeInSeconds * 1000,
-			path: "/",
-			sameSite: "lax",
-		});
-	}
-
-	async signOut(refreshToken: string): Promise<ServiceResponse> {
-		try {
-			const payload = verify(refreshToken, tokenConfig.refreshToken.secret) as RefreshTokenPayload;
-			await invalidateRefreshToken(payload.sub, payload.sessionId);
-			return ServiceResponse.success("Signed out successfully", null, StatusCodes.OK);
-		} catch (ex) {
-			const errorMessage = `Error signing out: ${(ex as Error).message}`;
-			logger.error(errorMessage);
-			return ServiceResponse.failure("An error occurred while signing out.", null, StatusCodes.INTERNAL_SERVER_ERROR);
-		}
-	}
+  async signOut(refreshToken: string): Promise<ServiceResponse> {
+    try {
+      const payload = verify(refreshToken, tokenConfig.refreshToken.secret) as RefreshTokenPayload;
+      await invalidateRefreshToken(payload.sub, payload.sessionId);
+      return ServiceResponse.success('Signed out successfully', null, StatusCodes.OK);
+    } catch (ex) {
+      const errorMessage = `Error signing out: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure('An error occurred while signing out.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
 
 // Export a singleton instance for convenience

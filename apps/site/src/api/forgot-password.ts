@@ -6,28 +6,25 @@ import type { User } from '@/types/user';
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
-export const signInSchema = z.object({
+export const forgotPasswordSchema = z.object({
   email: commonValidations.email,
-  password: commonValidations.password,
 });
 
-export type SignInInput = z.infer<typeof signInSchema>;
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 
-export async function signInWithEmailAndPassWord(data: SignInInput): Promise<
+export async function forgotPassword(data: ForgotPasswordInput): Promise<
   ApiResponse<{
     accessToken: string;
     user: User;
   }>
 > {
-  return api.post(server.path.auth.signIn, data);
+  return api.post(server.path.auth.forgotPassword, data);
 }
 
-export function useSignInMutation() {
+export function useForgotPasswordMutation() {
   return useMutation({
-    mutationFn: signInWithEmailAndPassWord,
-    onSuccess: () => {
-      //   queryClient.setQueryData(userQueryKey, data.user);
-    },
+    mutationFn: forgotPassword,
+    onSuccess: () => {},
     onError: (error: Error) => {
       console.error(error);
     },
