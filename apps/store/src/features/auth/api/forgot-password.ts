@@ -18,7 +18,9 @@ export async function forgotPassword(data: ForgotPasswordInput): Promise<
     user: User;
   }>
 > {
-  return api.post(server.path.auth.forgotPassword, data);
+  return api.post(server.path.auth.forgotPassword, data, {
+    skipAuth: true,
+  });
 }
 
 export function useForgotPasswordMutation() {

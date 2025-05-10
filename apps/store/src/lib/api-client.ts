@@ -1,4 +1,5 @@
 import { env } from '@/configs/env';
+import { ApiResponse } from '@/types/api';
 import { refreshToken } from './auth';
 
 type RequestOptions = {
@@ -109,19 +110,19 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
 }
 
 export const api = {
-  get<T>(endpoint: string, options?: RequestOptions): Promise<T> {
-    return fetchApi<T>(endpoint, { ...options, method: 'GET' });
+  get<T>(endpoint: string, options?: RequestOptions): Promise<ApiResponse<T>> {
+    return fetchApi<ApiResponse<T>>(endpoint, { ...options, method: 'GET' });
   },
-  post<T>(endpoint: string, body?: any, options?: RequestOptions): Promise<T> {
-    return fetchApi<T>(endpoint, { ...options, method: 'POST', body });
+  post<T>(endpoint: string, body?: any, options?: RequestOptions): Promise<ApiResponse<T>> {
+    return fetchApi<ApiResponse<T>>(endpoint, { ...options, method: 'POST', body });
   },
-  put<T>(endpoint: string, body?: any, options?: RequestOptions): Promise<T> {
-    return fetchApi<T>(endpoint, { ...options, method: 'PUT', body });
+  put<T>(endpoint: string, body?: any, options?: RequestOptions): Promise<ApiResponse<T>> {
+    return fetchApi<ApiResponse<T>>(endpoint, { ...options, method: 'PUT', body });
   },
-  patch<T>(endpoint: string, body?: any, options?: RequestOptions): Promise<T> {
-    return fetchApi<T>(endpoint, { ...options, method: 'PATCH', body });
+  patch<T>(endpoint: string, body?: any, options?: RequestOptions): Promise<ApiResponse<T>> {
+    return fetchApi<ApiResponse<T>>(endpoint, { ...options, method: 'PATCH', body });
   },
-  delete<T>(endpoint: string, options?: RequestOptions): Promise<T> {
-    return fetchApi<T>(endpoint, { ...options, method: 'DELETE' });
+  delete<T>(endpoint: string, options?: RequestOptions): Promise<ApiResponse<T>> {
+    return fetchApi<ApiResponse<T>>(endpoint, { ...options, method: 'DELETE' });
   },
 };

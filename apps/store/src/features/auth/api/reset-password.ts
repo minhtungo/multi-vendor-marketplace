@@ -17,7 +17,9 @@ export async function resetPassword(data: ResetPasswordInput): Promise<
   }>
 > {
   const resetPasswordData = resetPasswordSchema.parse(data);
-  return api.post(server.path.auth.resetPassword, resetPasswordData);
+  return api.post(server.path.auth.resetPassword, resetPasswordData, {
+    skipAuth: true,
+  });
 }
 
 export function useResetPasswordMutation() {

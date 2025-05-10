@@ -19,7 +19,9 @@ export async function signUpWithEmailAndPassWord(data: SignUpInput): Promise<
     user: User;
   }>
 > {
-  return api.post(server.path.auth.signUp, data);
+  return api.post(server.path.auth.signUp, data, {
+    skipAuth: true,
+  });
 }
 
 export function useSignUpMutation() {
