@@ -1,3 +1,4 @@
+import { env } from '@/configs/env';
 import { server } from '@/configs/server';
 import { commonValidations } from '@/lib/validations';
 import type { ApiResponse } from '@/types/api';
@@ -13,7 +14,7 @@ export const verifyUserSchema = z.object({
 export type VerifyUserInput = z.infer<typeof verifyUserSchema>;
 
 async function verifyUserWithOTP(data: VerifyUserInput): Promise<ApiResponse<null>> {
-  const response = await fetch(`${server.auth}/auth/verify-user`, {
+  const response = await fetch(`${env.SERVER_URL}${server.path.auth.verifyUser}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

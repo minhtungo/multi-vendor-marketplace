@@ -23,18 +23,19 @@ const signUpInputSchema = signUpSchema
     path: ['confirm_password'],
   });
 
+const defaultUserInput: z.infer<typeof signUpInputSchema> = {
+  email: '',
+  password: '',
+  confirm_password: '',
+};
+
 function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
   const [showOTP, setShowOTP] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [userInput, setUserInput] = useState<z.infer<typeof signUpInputSchema>>(defaultUserInput);
 
   const form = useForm<z.infer<typeof signUpInputSchema>>({
     resolver: zodResolver(signUpInputSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      confirm_password: '',
-    },
+    defaultValues: defaultUserInput,
   });
 
   const {
@@ -50,8 +51,7 @@ function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
   });
 
   const onSubmit = (data: z.infer<typeof signUpInputSchema>) => {
-    setEmail(data.email);
-    setPassword(data.password);
+    setUserInput(data);
     signUp(data);
   };
 
@@ -123,7 +123,7 @@ function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
           </form>
         </Form>
       ) : (
-        <OTPForm email={email} password={password} />
+        <OTPForm userInput={userInput} />
       )}
     </div>
   );

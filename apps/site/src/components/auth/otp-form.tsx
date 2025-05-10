@@ -1,35 +1,39 @@
 'use client';
 
+import { signUpSchema } from '@/api/sign-up';
 import { useVerifyUserMutation } from '@/api/verify-user';
 import { Button } from '@repo/ui/components/button';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@repo/ui/components/input-otp';
 import { LoaderButton } from '@repo/ui/components/loader-button';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { z } from 'zod';
 
 interface OTPFormProps {
-  email: string;
-  password: string;
+  userInput: z.infer<typeof signUpSchema>;
 }
 
-export function OTPForm({ email, password }: OTPFormProps) {
+export function OTPForm({ userInput }: OTPFormProps) {
   const [otp, setOtp] = useState('');
   const [countdown, setCountdown] = useState(0);
+  const router = useRouter();
 
-  const {
-    mutate: verifyUser,
-    isPending: isVerifyPending,
-    isSuccess: isVerifySuccess,
-    isError: isVerifyError,
-    error: verifyError,
-  } = useVerifyUserMutation();
+  const { mutate: verifyUser, isPending, isSuccess, isError, error } = useVerifyUserMutation();
 
-  const onVerifyOTP = () => {
-    verifyUser({
-      email,
-      password,
-      otp,
-    });
+  const handleVerifyOTP = () => {
+    verifyUser(
+      {
+        email: userInput.email,
+        password: userInput.password,
+        otp,
+      },
+      {
+        onSuccess: () => {
+          router.push('/');
+        },
+      }
+    );
   };
 
   const handleResendOTP = () => {
@@ -67,14 +71,14 @@ export function OTPForm({ email, password }: OTPFormProps) {
             </InputOTPGroup>
           </InputOTP>
         </div>
-        {isVerifyError && (
+        {isError && (
           <FormResponse
             title='Error'
             variant='destructive'
-            description={verifyError?.message || 'An error occurred while verifying your email.'}
+            description={error?.message || 'An error occurred while verifying your email.'}
           />
         )}
-        {isVerifySuccess && (
+        {isSuccess && (
           <FormResponse
             title='Success'
             variant='success'
@@ -82,9 +86,9 @@ export function OTPForm({ email, password }: OTPFormProps) {
           />
         )}
         <LoaderButton
-          isPending={isVerifyPending}
+          isPending={isPending}
           className='w-full mt-3'
-          onClick={onVerifyOTP}
+          onClick={handleVerifyOTP}
           disabled={otp.length !== 6}
         >
           Verify OTP
