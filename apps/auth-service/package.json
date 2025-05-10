@@ -53,6 +53,7 @@
     "@types/cors": "2.8.17",
     "@types/express": "5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/nodemailer": "^6.4.17",
     "@types/pg": "^8.11.14",
     "@types/react": "^19.1.2",
     "@types/supertest": "6.0.3",

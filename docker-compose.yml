@@ -4,11 +4,13 @@ services:
     image: postgres:latest
     restart: always
     ports:
-      - '5432:5432'
+      - '${DB_PORT}:5432'
+    env_file:
+      - ./apps/auth-service/.env
     environment:
-      POSTGRES_USER: auth_user
-      POSTGRES_PASSWORD: auth_password
-      POSTGRES_DB: auth_db
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - ./docker-data/auth-db-data:/var/lib/postgresql/data
     networks:

@@ -14,12 +14,12 @@ const envSchema = z.object({
   // Token
   ACCESS_TOKEN_SECRET: z.string().min(1),
   REFRESH_TOKEN_SECRET: z.string().min(1),
-  //Redis
-  // REDIS_HOST: z.string().min(1).default("localhost"),
-  // REDIS_PORT: z.coerce.number().int().positive().default(6379),
-  // REDIS_PASSWORD: z.string().min(1).default(""),
-  // REDIS_DB_NUMBER: z.coerce.number().int().positive().default(0),
-  // REDIS_TLS_ENABLED: z.boolean().default(false),
+  // Redis
+  REDIS_HOST: z.string().min(1).default('localhost'),
+  REDIS_PORT: z.coerce.number().int().positive().default(6379),
+  REDIS_PASSWORD: z.string().min(1).default(''),
+  REDIS_DB_NUMBER: z.coerce.number().int().positive().default(0),
+  REDIS_TLS_ENABLED: z.boolean().default(false),
   //SMTP
   SMTP_HOST: z.string().min(1).default('localhost'),
   SMTP_PORT: z.coerce.number().int().positive().default(1025),

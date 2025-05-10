@@ -1,2 +1,1 @@
-export * from "./service-response";
-export * from "./logger";
+export * from './service-response';

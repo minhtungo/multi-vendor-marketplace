@@ -1,6 +1,6 @@
 import { env } from '@/configs/env';
+import { logger } from '@/utils/logger';
 import { app } from '@/server';
-import { logger } from '@repo/server/lib/logger';
 
 const server = app.listen(env.PORT, () => {
   const { NODE_ENV, HOST, PORT } = env;
