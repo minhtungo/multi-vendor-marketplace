@@ -19,12 +19,7 @@ class AuthController {
 
   public signIn: RequestHandler = async (req: Request, res: Response) => {
     const data = SignInSchema.parse(req.body);
-    const { serviceResponse, refreshToken } = await authService.signIn(data);
-
-    if (serviceResponse.success && refreshToken) {
-      authService.setRefreshTokenToCookie(res, refreshToken);
-    }
-
+    const serviceResponse = await authService.signIn(data, res);
     handleServiceResponse(serviceResponse, res);
   };
 
@@ -48,15 +43,7 @@ class AuthController {
 
   public renewToken: RequestHandler = async (req: Request, res: Response) => {
     const refreshToken = req.cookies?.[tokenConfig.refreshToken.cookieName];
-    const { refreshToken: newRefreshToken, serviceResponse } = await authService.refreshToken(refreshToken);
-
-    if (serviceResponse.success && newRefreshToken) {
-      authService.setRefreshTokenToCookie(res, newRefreshToken);
-    }
-
-    if (!serviceResponse.success) {
-      res.clearCookie(tokenConfig.refreshToken.cookieName);
-    }
+    const serviceResponse = await authService.refreshToken(refreshToken, res);
 
     handleServiceResponse(serviceResponse, res);
   };

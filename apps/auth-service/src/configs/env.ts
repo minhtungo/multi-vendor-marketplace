@@ -11,9 +11,10 @@ const envSchema = z.object({
   APP_ORIGIN: z.string().url().default('http://localhost:5173'),
   COMMON_RATE_LIMIT_MAX_REQUESTS: z.coerce.number().int().positive().default(1000),
   COMMON_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(1000),
-  // Token
+  // Cookies
   ACCESS_TOKEN_SECRET: z.string().min(1),
   REFRESH_TOKEN_SECRET: z.string().min(1),
+  REFRESH_TOKEN_COOKIE_NAME: z.string().min(1),
   // Redis
   REDIS_HOST: z.string().min(1).default('localhost'),
   REDIS_PORT: z.coerce.number().int().positive().default(6379),

@@ -10,6 +10,8 @@ import { authRouter } from '@/routes/auth.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import { createRequestLogger } from '@repo/server/middlewares/request-logger';
 import cookieParser from 'cookie-parser';
+import passport from 'passport';
+import '@/lib/strategies/jwt';
 
 const app: Express = express();
 
@@ -20,6 +22,7 @@ app.set('trust proxy', true);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(passport.initialize());
 app.use(cors({ origin: env.APP_ORIGIN, credentials: true }));
 app.use(helmet());
 app.use(rateLimiter);

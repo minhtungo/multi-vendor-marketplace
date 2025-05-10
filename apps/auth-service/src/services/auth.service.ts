@@ -1,7 +1,7 @@
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
 import { getRedisClient } from '@/db/redis';
-import { checkOtpRestrictions, sendOtp, trackOtpRequests } from '@/lib/auth';
+import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
 import { emailService } from '@/lib/emails';
 import { ServiceResponse } from '@repo/server/lib/service-response';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
@@ -52,30 +52,26 @@ export class AuthService {
     }
   }
 
-  async signIn(data: SignInInput): Promise<{
-    refreshToken: string;
-    serviceResponse: ServiceResponse<{
+  async signIn(
+    data: SignInInput,
+    res: Response
+  ): Promise<
+    ServiceResponse<{
       accessToken: string;
       convertedUser: { id: string };
-    } | null>;
-  }> {
+    } | null>
+  > {
     try {
       const user = await this.userRepository.getUserByEmail(data.email);
 
       if (!user || !user.id || !user.password) {
-        return {
-          refreshToken: '',
-          serviceResponse: ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED),
-        };
+        return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
       }
 
       const isPasswordValid = await verifyPassword(user.password, data.password);
 
       if (!isPasswordValid) {
-        return {
-          refreshToken: '',
-          serviceResponse: ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED),
-        };
+        return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
       }
 
       const { token: refreshToken, sessionId } = await generateRefreshToken(user.id);
@@ -87,31 +83,23 @@ export class AuthService {
         sessionId,
       });
 
-      return {
-        refreshToken,
-        serviceResponse: ServiceResponse.success(
-          'Signed in successfully',
-          {
-            accessToken,
-            convertedUser: {
-              id: user.id,
-            },
+      setRefreshTokenCookie(res, refreshToken);
+
+      return ServiceResponse.success(
+        'Signed in successfully',
+        {
+          accessToken,
+          convertedUser: {
+            id: user.id,
           },
-          StatusCodes.OK
-        ),
-      };
+        },
+        StatusCodes.OK
+      );
     } catch (ex) {
       const errorMessage = `Error signing in: ${(ex as Error).message}`;
       logger.error(errorMessage);
 
-      return {
-        refreshToken: '',
-        serviceResponse: ServiceResponse.failure(
-          'An error occurred while signing in.',
-          null,
-          StatusCodes.INTERNAL_SERVER_ERROR
-        ),
-      };
+      return ServiceResponse.failure('An error occurred while signing in.', null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -172,38 +160,32 @@ export class AuthService {
     }
   }
 
-  async refreshToken(refreshToken: string): Promise<{
-    refreshToken: string;
-    serviceResponse: ServiceResponse<{
+  async refreshToken(
+    refreshToken: string,
+    res: Response
+  ): Promise<
+    ServiceResponse<{
       accessToken: string;
       userId: string;
-    } | null>;
-  }> {
+    } | null>
+  > {
     if (!refreshToken) {
-      return {
-        refreshToken: '',
-        serviceResponse: ServiceResponse.failure('Refresh token not found', null, StatusCodes.UNAUTHORIZED),
-      };
+      return ServiceResponse.failure('Refresh token not found', null, StatusCodes.UNAUTHORIZED);
     }
+
     try {
       const payload = verify(refreshToken, tokenConfig.refreshToken.secret) as RefreshTokenPayload;
 
       const isBlacklisted = await validateRefreshToken(payload.sessionId, refreshToken);
 
       if (isBlacklisted) {
-        return {
-          refreshToken: '',
-          serviceResponse: ServiceResponse.failure('Token has been revoked', null, StatusCodes.UNAUTHORIZED),
-        };
+        return ServiceResponse.failure('Token has been revoked', null, StatusCodes.UNAUTHORIZED);
       }
 
       const user = await this.userRepository.getUserById(payload.sub);
 
       if (!user) {
-        return {
-          refreshToken: '',
-          serviceResponse: ServiceResponse.failure('User not found', null, StatusCodes.UNAUTHORIZED),
-        };
+        return ServiceResponse.failure('User not found', null, StatusCodes.UNAUTHORIZED);
       }
       const { token: newRefreshToken, sessionId } = await generateRefreshToken(user.id);
 
@@ -215,18 +197,14 @@ export class AuthService {
       });
 
       await invalidateRefreshToken(user.id, payload.sessionId);
+      setRefreshTokenCookie(res, newRefreshToken);
 
-      return {
-        refreshToken: newRefreshToken,
-        serviceResponse: ServiceResponse.success('Token refreshed', { accessToken, userId: user.id }, StatusCodes.OK),
-      };
+      return ServiceResponse.success('Token refreshed', { accessToken, userId: user.id }, StatusCodes.OK);
     } catch (ex) {
+      res.clearCookie(tokenConfig.refreshToken.cookieName);
       const errorMessage = `Error refreshing token: ${(ex as Error).message}`;
       logger.error(errorMessage);
-      return {
-        refreshToken: '',
-        serviceResponse: ServiceResponse.failure('Invalid refresh token', null, StatusCodes.UNAUTHORIZED),
-      };
+      return ServiceResponse.failure('Invalid refresh token', null, StatusCodes.UNAUTHORIZED);
     }
   }
 
@@ -277,16 +255,6 @@ export class AuthService {
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
-  }
-
-  setRefreshTokenToCookie(res: Response, refreshToken: string): void {
-    res.cookie(tokenConfig.refreshToken.cookieName, refreshToken, {
-      httpOnly: env.NODE_ENV === 'production',
-      secure: env.NODE_ENV === 'production',
-      maxAge: tokenConfig.refreshToken.maxAgeInSeconds * 1000,
-      path: '/',
-      sameSite: 'lax',
-    });
   }
 
   async signOut(refreshToken: string): Promise<ServiceResponse> {

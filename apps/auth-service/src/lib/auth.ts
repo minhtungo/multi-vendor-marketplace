@@ -1,3 +1,4 @@
+import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
 import { getRedisClient } from '@/db/redis';
 import { emailService } from '@/lib/emails';
@@ -52,7 +53,7 @@ export const trackOtpRequests = async (email: string, next: NextFunction) => {
 };
 
 export const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
-  res.cookie('refresh_token', refreshToken, {
+  res.cookie(env.REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
