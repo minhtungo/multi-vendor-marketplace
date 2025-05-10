@@ -1,6 +1,6 @@
 'use client';
 
-import { resetPasswordSchema, useResetPasswordMutation } from '@/api/reset-password';
+import { resetPasswordSchema, useResetPasswordMutation } from '@/features/auth/api/reset-password';
 import { client } from '@/configs/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/components/form';

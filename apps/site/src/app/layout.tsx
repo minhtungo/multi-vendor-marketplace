@@ -1,7 +1,7 @@
-import { Footer } from '@/components/footer';
+import { Footer } from '@/components/footer/footer';
 import { Header } from '@/components/header';
 import { siteConfig } from '@/configs/site';
-import { Providers } from '@/providers';
+import { Providers } from '@/components/providers';
 import '@repo/ui/globals.css';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';

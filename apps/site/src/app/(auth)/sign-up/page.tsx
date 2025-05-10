@@ -1,5 +1,5 @@
-import { AuthContainer } from '@/components/auth/auth-container';
-import { SignUpForm } from '@/components/auth/sign-up-form';
+import { AuthContainer } from '@/features/auth/components/common/auth-container';
+import { SignUpForm } from '@/features/auth/components/sign-up-form';
 import { client } from '@/configs/client';
 
 const SignUp = () => {

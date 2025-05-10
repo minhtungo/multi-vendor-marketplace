@@ -1,5 +1,5 @@
-import { AuthContainer } from '@/components/auth/auth-container';
-import { ResetPasswordForm } from '@/components/auth/reset-password-form';
+import { AuthContainer } from '@/features/auth/components/common/auth-container';
+import { ResetPasswordForm } from '@/features/auth/components/reset-password-form';
 
 const ResetPassword = () => {
   return (

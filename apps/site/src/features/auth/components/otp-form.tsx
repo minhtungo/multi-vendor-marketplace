@@ -1,7 +1,7 @@
 'use client';
 
-import { signUpSchema } from '@/api/sign-up';
-import { useVerifyUserMutation } from '@/api/verify-user';
+import { signUpSchema } from '@/features/auth/api/sign-up';
+import { useVerifyUserMutation } from '@/features/auth/api/verify-user';
 import { Button } from '@repo/ui/components/button';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@repo/ui/components/input-otp';

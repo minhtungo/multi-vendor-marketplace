@@ -1,7 +1,7 @@
 import { AuthButtons } from '@/components/auth-buttons';
-import { Logo } from '@/components/logo';
-import { MobileMenu } from '@/components/mobile-menu';
-import { SearchBar } from '@/components/search-bar';
+import { Logo } from '@/components/common/logo';
+import { MobileMenu } from '@/components/header/mobile-menu';
+import { SearchBar } from '@/components/header/search-bar';
 import { client } from '@/configs/client';
 import { menu } from '@/configs/menu';
 import { Button, buttonVariants } from '@repo/ui/components/button';

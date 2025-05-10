@@ -1,7 +1,7 @@
 'use client';
 
-import { signUpSchema, useSignUpMutation } from '@/api/sign-up';
-import { OAuthActions } from '@/components/auth/oauth-actions';
+import { signUpSchema, useSignUpMutation } from '@/features/auth/api/sign-up';
+import { OAuthActions } from '@/features/auth/components/common/oauth-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/components/form';
 import { FormResponse } from '@repo/ui/components/form-response';

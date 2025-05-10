@@ -1,7 +1,7 @@
 'use client';
 
-import { forgotPasswordSchema, useForgotPasswordMutation } from '@/api/forgot-password';
-import { OAuthActions } from '@/components/auth/oauth-actions';
+import { forgotPasswordSchema, useForgotPasswordMutation } from '@/features/auth/api/forgot-password';
+import { OAuthActions } from '@/features/auth/components/common/oauth-actions';
 import { client } from '@/configs/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/components/form';
