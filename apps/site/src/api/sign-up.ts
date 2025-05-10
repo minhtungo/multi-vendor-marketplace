@@ -30,12 +30,9 @@ export async function signUpWithEmailAndPassWord(data: SignUpInput): Promise<
   return response.json();
 }
 
-export function useSignUpMutation({ onSuccess }: { onSuccess?: () => void }) {
+export function useSignUpMutation() {
   return useMutation({
     mutationFn: signUpWithEmailAndPassWord,
-    onSuccess: () => {
-      onSuccess?.();
-    },
     onError: (error: Error) => {
       console.error(error);
     },

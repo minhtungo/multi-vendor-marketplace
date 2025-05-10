@@ -8,6 +8,7 @@ import { FormResponse } from '@repo/ui/components/form-response';
 import { Input } from '@repo/ui/components/input';
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { PasswordInput } from '@repo/ui/components/password-input';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -19,11 +20,16 @@ export function SignInForm({ className }: React.ComponentPropsWithoutRef<'div'>)
       password: '',
     },
   });
+  const router = useRouter();
 
-  const { mutate: signIn, isPending, isSuccess, asisError, error } = useSignInMutation();
+  const { mutate: signIn, isPending, isSuccess, isError, error } = useSignInMutation();
 
   const onSubmit = (data: z.infer<typeof signInSchema>) => {
-    signIn(data);
+    signIn(data, {
+      onSuccess: () => {
+        router.push('/');
+      },
+    });
   };
 
   return (
@@ -66,6 +72,13 @@ export function SignInForm({ className }: React.ComponentPropsWithoutRef<'div'>)
             title='Success'
             variant='success'
             description='You have successfully signed in to your account.'
+          />
+        )}
+        {isError && (
+          <FormResponse
+            title='Error'
+            variant='destructive'
+            description={error?.message || 'An error occurred while signing in.'}
           />
         )}
 

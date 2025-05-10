@@ -38,24 +38,18 @@ function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
     defaultValues: defaultUserInput,
   });
 
-  const {
-    mutate: signUp,
-    isPending: isSignUpPending,
-    isSuccess: isSignUpSuccess,
-    isError: isSignUpError,
-    error: signUpError,
-  } = useSignUpMutation({
-    onSuccess: () => {
-      setShowOTP(true);
-    },
-  });
+  const { mutate: signUp, isPending, isSuccess, isError, error } = useSignUpMutation();
 
   const onSubmit = (data: z.infer<typeof signUpInputSchema>) => {
     setUserInput(data);
-    signUp(data);
+    signUp(data, {
+      onSuccess: () => {
+        setShowOTP(true);
+      },
+    });
   };
 
-  if (isSignUpSuccess && !showOTP) {
+  if (isSuccess && !showOTP) {
     setShowOTP(true);
   }
 
@@ -109,15 +103,15 @@ function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
                 )}
               />
             </div>
-            {isSignUpError && (
+            {isError && (
               <FormResponse
                 title='Error'
                 variant='destructive'
-                description={signUpError?.message || 'An error occurred while signing up.'}
+                description={error?.message || 'An error occurred while signing up.'}
               />
             )}
 
-            <LoaderButton isPending={isSignUpPending} className='w-full'>
+            <LoaderButton isPending={isPending} className='w-full'>
               Sign Up
             </LoaderButton>
           </form>
