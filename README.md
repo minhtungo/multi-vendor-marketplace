@@ -1,40 +1,60 @@
-# Turborepo kitchen sink starter
+# Multi-Tenant Ecommerce Platform
 
-This Turborepo starter is maintained by the Turborepo core team.
+A multi-tenant ecommerce platform built using a microservices architecture and Turborepo for monorepo management.
 
-This example also shows how to use [Workspace Configurations](https://turborepo.com/docs/core-concepts/monorepos/configuring-workspaces).
+## Project Structure
 
-## Using this example
+This Turborepo includes the following packages and applications:
 
-Run the following command:
+### Applications
 
-```sh
-npx create-turbo@latest -e kitchen-sink
-```
+- `api-gateway`: API Gateway service for routing and managing requests
+- `auth-service`: Authentication and authorization service
+- `store`: Main ecommerce storefront application
 
-## What's inside?
+### Shared Packages
 
-This Turborepo includes the following packages and apps:
+- `@repo/ui`: Shared UI components library
+- `@repo/server`: Shared server utilities and configurations
+- `@repo/config-eslint`: ESLint configurations used throughout the monorepo
+- `@repo/jest-presets`: Jest configurations for testing
+- `@repo/typescript-config`: TypeScript configurations used throughout the monorepo
 
-### Apps and Packages
-
-- `api`: an [Express](https://expressjs.com/) server
-- `storefront`: a [Next.js](https://nextjs.org/) app
-- `admin`: a [Vite](https://vitejs.dev/) single page app
-- `blog`: a [Remix](https://remix.run/) blog
-- `@repo/eslint-config`: ESLint configurations used throughout the monorepo
-- `@repo/jest-presets`: Jest configurations
-- `@repo/logger`: isomorphic logger (a small wrapper around console.log)
-- `@repo/ui`: a dummy React UI library (which contains `<CounterButton>` and `<Link>` components)
-- `@repo/typescript-config`: tsconfig.json's used throughout the monorepo
-
-Each package and app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
+## Technology Stack
 
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
 - [ESLint](https://eslint.org/) for code linting
-- [Jest](https://jestjs.io) test runner for all things JavaScript
-- [Prettier](https://prettier.io) for code formatting
+- [Jest](https://jestjs.io) for testing
+- [Docker](https://www.docker.com/) for containerization
+- [Turborepo](https://turbo.build/repo) for monorepo management
+
+## Getting Started
+
+1. Install dependencies:
+
+```sh
+pnpm install
+```
+
+2. Start the development environment:
+
+```sh
+docker-compose up
+```
+
+3. Run the development server:
+
+```sh
+pnpm dev
+```
+
+## Development
+
+This project uses pnpm workspaces and Turborepo for managing the monorepo. Each application and package is 100% TypeScript.
+
+### Available Scripts
+
+- `pnpm build` - Build all applications and packages
+- `pnpm dev` - Start development environment
+- `pnpm lint` - Run ESLint
+- `pnpm test` - Run tests
