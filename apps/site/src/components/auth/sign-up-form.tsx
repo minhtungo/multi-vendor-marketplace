@@ -43,7 +43,11 @@ function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
     isSuccess: isSignUpSuccess,
     isError: isSignUpError,
     error: signUpError,
-  } = useSignUpMutation();
+  } = useSignUpMutation({
+    onSuccess: () => {
+      setShowOTP(true);
+    },
+  });
 
   const onSubmit = (data: z.infer<typeof signUpInputSchema>) => {
     setEmail(data.email);

@@ -1,9 +1,11 @@
+const basePath = '/api';
+
 export const server = {
   path: {
     auth: {
-      signUp: '/auth/sign-up',
-      signIn: '/auth/sign-in',
-      verifyUser: '/auth/verify-user',
+      signUp: `${basePath}/sign-up`,
+      signIn: `${basePath}/sign-in`,
+      verifyUser: `${basePath}/verify-user`,
     },
   },
 };

@@ -5,7 +5,7 @@ import { Button } from '@repo/ui/components/button';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@repo/ui/components/input-otp';
 import { LoaderButton } from '@repo/ui/components/loader-button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface OTPFormProps {
   email: string;
@@ -14,6 +14,7 @@ interface OTPFormProps {
 
 export function OTPForm({ email, password }: OTPFormProps) {
   const [otp, setOtp] = useState('');
+  const [countdown, setCountdown] = useState(0);
 
   const {
     mutate: verifyUser,
@@ -30,6 +31,23 @@ export function OTPForm({ email, password }: OTPFormProps) {
       otp,
     });
   };
+
+  const handleResendOTP = () => {
+    // TODO: Implement resend OTP API call
+    setCountdown(60);
+  };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [countdown]);
 
   return (
     <div className='space-y-4'>
@@ -71,8 +89,8 @@ export function OTPForm({ email, password }: OTPFormProps) {
         >
           Verify OTP
         </LoaderButton>
-        <Button variant='ghost' className='w-full'>
-          Resend OTP
+        <Button variant='ghost' className='w-full' onClick={handleResendOTP} disabled={countdown > 0}>
+          {countdown > 0 ? `Resend OTP in ${countdown}s` : 'Resend OTP'}
         </Button>
       </div>
     </div>
