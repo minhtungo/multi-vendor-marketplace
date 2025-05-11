@@ -1,10 +1,10 @@
+import HeroSection from '@/components/home/hero-section';
 import { Button } from '@repo/ui/components/button';
-import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className=''>
-      <Button>Click me</Button>
-    </div>
+    <>
+      <HeroSection />
+    </>
   );
 }
