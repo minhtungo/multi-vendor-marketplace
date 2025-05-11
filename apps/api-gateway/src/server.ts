@@ -26,7 +26,10 @@ app.use(createRequestLogger(env));
 
 // Routes
 app.use('/health-check', healthCheckRouter);
-app.use('/', proxy(env.AUTH_SERVICE_URL));
+app.use('/', (req, res) => {
+  console.log('Request received');
+  res.send('Hello World');
+});
 
 // Swagger UI
 app.use(openAPIRouter);
