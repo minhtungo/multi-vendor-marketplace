@@ -43,6 +43,7 @@ class AuthController {
 
   public renewToken: RequestHandler = async (req: Request, res: Response) => {
     const refreshToken = req.cookies?.[tokenConfig.refreshToken.cookieName];
+    console.log('refreshToken', refreshToken);
     const serviceResponse = await authService.refreshToken(refreshToken, res);
 
     handleServiceResponse(serviceResponse, res);

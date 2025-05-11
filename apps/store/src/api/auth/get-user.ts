@@ -4,7 +4,7 @@ import { User } from '@/types/user';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
 export const getUser = async () => {
-  const response = await api.get<User>(server.path.user.me);
+  const response = await api.get<User>(server.path.auth.me);
   return response.data;
 };
 

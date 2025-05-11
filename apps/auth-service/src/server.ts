@@ -1,22 +1,20 @@
 import cors from 'cors';
 import express, { type Express } from 'express';
-import helmet from 'helmet';
 
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
-import errorHandler from '@repo/server/middlewares/error-handler';
-import rateLimiter from '@/middlewares/rateLimiter';
+import '@/lib/strategies/jwt';
 import { authRouter } from '@/routes/auth.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
+import errorHandler from '@repo/server/middlewares/error-handler';
 import { createRequestLogger } from '@repo/server/middlewares/request-logger';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
-import '@/lib/strategies/jwt';
 
 const app: Express = express();
 
 // Set the application to trust the reverse proxy
-app.set('trust proxy', true);
+// app.set('trust proxy', true);
 
 // Middlewares
 app.use(express.json());
@@ -24,11 +22,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(cors({ origin: env.APP_ORIGIN, credentials: true }));
-app.use(helmet());
-app.use(rateLimiter);
+// app.use(helmet());
+// app.use(rateLimiter);
 
 // Request logging
-app.use(createRequestLogger(env));
+// app.use(createRequestLogger(env));
 
 // Routes
 app.use('/api/health-check', healthCheckRouter);

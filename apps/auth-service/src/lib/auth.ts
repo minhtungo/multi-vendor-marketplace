@@ -11,11 +11,15 @@ const OTP_TIME_LIMIT = 60;
 
 export const sendOtp = async (email: string) => {
   const otp = generateOtp();
-  await emailService.sendVerificationEmail({
-    to: email,
-    username: email,
-    otp,
-  });
+  try {
+    await emailService.sendVerificationEmail({
+      to: email,
+      username: email,
+      otp,
+    });
+  } catch (error) {
+    console.log('emailService', error);
+  }
 
   const redis = getRedisClient();
   await redis.set(`otp:${email}`, otp, 'EX', OTP_EXPIRY);

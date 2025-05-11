@@ -9,8 +9,9 @@ export const getRedisClient = (): Redis => {
     redisClient = new Redis({
       host: env.REDIS_HOST,
       port: env.REDIS_PORT,
-      // password: env.REDIS_PASSWORD || undefined,
-      // db: env.REDIS_DB_NUMBER,
+      password: env.REDIS_PASSWORD || undefined,
+      db: env.REDIS_DB_NUMBER,
+      tls: env.REDIS_TLS_ENABLED ? {} : undefined,
       keyPrefix: 'auth:',
       retryStrategy: (times) => {
         const delay = Math.min(times * 50, 2000);

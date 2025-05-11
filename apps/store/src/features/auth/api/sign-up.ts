@@ -19,7 +19,8 @@ export async function signUpWithEmailAndPassWord(data: SignUpInput): Promise<
     user: User;
   }>
 > {
-  return api.post(server.path.auth.signUp, data, {
+  const parsedData = signUpSchema.parse(data);
+  return api.post(server.path.auth.signUp, parsedData, {
     skipAuth: true,
   });
 }

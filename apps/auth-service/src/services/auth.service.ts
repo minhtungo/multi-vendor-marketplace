@@ -176,21 +176,26 @@ export class AuthService {
     }
 
     try {
+      // First verify the token and check if it's expired
       const payload = verify(refreshToken, tokenConfig.refreshToken.secret) as RefreshTokenPayload;
 
-      const isBlacklisted = await validateRefreshToken(payload.sessionId, refreshToken);
-
-      if (isBlacklisted) {
+      // Check if token is blacklisted
+      const isValid = await validateRefreshToken(payload.sessionId, refreshToken);
+      if (!isValid) {
         return ServiceResponse.failure('Token has been revoked', null, StatusCodes.UNAUTHORIZED);
       }
 
+      // Get user and verify they exist
       const user = await this.userRepository.getUserById(payload.sub);
-
       if (!user) {
         return ServiceResponse.failure('User not found', null, StatusCodes.UNAUTHORIZED);
       }
-      const { token: newRefreshToken, sessionId } = await generateRefreshToken(user.id);
 
+      // Invalidate the current refresh token first
+      await invalidateRefreshToken(user.id, payload.sessionId);
+
+      // Generate new tokens
+      const { token: newRefreshToken, sessionId } = await generateRefreshToken(user.id);
       const accessToken = generateAccessToken({
         sub: user.id,
         email: user.email,
@@ -198,15 +203,30 @@ export class AuthService {
         sessionId,
       });
 
-      await invalidateRefreshToken(user.id, payload.sessionId);
+      // Set the new refresh token cookie
       setRefreshTokenCookie(res, newRefreshToken);
 
       return ServiceResponse.success('Token refreshed', { accessToken, userId: user.id }, StatusCodes.OK);
     } catch (ex) {
+      // Clear the refresh token cookie on any error
       res.clearCookie(tokenConfig.refreshToken.cookieName);
+
+      if (ex instanceof Error) {
+        if (ex.name === 'TokenExpiredError') {
+          return ServiceResponse.failure('Refresh token has expired', null, StatusCodes.UNAUTHORIZED);
+        }
+        if (ex.name === 'JsonWebTokenError') {
+          return ServiceResponse.failure('Invalid refresh token', null, StatusCodes.UNAUTHORIZED);
+        }
+      }
+
       const errorMessage = `Error refreshing token: ${(ex as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('Invalid refresh token', null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure(
+        'An error occurred while refreshing token',
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
     }
   }
 

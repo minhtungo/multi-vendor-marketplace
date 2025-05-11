@@ -10,6 +10,7 @@ export const server = {
       forgotPassword: `${authPath}/forgot-password`,
       resetPassword: `${authPath}/reset-password`,
       renewToken: `${authPath}/renew-token`,
+      me: `${authPath}/me`,
     },
     user: {
       me: `${basePath}/user/me`,

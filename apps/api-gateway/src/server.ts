@@ -22,14 +22,18 @@ app.use(helmet());
 app.use(rateLimiter);
 
 // Request logging
-app.use(createRequestLogger(env));
+// app.use(createRequestLogger(env));
 
 // Routes
 app.use('/health-check', healthCheckRouter);
-app.use('/', (req, res) => {
-  console.log('Request received');
-  res.send('Hello World');
-});
+app.use(
+  '/',
+  (req, res, next) => {
+    console.log('Request received');
+    next();
+  },
+  proxy(env.AUTH_SERVICE_URL)
+);
 
 // Swagger UI
 app.use(openAPIRouter);

@@ -1,5 +1,6 @@
 import { env } from '@/configs/env';
 import { server } from '@/configs/server';
+import { tokenManager } from './token';
 
 let isRefreshing = false;
 let refreshPromise: Promise<void> | null = null;
@@ -13,7 +14,7 @@ export async function refreshToken(): Promise<void> {
   refreshPromise = (async () => {
     try {
       const response = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}${server.path.auth.renewToken}`, {
-        method: 'POST',
+        method: 'PUT',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -22,6 +23,11 @@ export async function refreshToken(): Promise<void> {
 
       if (!response.ok) {
         throw new Error('Failed to refresh token');
+      }
+
+      const data = await response.json();
+      if (data.accessToken) {
+        await tokenManager.setToken(data.accessToken);
       }
     } catch (error) {
       console.error('Token refresh failed:', error);

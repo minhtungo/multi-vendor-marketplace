@@ -1,6 +1,7 @@
 import { env } from '@/configs/env';
 import { ApiResponse } from '@/types/api';
 import { refreshToken } from './auth';
+import { tokenManager } from './token';
 
 type RequestOptions = {
   method?: string;
@@ -58,6 +59,7 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
 
   // Get cookies from the request when running on server
   let cookieHeader = cookie;
+
   if (typeof window === 'undefined' && !cookie) {
     cookieHeader = await getServerCookies();
   }
@@ -65,11 +67,15 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
   const fullUrl = buildUrlWithParams(`${env.NEXT_PUBLIC_SERVER_URL}${url}`, params);
 
   try {
+    // Get the access token
+    const accessToken = await tokenManager.getToken();
+
     const response = await fetch(fullUrl, {
       method,
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         ...headers,
         ...(cookieHeader ? { Cookie: cookieHeader } : {}),
       },
