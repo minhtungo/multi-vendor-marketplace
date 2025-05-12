@@ -1,4 +1,5 @@
-import { pgEnum } from "drizzle-orm/pg-core";
+import { pgEnum } from 'drizzle-orm/pg-core';
 
-export const roleSchema = pgEnum("role", ["customer", "seller"]);
-export const accountTypeSchema = pgEnum("type", ["email", "google", "facebook"]);
+export const accountTypeSchema = pgEnum('type', ['email', 'google', 'facebook']);
+export const vendorStatusSchema = pgEnum('vendor_status', ['pending', 'active', 'suspended']);
+export const shopStatusSchema = pgEnum('shop_status', ['draft', 'published', 'suspended']);
