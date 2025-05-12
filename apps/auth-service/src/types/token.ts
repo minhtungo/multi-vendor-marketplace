@@ -1,11 +1,11 @@
 export type RefreshTokenPayload = {
-	sub: string;
-	sessionId: string;
+  sub: string;
+  sessionId: string;
 };
 
 export type AccessTokenPayload = {
-	sub: string;
-	email: string;
-	userId: string;
-	sessionId: string;
+  sub: string;
+  email: string;
+  userId: string;
+  sessionId: string;
 };

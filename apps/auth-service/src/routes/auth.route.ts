@@ -12,10 +12,13 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { type Router } from 'express';
 import z from 'zod';
 import { authController } from '@/controllers/auth.controller';
+import { vendorController } from '@/controllers/vendor.controller';
 import assertAuthentication from '@/middlewares/assertAuthentication';
 import { StatusCodes } from 'http-status-codes';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { tokenRepository } from '@/repositories/token.repository';
+import { insertVendorSchema } from '@/db/schemas/vendors';
+import { VendorSignUpSchema, VerifyVendorSchema } from '@/models/vendor.model';
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();
@@ -160,22 +163,69 @@ authRegistry.registerPath({
 authRouter.get(
   `${paths.resetPassword}/verify/:token`,
   validateRequest(z.object({ params: z.object({ token: z.string() }) })),
-  async (req: Request, res: Response) => {
-    const { token } = req.params;
-    const existingToken = await tokenRepository.getResetPasswordTokenByToken(token);
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { token } = req.params;
+      const existingToken = await tokenRepository.getResetPasswordTokenByToken(token);
 
-    if (!existingToken || existingToken.expires < new Date()) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        message: 'Invalid or expired token',
+      if (!existingToken || existingToken.expires < new Date()) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          message: 'Invalid or expired token',
+          data: null,
+        });
+        return;
+      }
+
+      res.status(StatusCodes.OK).json({
+        success: true,
+        message: 'Token is valid',
         data: null,
       });
+    } catch (error) {
+      next(error);
     }
-
-    return res.status(StatusCodes.OK).json({
-      success: true,
-      message: 'Token is valid',
-      data: null,
-    });
   }
+);
+
+// Add vendor signup route
+authRegistry.registerPath({
+  method: 'post',
+  path: `/auth/vendor/signup`,
+  tags: ['Auth'],
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: VendorSignUpSchema,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+authRouter.post('/vendor/signup', validateRequest(z.object({ body: VendorSignUpSchema })), vendorController.signUp);
+
+// Add vendor verification route
+authRegistry.registerPath({
+  method: 'post',
+  path: `/auth/vendor/verify`,
+  tags: ['Auth'],
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: VerifyVendorSchema,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+authRouter.post(
+  '/vendor/verify',
+  validateRequest(z.object({ body: VerifyVendorSchema })),
+  vendorController.verifyVendor
 );

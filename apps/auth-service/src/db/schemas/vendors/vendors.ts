@@ -11,6 +11,7 @@ export const vendors = pgTable('vendors', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   name: text().notNull(),
+  email: text().notNull(),
   description: text(),
   phoneNumber: text(),
   address: text(),
