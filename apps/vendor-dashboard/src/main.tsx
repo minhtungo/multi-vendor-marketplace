@@ -1,4 +1,4 @@
-import * as TanStackQueryProvider from '@/integrations/tanstack-query/root-provider.tsx'
+import * as TanStackQueryProvider from '@/integrations/tanstack-query/provider.tsx'
 import '@repo/ui/globals.css'
 import { RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'

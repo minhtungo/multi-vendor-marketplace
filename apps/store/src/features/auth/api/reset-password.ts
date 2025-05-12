@@ -22,6 +22,26 @@ export async function resetPassword(data: ResetPasswordInput): Promise<
   });
 }
 
+export async function verifyResetPasswordToken(token: string): Promise<
+  ApiResponse<{
+    isValid: boolean;
+  }>
+> {
+  // return api.get(server.path.auth.resetPassword + '/verify/' + token, {
+  //   skipAuth: true,
+  // });
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+  return {
+    success: true,
+    status: 200,
+    message: 'Token is valid',
+    errors: [],
+    data: {
+      isValid: true,
+    },
+  };
+}
+
 export function useResetPasswordMutation() {
   return useMutation({
     mutationFn: resetPassword,

@@ -1,23 +1,39 @@
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { siteConfig } from '@/configs/site'
+import type { RouterContext } from '@/router'
+import {
+  HeadContent,
+  Outlet,
+  createRootRouteWithContext,
+} from '@tanstack/react-router'
 
-import Header from '../components/header'
-
-import type { QueryClient } from '@tanstack/react-query'
-
-interface MyRouterContext {
-  queryClient: QueryClient
-}
-
-export const Route = createRootRouteWithContext<MyRouterContext>()({
-  component: () => (
-    <>
-      <Header />
-
-      <Outlet />
-      <TanStackRouterDevtools />
-
-      <TanStackRouterDevtools position="bottom-right" />
-    </>
-  ),
+export const Route = createRootRouteWithContext<RouterContext>()({
+  head: () => ({
+    meta: [
+      {
+        title: siteConfig.name,
+      },
+      {
+        name: 'description',
+        content: siteConfig.name,
+      },
+    ],
+    links: [
+      {
+        rel: 'icon',
+        href: '/favicon.ico',
+      },
+    ],
+  }),
+  component: RootLayoutComponent,
 })
+
+function RootLayoutComponent() {
+  return (
+    <>
+      <HeadContent />
+      <Outlet />
+      {/* <ReactQueryDevtools buttonPosition='top-right' /> */}
+      {/* <TanStackRouterDevtools position='bottom-right' /> */}
+    </>
+  )
+}

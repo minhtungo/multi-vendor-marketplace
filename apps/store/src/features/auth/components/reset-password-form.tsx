@@ -10,6 +10,8 @@ import { PasswordInput } from '@repo/ui/components/password-input';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { use, useState } from 'react';
+import { ApiResponse } from '@/types/api';
 
 const resetPasswordInputSchema = resetPasswordSchema
   .extend({
@@ -87,4 +89,14 @@ export function ResetPasswordForm({ className }: React.ComponentPropsWithoutRef<
       </form>
     </Form>
   );
+}
+
+export function ResetPasswordContainer({ tokenPromise }: { tokenPromise: Promise<ApiResponse<{ isValid: boolean }>> }) {
+  const isTokenValid = use(tokenPromise);
+
+  if (!isTokenValid.data?.isValid) {
+    return <div>Invalid token</div>;
+  }
+
+  return <ResetPasswordForm />;
 }

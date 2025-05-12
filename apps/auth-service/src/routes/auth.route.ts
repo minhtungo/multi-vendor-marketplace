@@ -13,6 +13,9 @@ import express, { type Router } from 'express';
 import z from 'zod';
 import { authController } from '@/controllers/auth.controller';
 import assertAuthentication from '@/middlewares/assertAuthentication';
+import { StatusCodes } from 'http-status-codes';
+import { Request, Response } from 'express';
+import { tokenRepository } from '@/repositories/token.repository';
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();
@@ -141,3 +144,38 @@ authRegistry.registerPath({
 });
 
 authRouter.get(paths.me, assertAuthentication, authController.getMe);
+
+authRegistry.registerPath({
+  method: 'get',
+  path: `/auth/${paths.resetPassword}/verify/:token`,
+  tags: ['Auth'],
+  request: {
+    params: z.object({
+      token: z.string(),
+    }),
+  },
+  responses: createApiResponse(z.object({}), 'Success'),
+});
+
+authRouter.get(
+  `${paths.resetPassword}/verify/:token`,
+  validateRequest(z.object({ params: z.object({ token: z.string() }) })),
+  async (req: Request, res: Response) => {
+    const { token } = req.params;
+    const existingToken = await tokenRepository.getResetPasswordTokenByToken(token);
+
+    if (!existingToken || existingToken.expires < new Date()) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: 'Invalid or expired token',
+        data: null,
+      });
+    }
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: 'Token is valid',
+      data: null,
+    });
+  }
+);
