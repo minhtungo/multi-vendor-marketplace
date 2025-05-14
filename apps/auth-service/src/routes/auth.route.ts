@@ -1,7 +1,7 @@
 import { paths } from '@/configs/paths';
 import { authController } from '@/controllers/auth.controller';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
-import assertUserAuthentication from '@/middlewares/assertAuthentication';
+import { assertUserAuthentication } from '@/middlewares/assertAuthentication';
 import {
   ForgotPasswordSchema,
   ResetPasswordSchema,

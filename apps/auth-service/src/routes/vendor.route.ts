@@ -3,7 +3,7 @@ import { shopController } from '@/controllers/shop.controller';
 import { vendorController } from '@/controllers/vendor.controller';
 import { insertShopSchema } from '@/db/schemas/shops';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
-import assertVendorAuthentication from '@/middlewares/assertVendorAuthentication';
+import { assertVendorAuthentication } from '@/middlewares/assertAuthentication';
 import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/vendor.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { validateRequest } from '@repo/server/lib/http-handlers';
@@ -70,6 +70,15 @@ vendorRouter.post(
   validateRequest(z.object({ body: VerifyVendorSchema })),
   vendorController.verifyVendor
 );
+
+vendorRegistry.registerPath({
+  method: 'put',
+  path: `/auth/vendor/${vendorPaths.renewToken}`,
+  tags: ['Auth'],
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+vendorRouter.put(vendorPaths.renewToken, vendorController.renewToken);
 
 vendorRegistry.registerPath({
   method: 'post',

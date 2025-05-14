@@ -1,14 +1,17 @@
+import { env } from '@/configs/env';
 import { getRedisClient } from '@/db/redis';
 import type { InsertVendor } from '@/db/schemas/vendors';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
-import { generateAccessToken, generateRefreshToken } from '@/lib/token';
+import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
 import type { VendorSignInInput, VendorSignUpInput, VerifyVendorInput } from '@/models/vendor.model';
 import { VendorRepository } from '@/repositories/vendor.repository';
+import { RefreshTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import { hashPassword, verifyPassword } from '@/utils/password';
 import { ServiceResponse } from '@repo/server/lib/service-response';
-import type { NextFunction, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { verify } from 'jsonwebtoken';
 
 export class VendorService {
   private vendorRepository: VendorRepository;
@@ -133,7 +136,7 @@ export class VendorService {
 
       const hashedPassword = password ? await hashPassword(password) : undefined;
       // Create user first
-      const vendor = await this.vendorRepository.createVendor({
+      await this.vendorRepository.createVendor({
         email,
         name,
         password: hashedPassword,
@@ -148,6 +151,48 @@ export class VendorService {
         null,
         StatusCodes.INTERNAL_SERVER_ERROR
       );
+    }
+  }
+
+  async renewToken(req: Request, res: Response): Promise<ServiceResponse<{ accessToken: string } | null>> {
+    const refreshToken = req.cookies[env.VENDOR_REFRESH_TOKEN_COOKIE_NAME];
+    if (!refreshToken) {
+      return ServiceResponse.failure('No refresh token provided', null, StatusCodes.UNAUTHORIZED);
+    }
+
+    try {
+      const payload = verify(refreshToken, env.ACCESS_TOKEN_SECRET) as RefreshTokenPayload;
+
+      const isValid = await validateRefreshToken(payload.sessionId, refreshToken);
+
+      if (!isValid) {
+        return ServiceResponse.failure('Token has been revoked', null, StatusCodes.UNAUTHORIZED);
+      }
+
+      const vendor = await this.vendorRepository.getVendorById(payload.sub);
+
+      if (!vendor) {
+        return ServiceResponse.failure('Vendor not found', null, StatusCodes.UNAUTHORIZED);
+      }
+
+      await invalidateRefreshToken(vendor.id, payload.sessionId);
+
+      const { token: newRefreshToken, sessionId } = await generateRefreshToken(vendor.id, 'vendor');
+      const accessToken = generateAccessToken({
+        sub: vendor.id,
+        email: vendor.email,
+        userId: vendor.id,
+        sessionId,
+        role: 'vendor',
+      });
+
+      setRefreshTokenCookie(res, newRefreshToken, 'vendor');
+
+      return ServiceResponse.success('Token refreshed', { accessToken, vendor: { id: vendor.id } }, StatusCodes.OK);
+    } catch (ex) {
+      const errorMessage = `Error renewing token: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure('An error occurred while renewing token', null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }

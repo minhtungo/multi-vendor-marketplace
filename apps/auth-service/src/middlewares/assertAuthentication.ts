@@ -5,30 +5,35 @@ import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import passport from 'passport';
 
-const assertUserAuthentication = (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate('jwt', { session: false }, async (err: any, user: Express.User | false, info: any) => {
-    if (err) {
-      logger.error('Error verifying access token', err);
-      return next(err);
-    }
+type AuthStrategy = 'jwt' | 'vendor-jwt';
 
-    if (!user) {
-      const serviceResponse = ServiceResponse.failure('Unauthorized', null, StatusCodes.UNAUTHORIZED);
-      return handleServiceResponse(serviceResponse, res);
-    }
+const assertAuthentication = (strategy: AuthStrategy) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate(strategy, { session: false }, async (err: any, user: Express.User | false, info: any) => {
+      if (err) {
+        logger.error('Error verifying access token', err);
+        return next(err);
+      }
 
-    // Check if the session is blacklisted
-    // const payload = info.payload as AccessTokenPayload;
-    // const isValid = await validateRefreshToken(payload.sessionId, payload.token);
+      if (!user) {
+        const serviceResponse = ServiceResponse.failure('Unauthorized', null, StatusCodes.UNAUTHORIZED);
+        return handleServiceResponse(serviceResponse, res);
+      }
 
-    // if (!isValid) {
-    //   const serviceResponse = ServiceResponse.failure('Unauthorized', null, StatusCodes.UNAUTHORIZED);
-    //   return handleServiceResponse(serviceResponse, res);
-    // }
+      // Check if the session is blacklisted
+      // const payload = info.payload as AccessTokenPayload;
+      // const isValid = await validateRefreshToken(payload.sessionId, payload.token);
 
-    req.user = user;
-    next();
-  })(req, res, next);
+      // if (!isValid) {
+      //   const serviceResponse = ServiceResponse.failure('Unauthorized', null, StatusCodes.UNAUTHORIZED);
+      //   return handleServiceResponse(serviceResponse, res);
+      // }
+
+      req.user = user;
+      next();
+    })(req, res, next);
+  };
 };
 
-export default assertUserAuthentication;
+export const assertUserAuthentication = assertAuthentication('jwt');
+export const assertVendorAuthentication = assertAuthentication('vendor-jwt');

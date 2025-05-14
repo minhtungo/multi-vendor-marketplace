@@ -1,3 +1,4 @@
+import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
 import { getRedisClient } from '@/db/redis';
 import type { User } from '@/db/schemas/users';
@@ -162,7 +163,7 @@ export class AuthService {
   }
 
   async refreshToken(
-    refreshToken: string,
+    req: Request,
     res: Response
   ): Promise<
     ServiceResponse<{
@@ -170,30 +171,27 @@ export class AuthService {
       userId: string;
     } | null>
   > {
+    const refreshToken = req.cookies[env.ACCESS_TOKEN_SECRET];
     if (!refreshToken) {
       return ServiceResponse.failure('Refresh token not found', null, StatusCodes.UNAUTHORIZED);
     }
 
     try {
-      // First verify the token and check if it's expired
-      const payload = verify(refreshToken, tokenConfig.refreshToken.secret) as RefreshTokenPayload;
+      const payload = verify(refreshToken, env.ACCESS_TOKEN_SECRET) as RefreshTokenPayload;
 
-      // Check if token is blacklisted
       const isValid = await validateRefreshToken(payload.sessionId, refreshToken);
+
       if (!isValid) {
         return ServiceResponse.failure('Token has been revoked', null, StatusCodes.UNAUTHORIZED);
       }
 
-      // Get user and verify they exist
       const user = await this.userRepository.getUserById(payload.sub);
       if (!user) {
         return ServiceResponse.failure('User not found', null, StatusCodes.UNAUTHORIZED);
       }
 
-      // Invalidate the current refresh token first
       await invalidateRefreshToken(user.id, payload.sessionId);
 
-      // Generate new tokens
       const { token: newRefreshToken, sessionId } = await generateRefreshToken(user.id, 'user');
       const accessToken = generateAccessToken({
         sub: user.id,
@@ -203,7 +201,6 @@ export class AuthService {
         role: 'user',
       });
 
-      // Set the new refresh token cookie
       setRefreshTokenCookie(res, newRefreshToken);
 
       return ServiceResponse.success('Token refreshed', { accessToken, userId: user.id }, StatusCodes.OK);

@@ -1,6 +1,6 @@
 import { stripeController } from '@/controllers/stripe.controller';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
-import assertUserAuthentication from '@/middlewares/assertAuthentication';
+import { assertVendorAuthentication } from '@/middlewares/assertAuthentication';
 import { CreateConnectLinkSchema } from '@/models/stripe.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
@@ -32,7 +32,7 @@ stripeRegistry.registerPath({
 
 stripeRouter.post(
   '/connect-link',
-  assertUserAuthentication,
+  assertVendorAuthentication,
   // validateRequest(z.object({ body: CreateConnectLinkSchema })),
   stripeController.createStripeConnectLink
 );

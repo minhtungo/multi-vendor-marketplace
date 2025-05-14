@@ -14,4 +14,5 @@ export const vendorPaths = {
   signIn: '/sign-in',
   verify: '/verify',
   shop: '/shop',
+  renewToken: '/renew-token',
 };
