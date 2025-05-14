@@ -58,7 +58,7 @@ export class AuthService {
   ): Promise<
     ServiceResponse<{
       accessToken: string;
-      convertedUser: { id: string };
+      user: { id: string };
     } | null>
   > {
     try {
@@ -90,7 +90,7 @@ export class AuthService {
         'Signed in successfully',
         {
           accessToken,
-          convertedUser: {
+          user: {
             id: user.id,
           },
         },

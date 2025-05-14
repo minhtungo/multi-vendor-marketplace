@@ -8,3 +8,10 @@ export const paths = {
   renewToken: '/renew-token',
   me: '/me',
 };
+
+export const vendorPaths = {
+  signUp: '/sign-up',
+  signIn: '/sign-in',
+  verify: '/verify',
+  shop: '/shop',
+};

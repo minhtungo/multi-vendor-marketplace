@@ -56,7 +56,7 @@ export class VendorService {
   ): Promise<
     ServiceResponse<{
       accessToken: string;
-      convertedUser: { id: string };
+      user: { id: string };
     } | null>
   > {
     try {
@@ -88,7 +88,7 @@ export class VendorService {
         'Signed in successfully',
         {
           accessToken,
-          convertedUser: {
+          user: {
             id: user.id,
           },
         },
@@ -139,7 +139,7 @@ export class VendorService {
         password: hashedPassword,
       });
 
-      return ServiceResponse.success('Vendor account created successfully', vendor, StatusCodes.CREATED);
+      return ServiceResponse.success('Vendor account created successfully', null, StatusCodes.CREATED);
     } catch (ex) {
       const errorMessage = `Error verifying vendor: ${(ex as Error).message}`;
       logger.error(errorMessage);

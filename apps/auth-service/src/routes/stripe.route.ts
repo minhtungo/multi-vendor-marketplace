@@ -3,7 +3,6 @@ import { createApiResponse } from '@/docs/openAPIResponseBuilders';
 import assertUserAuthentication from '@/middlewares/assertAuthentication';
 import { CreateConnectLinkSchema } from '@/models/stripe.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import { validateRequest } from '@repo/server/lib/http-handlers';
 import { Router } from 'express';
 import { z } from 'zod';
 

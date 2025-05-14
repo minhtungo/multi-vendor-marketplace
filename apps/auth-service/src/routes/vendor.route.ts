@@ -1,4 +1,4 @@
-import { paths as vendorPaths } from '@/configs/paths';
+import { vendorPaths } from '@/configs/paths';
 import { shopController } from '@/controllers/shop.controller';
 import { vendorController } from '@/controllers/vendor.controller';
 import { insertShopSchema } from '@/db/schemas/shops';
@@ -15,7 +15,7 @@ export const vendorRouter: Router = express.Router();
 
 vendorRegistry.registerPath({
   method: 'post',
-  path: `/auth/vendor/signup`,
+  path: `/auth/vendor/${vendorPaths.signUp}`,
   tags: ['Auth'],
   request: {
     body: {
@@ -33,7 +33,7 @@ vendorRouter.post(vendorPaths.signUp, validateRequest(z.object({ body: VendorSig
 
 vendorRegistry.registerPath({
   method: 'post',
-  path: `/auth/vendor/sign-in`,
+  path: `/auth/vendor/${vendorPaths.signIn}`,
   tags: ['Auth'],
   request: {
     body: {
@@ -51,7 +51,7 @@ vendorRouter.post(vendorPaths.signIn, validateRequest(z.object({ body: VendorSig
 
 vendorRegistry.registerPath({
   method: 'post',
-  path: `/auth/vendor/verify`,
+  path: `/auth/vendor/${vendorPaths.verify}`,
   tags: ['Auth'],
   request: {
     body: {
@@ -66,14 +66,14 @@ vendorRegistry.registerPath({
 });
 
 vendorRouter.post(
-  vendorPaths.verifyUser,
+  vendorPaths.verify,
   validateRequest(z.object({ body: VerifyVendorSchema })),
   vendorController.verifyVendor
 );
 
 vendorRegistry.registerPath({
   method: 'post',
-  path: `/auth/vendor/shops`,
+  path: `/auth/vendor/${vendorPaths.shop}`,
   tags: ['Shops'],
   request: {
     body: {
@@ -88,7 +88,7 @@ vendorRegistry.registerPath({
 });
 
 vendorRouter.post(
-  '/shops',
+  vendorPaths.shop,
   validateRequest(z.object({ body: insertShopSchema })),
   assertVendorAuthentication,
   shopController.createShop
