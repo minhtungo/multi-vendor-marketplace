@@ -1,5 +1,5 @@
-const basePath = '/api'
-const authPath = `${basePath}/auth`
+const basePath = '/api';
+const authPath = `${basePath}/auth/vendor`;
 
 export const server = {
   path: {
@@ -15,5 +15,8 @@ export const server = {
     user: {
       me: `${basePath}/user/me`,
     },
+    shop: {
+      create: `${basePath}/shops`,
+    },
   },
-}
+};
