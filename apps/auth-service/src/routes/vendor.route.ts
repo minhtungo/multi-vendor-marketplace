@@ -1,14 +1,14 @@
-import { vendorController } from '@/controllers/vendor.controller';
-import { shopController } from '@/controllers/shop.controller';
-import { createApiResponse } from '@/docs/openAPIResponseBuilders';
-import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/vendor.model';
-import { insertShopSchema } from '@/db/schemas/shops';
 import { paths as vendorPaths } from '@/configs/paths';
+import { shopController } from '@/controllers/shop.controller';
+import { vendorController } from '@/controllers/vendor.controller';
+import { insertShopSchema } from '@/db/schemas/shops';
+import { createApiResponse } from '@/docs/openAPIResponseBuilders';
+import assertVendorAuthentication from '@/middlewares/assertVendorAuthentication';
+import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/vendor.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { validateRequest } from '@repo/server/lib/http-handlers';
 import express, { type Router } from 'express';
 import z from 'zod';
-import assertAuthentication from '@/middlewares/assertAuthentication';
 
 export const vendorRegistry = new OpenAPIRegistry();
 export const vendorRouter: Router = express.Router();
@@ -90,6 +90,6 @@ vendorRegistry.registerPath({
 vendorRouter.post(
   '/shops',
   validateRequest(z.object({ body: insertShopSchema })),
-  assertAuthentication,
+  assertVendorAuthentication,
   shopController.createShop
 );

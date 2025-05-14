@@ -11,6 +11,7 @@ import { createRequestLogger } from '@repo/server/middlewares/request-logger';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import { vendorRouter } from '@/routes/vendor.route';
+import { stripeRouter } from '@/routes/stripe.route';
 
 const app: Express = express();
 
@@ -33,6 +34,7 @@ app.use(cors({ origin: env.APP_ORIGIN, credentials: true }));
 app.use('/api/health-check', healthCheckRouter);
 app.use('/api/auth/vendor', vendorRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/stripe', stripeRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

@@ -25,6 +25,16 @@ export class VendorRepository {
 
     return newVendor;
   }
+
+  async updateVendor(id: string, data: Partial<InsertVendor>, trx: typeof db = this.dbInstance) {
+    const [updatedVendor] = await trx
+      .update(vendors)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(vendors.id, id))
+      .returning();
+
+    return updatedVendor;
+  }
 }
 
 export const vendorRepository = new VendorRepository();

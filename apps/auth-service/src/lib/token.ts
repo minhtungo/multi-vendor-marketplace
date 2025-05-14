@@ -1,59 +1,61 @@
-import { env } from "@/configs/env";
-import { tokenConfig } from "@/configs/token";
+import { env } from '@/configs/env';
+import { tokenConfig } from '@/configs/token';
 
-import crypto from "node:crypto";
-import type { AccessTokenPayload } from "@/types/token";
-import { sign } from "jsonwebtoken";
-import { redisService } from "@/services/redis.service";
+import crypto from 'node:crypto';
+import type { AccessTokenPayload } from '@/types/token';
+import { sign } from 'jsonwebtoken';
+import { redisService } from '@/services/redis.service';
 
 export const generateToken = async (length = 32): Promise<string> => {
-	const buffer = await crypto.randomBytes(Math.ceil(length * 0.75));
+  const buffer = await crypto.randomBytes(Math.ceil(length * 0.75));
 
-	return buffer.toString("base64url").slice(0, length);
+  return buffer.toString('base64url').slice(0, length);
 };
 
 export const generateAccessToken = (payload: AccessTokenPayload) => {
-	return sign(payload, tokenConfig.accessToken.secret, {
-		expiresIn: "30m",
-		audience: env.APP_ORIGIN,
-	});
+  return sign(payload, tokenConfig.accessToken.secret, {
+    expiresIn: '30m',
+    audience: env.APP_ORIGIN,
+  });
 };
 
 export const generateRefreshToken = async (
-	userId: string,
+  userId: string,
+  role: 'user' | 'vendor'
 ): Promise<{
-	token: string;
-	expiresAt: Date;
-	sessionId: string;
+  token: string;
+  expiresAt: Date;
+  sessionId: string;
 }> => {
-	const sessionId = crypto.randomUUID();
-	const expiresAt = new Date(Date.now() + tokenConfig.refreshToken.maxAgeInSeconds);
+  const sessionId = crypto.randomUUID();
+  const expiresAt = new Date(Date.now() + tokenConfig.refreshToken.maxAgeInSeconds);
 
-	const token = sign(
-		{
-			sub: userId,
-			sessionId,
-		},
-		tokenConfig.refreshToken.secret,
-		{
-			expiresIn: tokenConfig.refreshToken.maxAgeInSeconds,
-		},
-	);
+  const token = sign(
+    {
+      sub: userId,
+      sessionId,
+      role,
+    },
+    tokenConfig.refreshToken.secret,
+    {
+      expiresIn: tokenConfig.refreshToken.maxAgeInSeconds,
+    }
+  );
 
-	// Store the refresh token in Redis
-	await redisService.storeRefreshToken(userId, sessionId, token);
+  // Store the refresh token in Redis
+  await redisService.storeRefreshToken(userId, sessionId, token);
 
-	return {
-		token,
-		expiresAt,
-		sessionId,
-	};
+  return {
+    token,
+    expiresAt,
+    sessionId,
+  };
 };
 
 export const validateRefreshToken = async (sessionId: string, token: string): Promise<boolean> => {
-	return await redisService.validateRefreshToken(sessionId, token);
+  return await redisService.validateRefreshToken(sessionId, token);
 };
 
 export const invalidateRefreshToken = async (userId: string, sessionId: string): Promise<void> => {
-	await redisService.invalidateRefreshToken(userId, sessionId);
+  await redisService.invalidateRefreshToken(userId, sessionId);
 };

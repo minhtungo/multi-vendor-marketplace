@@ -1,5 +1,5 @@
 import { env } from '@/configs/env';
-import { userRepository } from '@/repositories/user.repository';
+import { vendorRepository } from '@/repositories/vendor.repository';
 import type { AccessTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import passport from 'passport';
@@ -12,20 +12,21 @@ const opts: StrategyOptionsWithoutRequest = {
 };
 
 export default passport.use(
+  'vendor-jwt',
   new Strategy(opts, async (payload: AccessTokenPayload, done) => {
     try {
-      // Only verify user tokens here
-      if (payload.role !== 'user') {
+      // Only verify vendor tokens here
+      if (payload.role !== 'vendor') {
         return done(null, false);
       }
 
-      const user = await userRepository.getUserByEmail(payload.email);
-      if (!user) {
+      const vendor = await vendorRepository.getVendorByEmail(payload.email);
+      if (!vendor) {
         return done(null, false);
       }
-      done(null, user, { payload });
+      done(null, vendor, { payload });
     } catch (err) {
-      logger.error('Error verifying access token', err);
+      logger.error('Error verifying vendor access token', err);
       done(err, false);
     }
   })

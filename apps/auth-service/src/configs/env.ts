@@ -15,6 +15,8 @@ const envSchema = z.object({
   ACCESS_TOKEN_SECRET: z.string().min(1),
   REFRESH_TOKEN_SECRET: z.string().min(1),
   REFRESH_TOKEN_COOKIE_NAME: z.string().min(1),
+  VENDOR_REFRESH_TOKEN_COOKIE_NAME: z.string().min(1),
+  VENDOR_REFRESH_TOKEN_SECRET: z.string().min(1),
   // Redis
   REDIS_HOST: z.string().min(1).default('localhost'),
   REDIS_PORT: z.coerce.number().int().positive().default(6379),
@@ -28,6 +30,9 @@ const envSchema = z.object({
   SMTP_PASSWORD: z.string().min(1).default('password'),
   SMTP_SERVICE: z.string().min(1).default('gmail'),
   EMAIL_FROM: z.string().min(1).default('noreply@example.com'),
+  // Stripe
+  STRIPE_SECRET_KEY: z.string().min(1),
+  STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

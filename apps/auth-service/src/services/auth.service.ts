@@ -74,13 +74,14 @@ export class AuthService {
         return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
       }
 
-      const { token: refreshToken, sessionId } = await generateRefreshToken(user.id);
+      const { token: refreshToken, sessionId } = await generateRefreshToken(user.id, 'user');
 
       const accessToken = generateAccessToken({
         sub: user.id,
         email: user.email,
         userId: user.id,
         sessionId,
+        role: 'user',
       });
 
       setRefreshTokenCookie(res, refreshToken);
@@ -193,12 +194,13 @@ export class AuthService {
       await invalidateRefreshToken(user.id, payload.sessionId);
 
       // Generate new tokens
-      const { token: newRefreshToken, sessionId } = await generateRefreshToken(user.id);
+      const { token: newRefreshToken, sessionId } = await generateRefreshToken(user.id, 'user');
       const accessToken = generateAccessToken({
         sub: user.id,
         email: user.email,
         userId: user.id,
         sessionId,
+        role: 'user',
       });
 
       // Set the new refresh token cookie

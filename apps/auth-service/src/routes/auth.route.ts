@@ -1,7 +1,7 @@
 import { paths } from '@/configs/paths';
 import { authController } from '@/controllers/auth.controller';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
-import assertAuthentication from '@/middlewares/assertAuthentication';
+import assertUserAuthentication from '@/middlewares/assertAuthentication';
 import {
   ForgotPasswordSchema,
   ResetPasswordSchema,
@@ -142,7 +142,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-authRouter.get(paths.me, assertAuthentication, authController.getMe);
+authRouter.get(paths.me, assertUserAuthentication, authController.getMe);
 
 authRegistry.registerPath({
   method: 'get',

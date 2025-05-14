@@ -56,8 +56,8 @@ export const trackOtpRequests = async (email: string, next: NextFunction) => {
   await redis.set(otpRequestsKey, otpRequests + 1, 'EX', 60);
 };
 
-export const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
-  res.cookie(env.REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
+export const setRefreshTokenCookie = (res: Response, refreshToken: string, role: 'user' | 'vendor' = 'user') => {
+  res.cookie(role === 'user' ? env.REFRESH_TOKEN_COOKIE_NAME : env.VENDOR_REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',

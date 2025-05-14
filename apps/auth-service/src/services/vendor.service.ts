@@ -72,16 +72,17 @@ export class VendorService {
         return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
       }
 
-      const { token: refreshToken, sessionId } = await generateRefreshToken(user.id);
+      const { token: refreshToken, sessionId } = await generateRefreshToken(user.id, 'vendor');
 
       const accessToken = generateAccessToken({
         sub: user.id,
         email: user.email,
         userId: user.id,
         sessionId,
+        role: 'vendor',
       });
 
-      setRefreshTokenCookie(res, refreshToken);
+      setRefreshTokenCookie(res, refreshToken, 'vendor');
 
       return ServiceResponse.success(
         'Signed in successfully',
