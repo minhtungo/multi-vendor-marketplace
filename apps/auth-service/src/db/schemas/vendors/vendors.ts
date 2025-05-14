@@ -7,11 +7,9 @@ export const vendors = pgTable('vendors', {
   id: text()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  userId: text()
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
   name: text().notNull(),
   email: text().notNull(),
+  password: text(),
   description: text(),
   phoneNumber: text(),
   address: text(),

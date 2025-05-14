@@ -1,9 +1,8 @@
-import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
 import { getRedisClient } from '@/db/redis';
+import type { User } from '@/db/schemas/users';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
 import { emailService } from '@/lib/emails';
-import { ServiceResponse } from '@repo/server/lib/service-response';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
 import type { SignInInput, SignUpInput, VerifyUserInput } from '@/models/auth.model';
 import { tokenRepository } from '@/repositories/token.repository';
@@ -12,11 +11,10 @@ import type { RefreshTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import { hashPassword, verifyPassword } from '@/utils/password';
 import { createTransaction } from '@/utils/transaction';
-import type { NextFunction, Response } from 'express';
+import { ServiceResponse } from '@repo/server/lib/service-response';
+import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { verify } from 'jsonwebtoken';
-import type { User } from '@/db/schemas/users';
-import type { Request } from 'express';
 
 export class AuthService {
   private userRepository: UserRepository;

@@ -5,12 +5,6 @@ import { eq } from 'drizzle-orm';
 export class VendorRepository {
   constructor(private readonly dbInstance = db) {}
 
-  async getVendorByUserId(userId: string): Promise<Vendor | undefined> {
-    return this.dbInstance.query.vendors.findFirst({
-      where: eq(vendors.userId, userId),
-    });
-  }
-
   async getVendorByEmail(email: string): Promise<Vendor | undefined> {
     return this.dbInstance.query.vendors.findFirst({
       where: eq(vendors.email, email),

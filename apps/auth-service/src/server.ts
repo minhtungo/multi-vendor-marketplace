@@ -10,6 +10,7 @@ import errorHandler from '@repo/server/middlewares/error-handler';
 import { createRequestLogger } from '@repo/server/middlewares/request-logger';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
+import { vendorRouter } from '@/routes/vendor.route';
 
 const app: Express = express();
 
@@ -30,6 +31,7 @@ app.use(cors({ origin: env.APP_ORIGIN, credentials: true }));
 
 // Routes
 app.use('/api/health-check', healthCheckRouter);
+app.use('/api/auth/vendor', vendorRouter);
 app.use('/api/auth', authRouter);
 
 // Swagger UI

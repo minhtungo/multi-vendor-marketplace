@@ -1,5 +1,7 @@
 import { paths } from '@/configs/paths';
+import { authController } from '@/controllers/auth.controller';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
+import assertAuthentication from '@/middlewares/assertAuthentication';
 import {
   ForgotPasswordSchema,
   ResetPasswordSchema,
@@ -7,18 +9,12 @@ import {
   SignUpSchema,
   VerifyUserSchema,
 } from '@/models/auth.model';
-import { validateRequest } from '@repo/server/lib/http-handlers';
-import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import express, { type Router } from 'express';
-import z from 'zod';
-import { authController } from '@/controllers/auth.controller';
-import { vendorController } from '@/controllers/vendor.controller';
-import assertAuthentication from '@/middlewares/assertAuthentication';
-import { StatusCodes } from 'http-status-codes';
-import { Request, Response, NextFunction } from 'express';
 import { tokenRepository } from '@/repositories/token.repository';
-import { insertVendorSchema } from '@/db/schemas/vendors';
-import { VendorSignUpSchema, VerifyVendorSchema } from '@/models/vendor.model';
+import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
+import { validateRequest } from '@repo/server/lib/http-handlers';
+import express, { NextFunction, Request, Response, type Router } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import z from 'zod';
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();
@@ -186,46 +182,4 @@ authRouter.get(
       next(error);
     }
   }
-);
-
-// Add vendor signup route
-authRegistry.registerPath({
-  method: 'post',
-  path: `/auth/vendor/signup`,
-  tags: ['Auth'],
-  request: {
-    body: {
-      content: {
-        'application/json': {
-          schema: VendorSignUpSchema,
-        },
-      },
-    },
-  },
-  responses: createApiResponse(z.null(), 'Success'),
-});
-
-authRouter.post('/vendor/signup', validateRequest(z.object({ body: VendorSignUpSchema })), vendorController.signUp);
-
-// Add vendor verification route
-authRegistry.registerPath({
-  method: 'post',
-  path: `/auth/vendor/verify`,
-  tags: ['Auth'],
-  request: {
-    body: {
-      content: {
-        'application/json': {
-          schema: VerifyVendorSchema,
-        },
-      },
-    },
-  },
-  responses: createApiResponse(z.null(), 'Success'),
-});
-
-authRouter.post(
-  '/vendor/verify',
-  validateRequest(z.object({ body: VerifyVendorSchema })),
-  vendorController.verifyVendor
 );

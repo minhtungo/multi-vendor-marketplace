@@ -1,12 +1,13 @@
 import { getRedisClient } from '@/db/redis';
 import type { InsertVendor } from '@/db/schemas/vendors';
-import { checkOtpRestrictions, sendOtp, trackOtpRequests } from '@/lib/auth';
-import type { VendorSignUpInput, VerifyVendorInput } from '@/models/vendor.model';
-import { userRepository } from '@/repositories/user.repository';
+import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
+import { generateAccessToken, generateRefreshToken } from '@/lib/token';
+import type { VendorSignInInput, VendorSignUpInput, VerifyVendorInput } from '@/models/vendor.model';
 import { VendorRepository } from '@/repositories/vendor.repository';
 import { logger } from '@/utils/logger';
+import { hashPassword, verifyPassword } from '@/utils/password';
 import { ServiceResponse } from '@repo/server/lib/service-response';
-import type { NextFunction } from 'express';
+import type { NextFunction, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 export class VendorService {
@@ -49,7 +50,58 @@ export class VendorService {
     }
   }
 
-  async verifyVendor({ email, otp }: VerifyVendorInput): Promise<ServiceResponse<InsertVendor | null>> {
+  async signIn(
+    data: VendorSignInInput,
+    res: Response
+  ): Promise<
+    ServiceResponse<{
+      accessToken: string;
+      convertedUser: { id: string };
+    } | null>
+  > {
+    try {
+      const user = await this.vendorRepository.getVendorByEmail(data.email);
+
+      if (!user || !user.id || !user.password) {
+        return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
+      }
+
+      const isPasswordValid = await verifyPassword(user.password, data.password);
+
+      if (!isPasswordValid) {
+        return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
+      }
+
+      const { token: refreshToken, sessionId } = await generateRefreshToken(user.id);
+
+      const accessToken = generateAccessToken({
+        sub: user.id,
+        email: user.email,
+        userId: user.id,
+        sessionId,
+      });
+
+      setRefreshTokenCookie(res, refreshToken);
+
+      return ServiceResponse.success(
+        'Signed in successfully',
+        {
+          accessToken,
+          convertedUser: {
+            id: user.id,
+          },
+        },
+        StatusCodes.OK
+      );
+    } catch (ex) {
+      const errorMessage = `Error signing in: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+
+      return ServiceResponse.failure('An error occurred while signing in.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async verifyVendor({ email, otp, password, name }: VerifyVendorInput): Promise<ServiceResponse<InsertVendor | null>> {
     try {
       const redis = getRedisClient();
       const storedOtp = await redis.get(`otp:${email}`);
@@ -78,19 +130,12 @@ export class VendorService {
 
       await redis.del(`otp:${email}`, failedAttemptsKey);
 
+      const hashedPassword = password ? await hashPassword(password) : undefined;
       // Create user first
-      const user = await userRepository.createUser({
-        email,
-        name: 'New Vendor',
-        role: 'vendor',
-      });
-
-      // Create vendor account
       const vendor = await this.vendorRepository.createVendor({
-        userId: user.id,
         email,
-        name: 'New Vendor',
-        status: 'pending',
+        name,
+        password: hashedPassword,
       });
 
       return ServiceResponse.success('Vendor account created successfully', vendor, StatusCodes.CREATED);
