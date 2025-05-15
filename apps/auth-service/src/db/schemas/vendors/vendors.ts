@@ -1,7 +1,6 @@
-import crypto from 'crypto';
-import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core';
-import { users } from '@/db/schemas/users';
 import { vendorStatusSchema } from '@/db/schemas/constants';
+import crypto from 'crypto';
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 export const vendors = pgTable('vendors', {
   id: text()

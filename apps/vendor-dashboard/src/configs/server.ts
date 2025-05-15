@@ -6,7 +6,7 @@ export const server = {
     auth: {
       signUp: `${authPath}/sign-up`,
       signIn: `${authPath}/sign-in`,
-      verifyUser: `${authPath}/verify-user`,
+      verifyUser: `${authPath}/verify`,
       forgotPassword: `${authPath}/forgot-password`,
       resetPassword: `${authPath}/reset-password`,
       renewToken: `${authPath}/renew-token`,
@@ -16,7 +16,7 @@ export const server = {
       me: `${basePath}/user/me`,
     },
     shop: {
-      create: `${basePath}/shops`,
+      root: `${authPath}/shop`,
     },
   },
 };

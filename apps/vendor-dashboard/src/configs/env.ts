@@ -1,5 +1,5 @@
-import { createEnv } from '@t3-oss/env-core'
-import { z } from 'zod'
+import { createEnv } from '@t3-oss/env-core';
+import { z } from 'zod';
 
 export const env = createEnv({
   server: {
@@ -9,7 +9,8 @@ export const env = createEnv({
   client: {
     VITE_APP_TITLE: z.string().min(1).optional(),
     VITE_SERVER_URL: z.string(),
+    VITE_REFRESH_TOKEN_COOKIE_NAME: z.string(),
   },
   runtimeEnv: import.meta.env,
   emptyStringAsUndefined: true,
-})
+});
