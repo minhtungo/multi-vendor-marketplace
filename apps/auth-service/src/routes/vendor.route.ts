@@ -102,3 +102,12 @@ vendorRouter.post(
   assertVendorAuthentication,
   shopController.createShop
 );
+
+vendorRegistry.registerPath({
+  method: 'get',
+  path: `/auth/vendor/${vendorPaths.me}`,
+  tags: ['Auth'],
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+vendorRouter.get(vendorPaths.me, assertVendorAuthentication, vendorController.getVendor);

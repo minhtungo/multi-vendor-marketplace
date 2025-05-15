@@ -61,6 +61,6 @@ export const setRefreshTokenCookie = (res: Response, refreshToken: string, role:
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: tokenConfig.refreshToken.maxAgeInSeconds / 1000,
+    maxAge: tokenConfig.refreshToken.maxAgeInSeconds,
   });
 };

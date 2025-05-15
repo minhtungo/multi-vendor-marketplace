@@ -17,7 +17,22 @@ app.set('trust proxy', true);
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: env.APP_ORIGIN, credentials: true }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      console.log('origin', origin);
+      console.log('env.APP_ORIGIN', env.APP_ORIGIN);
+      const allowedOrigins = Array.isArray(env.APP_ORIGIN) ? env.APP_ORIGIN : [env.APP_ORIGIN];
+      console.log('allowedOrigins', allowedOrigins);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(helmet());
 app.use(rateLimiter);
 

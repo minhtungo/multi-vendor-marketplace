@@ -1,5 +1,5 @@
 import { useSignOut } from '@/api/auth/sign-out';
-import { useUser } from '@/api/user/get-user';
+import { useVendor } from '@/api/user/get-vendor';
 import { menu } from '@/configs/menu';
 import { getNameInitials } from '@/utils/name';
 import { Avatar, AvatarFallback } from '@repo/ui/components/avatar';
@@ -17,7 +17,7 @@ import { Link } from '@tanstack/react-router';
 import { LogOut, MoreVerticalIcon } from 'lucide-react';
 
 export function NavUser() {
-  const { data: user } = useUser();
+  const { data: user } = useVendor();
   const { mutate: signOut } = useSignOut();
 
   const { isMobile } = useSidebar();

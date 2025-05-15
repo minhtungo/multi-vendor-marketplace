@@ -14,7 +14,7 @@ export const server = {
       signOut: `${authPath}/sign-out`,
     },
     user: {
-      me: `${basePath}/user/me`,
+      me: `${authPath}/me`,
     },
     shop: {
       root: `${authPath}/shop`,

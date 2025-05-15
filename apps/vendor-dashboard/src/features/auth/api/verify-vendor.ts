@@ -21,8 +21,5 @@ async function verifyUserWithOTP(data: VerifyUserInput): Promise<ApiResponse<nul
 export function useVerifyUserMutation() {
   return useMutation({
     mutationFn: verifyUserWithOTP,
-    onError: (error: Error) => {
-      console.error(error);
-    },
   });
 }

@@ -23,7 +23,9 @@ export default passport.use(
       if (!user) {
         return done(null, false);
       }
-      done(null, user, { payload });
+      const { password, ...userWithoutPassword } = user;
+
+      done(null, userWithoutPassword, { payload });
     } catch (err) {
       logger.error('Error verifying access token', err);
       done(err, false);

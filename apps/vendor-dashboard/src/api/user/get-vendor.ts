@@ -4,22 +4,22 @@ import type { ApiResponse } from '@/types/api';
 import type { Vendor } from '@/types/vendor';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
-export function getUser(): Promise<ApiResponse<Vendor>> {
+export function getVendor(): Promise<ApiResponse<Vendor>> {
   return privateApi.get(server.path.user.me);
 }
 
-export function getUserQueryOptions() {
+export function getVendorQueryOptions() {
   return queryOptions({
-    queryKey: ['user'],
+    queryKey: ['vendor'],
     queryFn: async () => {
-      const response = await getUser();
+      const response = await getVendor();
       return response.data;
     },
   });
 }
 
-export function useUser() {
+export function useVendor() {
   return useQuery({
-    ...getUserQueryOptions(),
+    ...getVendorQueryOptions(),
   });
 }

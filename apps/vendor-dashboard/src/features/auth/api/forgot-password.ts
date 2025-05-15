@@ -2,7 +2,7 @@ import { publicApi } from '@/api/api-client';
 import { server } from '@/configs/server';
 import { commonValidations } from '@/lib/commonValidation';
 import type { ApiResponse } from '@/types/api';
-import type { User } from '@/types/vendor';
+import type { Vendor } from '@/types/vendor';
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
@@ -15,7 +15,7 @@ export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export async function forgotPassword(data: ForgotPasswordInput): Promise<
   ApiResponse<{
     accessToken: string;
-    user: User;
+    vendor: Vendor;
   }>
 > {
   return publicApi.post(server.path.auth.forgotPassword, data);
@@ -24,9 +24,5 @@ export async function forgotPassword(data: ForgotPasswordInput): Promise<
 export function useForgotPasswordMutation() {
   return useMutation({
     mutationFn: forgotPassword,
-    onSuccess: () => {},
-    onError: (error: Error) => {
-      console.error(error);
-    },
   });
 }

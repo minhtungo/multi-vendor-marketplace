@@ -26,6 +26,11 @@ class VendorController {
     const serviceResponse = await vendorService.renewToken(req, res);
     handleServiceResponse(serviceResponse, res);
   };
+
+  public getVendor: RequestHandler = async (req: Request, res: Response) => {
+    const serviceResponse = await vendorService.getVendor(req);
+    handleServiceResponse(serviceResponse, res);
+  };
 }
 
 export const vendorController = new VendorController();

@@ -15,6 +15,7 @@ export const vendorPaths = {
   verify: '/verify',
   shop: '/shop',
   renewToken: '/renew-token',
+  me: '/me',
 };
 
 export const stripePaths = {

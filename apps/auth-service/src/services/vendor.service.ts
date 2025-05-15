@@ -1,6 +1,6 @@
 import { env } from '@/configs/env';
 import { getRedisClient } from '@/db/redis';
-import type { InsertVendor } from '@/db/schemas/vendors';
+import type { InsertVendor, Vendor } from '@/db/schemas/vendors';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
 import type { VendorSignInInput, VendorSignUpInput, VerifyVendorInput } from '@/models/vendor.model';
@@ -86,13 +86,13 @@ export class VendorService {
       });
 
       setRefreshTokenCookie(res, refreshToken, 'vendor');
-
+      const { password, ...rest } = user;
       return ServiceResponse.success(
         'Signed in successfully',
         {
           accessToken,
           user: {
-            id: user.id,
+            ...rest,
           },
         },
         StatusCodes.OK
@@ -156,6 +156,7 @@ export class VendorService {
 
   async renewToken(req: Request, res: Response): Promise<ServiceResponse<{ accessToken: string } | null>> {
     const refreshToken = req.cookies[env.VENDOR_REFRESH_TOKEN_COOKIE_NAME];
+    console.log('refreshToken', req.cookies);
     if (!refreshToken) {
       return ServiceResponse.failure('No refresh token provided', null, StatusCodes.UNAUTHORIZED);
     }
@@ -193,6 +194,21 @@ export class VendorService {
       const errorMessage = `Error renewing token: ${(ex as Error).message}`;
       logger.error(errorMessage);
       return ServiceResponse.failure('An error occurred while renewing token', null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async getVendor(req: Request): Promise<ServiceResponse<Vendor | null>> {
+    try {
+      const vendor = req.user as Vendor;
+      return ServiceResponse.success('Vendor fetched successfully', vendor, StatusCodes.OK);
+    } catch (ex) {
+      const errorMessage = `Error fetching vendor: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        'An error occurred while fetching vendor.',
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
     }
   }
 }

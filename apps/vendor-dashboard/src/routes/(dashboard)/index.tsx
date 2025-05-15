@@ -1,5 +1,5 @@
-import { siteConfig } from '@/configs/site'
-import { createFileRoute } from '@tanstack/react-router'
+import { siteConfig } from '@/configs/site';
+import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/(dashboard)/')({
   component: App,
@@ -14,8 +14,8 @@ export const Route = createFileRoute('/(dashboard)/')({
       },
     ],
   }),
-})
+});
 
 function App() {
-  return <div className="text-center">asdasd</div>
+  return <div className="text-center">Dashboard</div>;
 }

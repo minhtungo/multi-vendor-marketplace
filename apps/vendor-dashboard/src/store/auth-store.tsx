@@ -1,5 +1,5 @@
 import { renewToken } from '@/api/auth/renew-token';
-import { getUser, getUserQueryOptions } from '@/api/user/get-user';
+import { getVendor, getVendorQueryOptions } from '@/api/user/get-vendor';
 import { queryClient } from '@/integrations/tanstack-query/query-client';
 import { createZustandContext } from '@/lib/context';
 import { createStore } from 'zustand';
@@ -35,12 +35,13 @@ const authStore = createStore<AuthState & { actions: AuthActions }>((set) => ({
         if (data?.accessToken) {
           set({ token: data.accessToken });
         }
-        const user = await getUser();
-        queryClient.setQueryData(getUserQueryOptions().queryKey, user.data);
+        const vendor = await getVendor();
+        queryClient.setQueryData(getVendorQueryOptions().queryKey, vendor.data);
+        console.log('vendor', vendor);
         set({
           isAuthenticated: true,
           isLoaded: true,
-          userId: user.data.id,
+          userId: vendor.data.id,
         });
       } catch (error) {
         set({ isAuthenticated: false, isLoaded: true });
