@@ -1,8 +1,16 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { client } from '@/configs/client';
+import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/(auth)')({
+  beforeLoad: ({ context }) => {
+    if (context.isAuthLoaded && context.isAuthenticated) {
+      throw redirect({
+        to: client.path.root,
+      });
+    }
+  },
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   return (
@@ -11,5 +19,5 @@ function RouteComponent() {
         <Outlet />
       </div>
     </div>
-  )
+  );
 }

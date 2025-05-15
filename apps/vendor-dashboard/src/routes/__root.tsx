@@ -1,10 +1,6 @@
-import { siteConfig } from '@/configs/site'
-import type { RouterContext } from '@/router'
-import {
-  HeadContent,
-  Outlet,
-  createRootRouteWithContext,
-} from '@tanstack/react-router'
+import { siteConfig } from '@/configs/site';
+import type { RouterContext } from '@/router';
+import { HeadContent, Outlet, createRootRouteWithContext } from '@tanstack/react-router';
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
@@ -24,8 +20,13 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
     ],
   }),
+  beforeLoad: async ({ context }) => {
+    if (!context.isAuthLoaded) {
+      await context.initializeAuth();
+    }
+  },
   component: RootLayoutComponent,
-})
+});
 
 function RootLayoutComponent() {
   return (
@@ -35,5 +36,5 @@ function RootLayoutComponent() {
       {/* <ReactQueryDevtools buttonPosition='top-right' /> */}
       {/* <TanStackRouterDevtools position='bottom-right' /> */}
     </>
-  )
+  );
 }
