@@ -11,6 +11,7 @@ export const server = {
       resetPassword: `${authPath}/reset-password`,
       renewToken: `${authPath}/renew-token`,
       me: `${authPath}/me`,
+      signOut: `${authPath}/sign-out`,
     },
     user: {
       me: `${basePath}/user/me`,

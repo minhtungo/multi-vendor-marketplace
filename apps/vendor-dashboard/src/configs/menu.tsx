@@ -1,4 +1,4 @@
-import { Home } from 'lucide-react';
+import { Home, Package, Settings, ShoppingBag, Users } from 'lucide-react';
 
 export const menu = {
   main: [
@@ -15,13 +15,35 @@ export const menu = {
       href: '/become-a-seller',
     },
   ],
-  dashboard: [
-    {
-      title: 'Dashboard',
-      href: '/dashboard',
-      icon: Home,
-    },
-  ],
+  dashboard: {
+    main: [
+      {
+        title: 'Dashboard',
+        href: '/dashboard',
+        icon: Home,
+      },
+      {
+        title: 'Orders',
+        href: '/orders',
+        icon: ShoppingBag,
+      },
+      {
+        title: 'Products',
+        href: '/products',
+        icon: Package,
+      },
+      {
+        title: 'Customers',
+        href: '/customers',
+        icon: Users,
+      },
+      {
+        title: 'Settings',
+        href: '/settings',
+        icon: Settings,
+      },
+    ],
+  },
   footer: [
     {
       title: 'About',
