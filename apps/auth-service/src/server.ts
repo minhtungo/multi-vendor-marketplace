@@ -4,10 +4,10 @@ import express, { type Express } from 'express';
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
 import '@/lib/strategies/jwt';
+import '@/lib/strategies/vendor-jwt';
 import { authRouter } from '@/routes/auth.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import errorHandler from '@repo/server/middlewares/error-handler';
-import { createRequestLogger } from '@repo/server/middlewares/request-logger';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import { vendorRouter } from '@/routes/vendor.route';
@@ -32,9 +32,9 @@ app.use(cors({ origin: env.APP_ORIGIN, credentials: true }));
 
 // Routes
 app.use('/api/health-check', healthCheckRouter);
+app.use('/api/auth/vendor/stripe', stripeRouter);
 app.use('/api/auth/vendor', vendorRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/stripe', stripeRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

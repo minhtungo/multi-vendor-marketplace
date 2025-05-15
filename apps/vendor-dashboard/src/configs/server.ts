@@ -18,5 +18,8 @@ export const server = {
     shop: {
       root: `${authPath}/shop`,
     },
+    stripe: {
+      createConnectLink: `${authPath}/stripe/create-connect-link`,
+    },
   },
 };

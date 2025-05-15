@@ -1,3 +1,5 @@
+import { Home } from 'lucide-react';
+
 export const menu = {
   main: [
     {
@@ -11,6 +13,13 @@ export const menu = {
     {
       title: 'Become a seller',
       href: '/become-a-seller',
+    },
+  ],
+  dashboard: [
+    {
+      title: 'Dashboard',
+      href: '/dashboard',
+      icon: Home,
     },
   ],
   footer: [
@@ -27,4 +36,4 @@ export const menu = {
       href: '/pricing',
     },
   ],
-}
+};

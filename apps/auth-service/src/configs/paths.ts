@@ -16,3 +16,7 @@ export const vendorPaths = {
   shop: '/shop',
   renewToken: '/renew-token',
 };
+
+export const stripePaths = {
+  createConnectLink: '/create-connect-link',
+};

@@ -1,3 +1,4 @@
+import { stripePaths } from '@/configs/paths';
 import { stripeController } from '@/controllers/stripe.controller';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
 import { assertVendorAuthentication } from '@/middlewares/assertAuthentication';
@@ -11,7 +12,7 @@ export const stripeRouter: Router = Router();
 
 stripeRegistry.registerPath({
   method: 'post',
-  path: '/stripe/connect-link',
+  path: `/auth/stripe/${stripePaths.createConnectLink}`,
   tags: ['Stripe'],
   request: {
     body: {
@@ -31,7 +32,7 @@ stripeRegistry.registerPath({
 });
 
 stripeRouter.post(
-  '/connect-link',
+  stripePaths.createConnectLink,
   assertVendorAuthentication,
   // validateRequest(z.object({ body: CreateConnectLinkSchema })),
   stripeController.createStripeConnectLink

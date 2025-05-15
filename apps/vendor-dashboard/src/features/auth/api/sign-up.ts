@@ -2,13 +2,14 @@ import { publicApi } from '@/api/api-client';
 import { server } from '@/configs/server';
 import { commonValidations } from '@/lib/commonValidation';
 import type { ApiResponse } from '@/types/api';
-import type { User } from '@/types/vendor';
+import type { Vendor } from '@/types/vendor';
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
 export const signUpSchema = z.object({
   email: commonValidations.email,
   password: commonValidations.password,
+  name: z.string().min(1, 'Name is required'),
 });
 
 export type SignUpInput = z.infer<typeof signUpSchema>;
@@ -16,7 +17,7 @@ export type SignUpInput = z.infer<typeof signUpSchema>;
 export async function signUpWithEmailAndPassWord(data: SignUpInput): Promise<
   ApiResponse<{
     accessToken: string;
-    user: User;
+    vendor: Vendor;
   }>
 > {
   const parsedData = signUpSchema.parse(data);

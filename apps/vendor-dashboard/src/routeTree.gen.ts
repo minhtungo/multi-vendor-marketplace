@@ -11,24 +11,32 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as dashboardRouteImport } from './routes/(dashboard)/route'
 import { Route as authRouteImport } from './routes/(auth)/route'
-import { Route as IndexImport } from './routes/index'
+import { Route as dashboardIndexImport } from './routes/(dashboard)/index'
 import { Route as authSignUpImport } from './routes/(auth)/sign-up'
 import { Route as authSignInImport } from './routes/(auth)/sign-in'
 import { Route as authResetPasswordImport } from './routes/(auth)/reset-password'
 import { Route as authForgotPasswordImport } from './routes/(auth)/forgot-password'
+import { Route as StripeConnectReturnImport } from './routes/stripe/connect/return'
+import { Route as StripeConnectRefreshImport } from './routes/stripe/connect/refresh'
 
 // Create/Update Routes
+
+const dashboardRouteRoute = dashboardRouteImport.update({
+  id: '/(dashboard)',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const authRouteRoute = authRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const dashboardIndexRoute = dashboardIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => dashboardRouteRoute,
 } as any)
 
 const authSignUpRoute = authSignUpImport.update({
@@ -55,22 +63,34 @@ const authForgotPasswordRoute = authForgotPasswordImport.update({
   getParentRoute: () => authRouteRoute,
 } as any)
 
+const StripeConnectReturnRoute = StripeConnectReturnImport.update({
+  id: '/stripe/connect/return',
+  path: '/stripe/connect/return',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const StripeConnectRefreshRoute = StripeConnectRefreshImport.update({
+  id: '/stripe/connect/refresh',
+  path: '/stripe/connect/refresh',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
     '/(auth)': {
       id: '/(auth)'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof authRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/(dashboard)': {
+      id: '/(dashboard)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof dashboardRouteImport
       parentRoute: typeof rootRoute
     }
     '/(auth)/forgot-password': {
@@ -101,6 +121,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignUpImport
       parentRoute: typeof authRouteImport
     }
+    '/(dashboard)/': {
+      id: '/(dashboard)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof dashboardIndexImport
+      parentRoute: typeof dashboardRouteImport
+    }
+    '/stripe/connect/refresh': {
+      id: '/stripe/connect/refresh'
+      path: '/stripe/connect/refresh'
+      fullPath: '/stripe/connect/refresh'
+      preLoaderRoute: typeof StripeConnectRefreshImport
+      parentRoute: typeof rootRoute
+    }
+    '/stripe/connect/return': {
+      id: '/stripe/connect/return'
+      path: '/stripe/connect/return'
+      fullPath: '/stripe/connect/return'
+      preLoaderRoute: typeof StripeConnectReturnImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -124,30 +165,49 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 )
 
+interface dashboardRouteRouteChildren {
+  dashboardIndexRoute: typeof dashboardIndexRoute
+}
+
+const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
+  dashboardIndexRoute: dashboardIndexRoute,
+}
+
+const dashboardRouteRouteWithChildren = dashboardRouteRoute._addFileChildren(
+  dashboardRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  '/': typeof authRouteRouteWithChildren
+  '/': typeof dashboardIndexRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/stripe/connect/refresh': typeof StripeConnectRefreshRoute
+  '/stripe/connect/return': typeof StripeConnectReturnRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof authRouteRouteWithChildren
+  '/': typeof dashboardIndexRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/stripe/connect/refresh': typeof StripeConnectRefreshRoute
+  '/stripe/connect/return': typeof StripeConnectReturnRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
   '/(auth)': typeof authRouteRouteWithChildren
+  '/(dashboard)': typeof dashboardRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/reset-password': typeof authResetPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
+  '/(dashboard)/': typeof dashboardIndexRoute
+  '/stripe/connect/refresh': typeof StripeConnectRefreshRoute
+  '/stripe/connect/return': typeof StripeConnectReturnRoute
 }
 
 export interface FileRouteTypes {
@@ -158,27 +218,43 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/stripe/connect/refresh'
+    | '/stripe/connect/return'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/forgot-password' | '/reset-password' | '/sign-in' | '/sign-up'
+  to:
+    | '/'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
+    | '/stripe/connect/refresh'
+    | '/stripe/connect/return'
   id:
     | '__root__'
-    | '/'
     | '/(auth)'
+    | '/(dashboard)'
     | '/(auth)/forgot-password'
     | '/(auth)/reset-password'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
+    | '/(dashboard)/'
+    | '/stripe/connect/refresh'
+    | '/stripe/connect/return'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   authRouteRoute: typeof authRouteRouteWithChildren
+  dashboardRouteRoute: typeof dashboardRouteRouteWithChildren
+  StripeConnectRefreshRoute: typeof StripeConnectRefreshRoute
+  StripeConnectReturnRoute: typeof StripeConnectReturnRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
+  dashboardRouteRoute: dashboardRouteRouteWithChildren,
+  StripeConnectRefreshRoute: StripeConnectRefreshRoute,
+  StripeConnectReturnRoute: StripeConnectReturnRoute,
 }
 
 export const routeTree = rootRoute
@@ -191,12 +267,11 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/(auth)"
+        "/(auth)",
+        "/(dashboard)",
+        "/stripe/connect/refresh",
+        "/stripe/connect/return"
       ]
-    },
-    "/": {
-      "filePath": "index.tsx"
     },
     "/(auth)": {
       "filePath": "(auth)/route.tsx",
@@ -205,6 +280,12 @@ export const routeTree = rootRoute
         "/(auth)/reset-password",
         "/(auth)/sign-in",
         "/(auth)/sign-up"
+      ]
+    },
+    "/(dashboard)": {
+      "filePath": "(dashboard)/route.tsx",
+      "children": [
+        "/(dashboard)/"
       ]
     },
     "/(auth)/forgot-password": {
@@ -222,6 +303,16 @@ export const routeTree = rootRoute
     "/(auth)/sign-up": {
       "filePath": "(auth)/sign-up.tsx",
       "parent": "/(auth)"
+    },
+    "/(dashboard)/": {
+      "filePath": "(dashboard)/index.tsx",
+      "parent": "/(dashboard)"
+    },
+    "/stripe/connect/refresh": {
+      "filePath": "stripe/connect/refresh.tsx"
+    },
+    "/stripe/connect/return": {
+      "filePath": "stripe/connect/return.tsx"
     }
   }
 }

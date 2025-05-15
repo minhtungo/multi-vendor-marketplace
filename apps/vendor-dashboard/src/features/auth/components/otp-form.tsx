@@ -25,6 +25,7 @@ export function OTPForm({ userInput }: OTPFormProps) {
       {
         email: userInput.email,
         password: userInput.password,
+        name: userInput.name,
         otp,
       },
       {
