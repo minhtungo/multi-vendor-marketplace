@@ -18,7 +18,7 @@ export const server = {
       root: `${authPath}/shop`,
     },
     payment: {
-      createConnectLink: `${vendorPath}/payment/create-connect-link`,
+      connect: `${vendorPath}/payment/create-connect-link`,
     },
     product: {
       createProduct: `${vendorPath}/product`,

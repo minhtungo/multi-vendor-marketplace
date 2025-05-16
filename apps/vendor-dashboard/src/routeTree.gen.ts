@@ -18,8 +18,8 @@ import { Route as authSignUpImport } from './routes/(auth)/sign-up'
 import { Route as authSignInImport } from './routes/(auth)/sign-in'
 import { Route as authResetPasswordImport } from './routes/(auth)/reset-password'
 import { Route as authForgotPasswordImport } from './routes/(auth)/forgot-password'
-import { Route as StripeConnectReturnImport } from './routes/stripe/connect/return'
-import { Route as StripeConnectRefreshImport } from './routes/stripe/connect/refresh'
+import { Route as PaymentConnectReturnImport } from './routes/payment/connect/return'
+import { Route as PaymentConnectRefreshImport } from './routes/payment/connect/refresh'
 import { Route as dashboardProductNewImport } from './routes/(dashboard)/product/new'
 
 // Create/Update Routes
@@ -64,15 +64,15 @@ const authForgotPasswordRoute = authForgotPasswordImport.update({
   getParentRoute: () => authRouteRoute,
 } as any)
 
-const StripeConnectReturnRoute = StripeConnectReturnImport.update({
-  id: '/stripe/connect/return',
-  path: '/stripe/connect/return',
+const PaymentConnectReturnRoute = PaymentConnectReturnImport.update({
+  id: '/payment/connect/return',
+  path: '/payment/connect/return',
   getParentRoute: () => rootRoute,
 } as any)
 
-const StripeConnectRefreshRoute = StripeConnectRefreshImport.update({
-  id: '/stripe/connect/refresh',
-  path: '/stripe/connect/refresh',
+const PaymentConnectRefreshRoute = PaymentConnectRefreshImport.update({
+  id: '/payment/connect/refresh',
+  path: '/payment/connect/refresh',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -142,18 +142,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardProductNewImport
       parentRoute: typeof dashboardRouteImport
     }
-    '/stripe/connect/refresh': {
-      id: '/stripe/connect/refresh'
-      path: '/stripe/connect/refresh'
-      fullPath: '/stripe/connect/refresh'
-      preLoaderRoute: typeof StripeConnectRefreshImport
+    '/payment/connect/refresh': {
+      id: '/payment/connect/refresh'
+      path: '/payment/connect/refresh'
+      fullPath: '/payment/connect/refresh'
+      preLoaderRoute: typeof PaymentConnectRefreshImport
       parentRoute: typeof rootRoute
     }
-    '/stripe/connect/return': {
-      id: '/stripe/connect/return'
-      path: '/stripe/connect/return'
-      fullPath: '/stripe/connect/return'
-      preLoaderRoute: typeof StripeConnectReturnImport
+    '/payment/connect/return': {
+      id: '/payment/connect/return'
+      path: '/payment/connect/return'
+      fullPath: '/payment/connect/return'
+      preLoaderRoute: typeof PaymentConnectReturnImport
       parentRoute: typeof rootRoute
     }
   }
@@ -200,8 +200,8 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/product/new': typeof dashboardProductNewRoute
-  '/stripe/connect/refresh': typeof StripeConnectRefreshRoute
-  '/stripe/connect/return': typeof StripeConnectReturnRoute
+  '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
+  '/payment/connect/return': typeof PaymentConnectReturnRoute
 }
 
 export interface FileRoutesByTo {
@@ -211,8 +211,8 @@ export interface FileRoutesByTo {
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/product/new': typeof dashboardProductNewRoute
-  '/stripe/connect/refresh': typeof StripeConnectRefreshRoute
-  '/stripe/connect/return': typeof StripeConnectReturnRoute
+  '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
+  '/payment/connect/return': typeof PaymentConnectReturnRoute
 }
 
 export interface FileRoutesById {
@@ -225,8 +225,8 @@ export interface FileRoutesById {
   '/(auth)/sign-up': typeof authSignUpRoute
   '/(dashboard)/': typeof dashboardIndexRoute
   '/(dashboard)/product/new': typeof dashboardProductNewRoute
-  '/stripe/connect/refresh': typeof StripeConnectRefreshRoute
-  '/stripe/connect/return': typeof StripeConnectReturnRoute
+  '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
+  '/payment/connect/return': typeof PaymentConnectReturnRoute
 }
 
 export interface FileRouteTypes {
@@ -238,8 +238,8 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/product/new'
-    | '/stripe/connect/refresh'
-    | '/stripe/connect/return'
+    | '/payment/connect/refresh'
+    | '/payment/connect/return'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -248,8 +248,8 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/product/new'
-    | '/stripe/connect/refresh'
-    | '/stripe/connect/return'
+    | '/payment/connect/refresh'
+    | '/payment/connect/return'
   id:
     | '__root__'
     | '/(auth)'
@@ -260,23 +260,23 @@ export interface FileRouteTypes {
     | '/(auth)/sign-up'
     | '/(dashboard)/'
     | '/(dashboard)/product/new'
-    | '/stripe/connect/refresh'
-    | '/stripe/connect/return'
+    | '/payment/connect/refresh'
+    | '/payment/connect/return'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   dashboardRouteRoute: typeof dashboardRouteRouteWithChildren
-  StripeConnectRefreshRoute: typeof StripeConnectRefreshRoute
-  StripeConnectReturnRoute: typeof StripeConnectReturnRoute
+  PaymentConnectRefreshRoute: typeof PaymentConnectRefreshRoute
+  PaymentConnectReturnRoute: typeof PaymentConnectReturnRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   dashboardRouteRoute: dashboardRouteRouteWithChildren,
-  StripeConnectRefreshRoute: StripeConnectRefreshRoute,
-  StripeConnectReturnRoute: StripeConnectReturnRoute,
+  PaymentConnectRefreshRoute: PaymentConnectRefreshRoute,
+  PaymentConnectReturnRoute: PaymentConnectReturnRoute,
 }
 
 export const routeTree = rootRoute
@@ -291,8 +291,8 @@ export const routeTree = rootRoute
       "children": [
         "/(auth)",
         "/(dashboard)",
-        "/stripe/connect/refresh",
-        "/stripe/connect/return"
+        "/payment/connect/refresh",
+        "/payment/connect/return"
       ]
     },
     "/(auth)": {
@@ -335,11 +335,11 @@ export const routeTree = rootRoute
       "filePath": "(dashboard)/product/new.tsx",
       "parent": "/(dashboard)"
     },
-    "/stripe/connect/refresh": {
-      "filePath": "stripe/connect/refresh.tsx"
+    "/payment/connect/refresh": {
+      "filePath": "payment/connect/refresh.tsx"
     },
-    "/stripe/connect/return": {
-      "filePath": "stripe/connect/return.tsx"
+    "/payment/connect/return": {
+      "filePath": "payment/connect/return.tsx"
     }
   }
 }

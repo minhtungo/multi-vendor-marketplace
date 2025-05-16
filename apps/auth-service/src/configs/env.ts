@@ -19,6 +19,7 @@ const envSchema = z.object({
     })
     .pipe(z.array(z.string().url()))
     .default('http://localhost:5173,http://localhost:5174'),
+  VENDOR_ORIGIN: z.string().url().default('http://localhost:5174'),
   COMMON_RATE_LIMIT_MAX_REQUESTS: z.coerce.number().int().positive().default(1000),
   COMMON_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(1000),
   // Cookies

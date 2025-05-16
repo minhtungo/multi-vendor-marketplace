@@ -1,14 +1,14 @@
-import { useCreateStripeConnectLinkMutation } from '@/features/auth/api/create-stripe-connect-link';
+import { useConnectPaymentMutation } from '@/features/auth/api/connect-payment';
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { toast } from 'sonner';
 
 type ConnectPaymentProps = React.ComponentProps<'div'>;
 
 export function ConnectPayment({}: ConnectPaymentProps) {
-  const { mutate: createStripeConnectLink, isPending } = useCreateStripeConnectLinkMutation();
+  const { mutate: connectPayment, isPending } = useConnectPaymentMutation();
 
   const handleConnectPayment = () => {
-    createStripeConnectLink(
+    connectPayment(
       {},
       {
         onSuccess: (data) => {
@@ -22,10 +22,8 @@ export function ConnectPayment({}: ConnectPaymentProps) {
   };
 
   return (
-    <div>
-      <LoaderButton isPending={isPending} onClick={handleConnectPayment} disabled={isPending}>
-        Connect Payment
-      </LoaderButton>
-    </div>
+    <LoaderButton isPending={isPending} onClick={handleConnectPayment} disabled={isPending}>
+      Connect Payment
+    </LoaderButton>
   );
 }

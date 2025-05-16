@@ -1,4 +1,5 @@
 import { siteConfig } from '@/configs/site';
+import { ConnectPayment } from '@/features/auth/components/connect-payment';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/(dashboard)/')({
@@ -17,5 +18,9 @@ export const Route = createFileRoute('/(dashboard)/')({
 });
 
 function App() {
-  return <div className="text-center">Dashboard</div>;
+  return (
+    <div className="text-center">
+      <ConnectPayment />
+    </div>
+  );
 }

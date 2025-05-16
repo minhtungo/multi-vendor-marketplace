@@ -19,7 +19,7 @@ export const menu = {
     main: [
       {
         title: 'Dashboard',
-        href: '/dashboard',
+        href: '/',
         icon: Home,
       },
       {

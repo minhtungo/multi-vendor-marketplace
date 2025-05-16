@@ -27,8 +27,8 @@ class StripeService {
 
       const accountLink = await stripe.accountLinks.create({
         account: account.id,
-        refresh_url: `${env.APP_ORIGIN}/stripe/connect/refresh`,
-        return_url: `${env.APP_ORIGIN}/stripe/connect/return`,
+        refresh_url: `${env.VENDOR_ORIGIN}/payment/connect/refresh`,
+        return_url: `${env.VENDOR_ORIGIN}/payment/connect/return`,
         type: 'account_onboarding',
       });
 
