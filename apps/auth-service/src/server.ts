@@ -5,13 +5,13 @@ import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
 import '@/lib/strategies/jwt';
 import '@/lib/strategies/vendor-jwt';
-import { authRouter } from '@/routes/auth.route';
+import { authUserRouter } from '@/routes/auth.user.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import errorHandler from '@repo/server/middlewares/error-handler';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
-import { vendorRouter } from '@/routes/vendor.route';
-import { stripeRouter } from '@/routes/stripe.route';
+import { authVendorRouter } from '@/routes/auth.vendor.route';
+import { paymentRouter } from '@/routes/payment.route';
 
 const app: Express = express();
 
@@ -44,9 +44,9 @@ app.use(
 
 // Routes
 app.use('/api/health-check', healthCheckRouter);
-app.use('/api/auth/vendor/stripe', stripeRouter);
-app.use('/api/auth/vendor', vendorRouter);
-app.use('/api/auth', authRouter);
+app.use('/api/auth/vendor', authVendorRouter);
+app.use('/api/auth/user', authUserRouter);
+app.use('/api/vendor/payment', paymentRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

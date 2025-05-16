@@ -5,7 +5,7 @@ import type { Vendor } from '@/types/vendor';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
 export function getVendor(): Promise<ApiResponse<Vendor>> {
-  return privateApi.get(server.path.user.me);
+  return privateApi.get(server.path.vendor.me);
 }
 
 export function getVendorQueryOptions() {

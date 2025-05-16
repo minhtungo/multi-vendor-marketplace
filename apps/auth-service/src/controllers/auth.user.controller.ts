@@ -5,12 +5,12 @@ import {
   SignInSchema,
   SignUpSchema,
   VerifyUserSchema,
-} from '@/models/auth.model';
+} from '@/models/auth.user.model';
 import { authService } from '@/services/auth.service';
 import { handleServiceResponse } from '@repo/server/lib/http-handlers';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 
-class AuthController {
+class AuthUserController {
   public signUp: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const data = SignUpSchema.parse(req.body);
     const serviceResponse = await authService.signUp(data, next);
@@ -61,4 +61,4 @@ class AuthController {
   };
 }
 
-export const authController = new AuthController();
+export const authUserController = new AuthUserController();

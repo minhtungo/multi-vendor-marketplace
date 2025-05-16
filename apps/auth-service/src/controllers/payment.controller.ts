@@ -1,9 +1,8 @@
-import { CreateConnectLinkSchema } from '@/models/stripe.model';
 import { stripeService } from '@/services/stripe.service';
 import { handleServiceResponse } from '@repo/server/lib/http-handlers';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 
-class StripeController {
+class PaymentController {
   public createStripeConnectLink = async (req: Request, res: Response) => {
     // const data = CreateConnectLinkSchema.parse(req.body);
     const serviceResponse = await stripeService.createConnectAccountLink(req.user?.id!);
@@ -11,4 +10,4 @@ class StripeController {
   };
 }
 
-export const stripeController = new StripeController();
+export const paymentController = new PaymentController();

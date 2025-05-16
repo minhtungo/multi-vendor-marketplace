@@ -18,6 +18,6 @@ export const vendorPaths = {
   me: '/me',
 };
 
-export const stripePaths = {
+export const paymentPaths = {
   createConnectLink: '/create-connect-link',
 };

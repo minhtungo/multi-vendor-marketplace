@@ -1,5 +1,6 @@
 const basePath = '/api';
 const authPath = `${basePath}/auth/vendor`;
+const vendorPath = `${basePath}/vendor`;
 
 export const server = {
   path: {
@@ -13,14 +14,11 @@ export const server = {
       me: `${authPath}/me`,
       signOut: `${authPath}/sign-out`,
     },
-    user: {
-      me: `${authPath}/me`,
-    },
     shop: {
       root: `${authPath}/shop`,
     },
-    stripe: {
-      createConnectLink: `${authPath}/stripe/create-connect-link`,
+    payment: {
+      createConnectLink: `${vendorPath}/payment/create-connect-link`,
     },
   },
 };

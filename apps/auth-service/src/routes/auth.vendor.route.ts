@@ -1,19 +1,19 @@
 import { vendorPaths } from '@/configs/paths';
 import { shopController } from '@/controllers/shop.controller';
-import { vendorController } from '@/controllers/vendor.controller';
+import { authVendorController } from '@/controllers/auth.vendor.controller';
 import { insertShopSchema } from '@/db/schemas/shops';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
 import { assertVendorAuthentication } from '@/middlewares/assertAuthentication';
-import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/vendor.model';
+import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/auth.vendor.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { validateRequest } from '@repo/server/lib/http-handlers';
 import express, { type Router } from 'express';
 import z from 'zod';
 
-export const vendorRegistry = new OpenAPIRegistry();
-export const vendorRouter: Router = express.Router();
+export const authVendorRegistry = new OpenAPIRegistry();
+export const authVendorRouter: Router = express.Router();
 
-vendorRegistry.registerPath({
+authVendorRegistry.registerPath({
   method: 'post',
   path: `/auth/vendor/${vendorPaths.signUp}`,
   tags: ['Auth'],
@@ -29,9 +29,13 @@ vendorRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-vendorRouter.post(vendorPaths.signUp, validateRequest(z.object({ body: VendorSignUpSchema })), vendorController.signUp);
+authVendorRouter.post(
+  vendorPaths.signUp,
+  validateRequest(z.object({ body: VendorSignUpSchema })),
+  authVendorController.signUp
+);
 
-vendorRegistry.registerPath({
+authVendorRegistry.registerPath({
   method: 'post',
   path: `/auth/vendor/${vendorPaths.signIn}`,
   tags: ['Auth'],
@@ -47,9 +51,13 @@ vendorRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-vendorRouter.post(vendorPaths.signIn, validateRequest(z.object({ body: VendorSignInSchema })), vendorController.signIn);
+authVendorRouter.post(
+  vendorPaths.signIn,
+  validateRequest(z.object({ body: VendorSignInSchema })),
+  authVendorController.signIn
+);
 
-vendorRegistry.registerPath({
+authVendorRegistry.registerPath({
   method: 'post',
   path: `/auth/vendor/${vendorPaths.verify}`,
   tags: ['Auth'],
@@ -65,22 +73,22 @@ vendorRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-vendorRouter.post(
+authVendorRouter.post(
   vendorPaths.verify,
   validateRequest(z.object({ body: VerifyVendorSchema })),
-  vendorController.verifyVendor
+  authVendorController.verifyVendor
 );
 
-vendorRegistry.registerPath({
+authVendorRegistry.registerPath({
   method: 'put',
   path: `/auth/vendor/${vendorPaths.renewToken}`,
   tags: ['Auth'],
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-vendorRouter.put(vendorPaths.renewToken, vendorController.renewToken);
+authVendorRouter.put(vendorPaths.renewToken, authVendorController.renewToken);
 
-vendorRegistry.registerPath({
+authVendorRegistry.registerPath({
   method: 'post',
   path: `/auth/vendor/${vendorPaths.shop}`,
   tags: ['Shops'],
@@ -96,18 +104,18 @@ vendorRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-vendorRouter.post(
+authVendorRouter.post(
   vendorPaths.shop,
   validateRequest(z.object({ body: insertShopSchema })),
   assertVendorAuthentication,
   shopController.createShop
 );
 
-vendorRegistry.registerPath({
+authVendorRegistry.registerPath({
   method: 'get',
   path: `/auth/vendor/${vendorPaths.me}`,
   tags: ['Auth'],
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-vendorRouter.get(vendorPaths.me, assertVendorAuthentication, vendorController.getVendor);
+authVendorRouter.get(vendorPaths.me, assertVendorAuthentication, authVendorController.getVendor);

@@ -5,7 +5,7 @@ import type { User } from '@/db/schemas/users';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
 import { emailService } from '@/lib/emails';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
-import type { SignInInput, SignUpInput, VerifyUserInput } from '@/models/auth.model';
+import type { SignInInput, SignUpInput, VerifyUserInput } from '@/models/auth.user.model';
 import { tokenRepository } from '@/repositories/token.repository';
 import { userRepository, UserRepository } from '@/repositories/user.repository';
 import type { RefreshTokenPayload } from '@/types/token';

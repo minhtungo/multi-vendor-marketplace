@@ -1,5 +1,5 @@
 const basePath = '/api';
-const authPath = `${basePath}/auth`;
+const authPath = `${basePath}/auth/user`;
 
 export const server = {
   path: {

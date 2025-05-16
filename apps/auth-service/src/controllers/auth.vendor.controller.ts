@@ -1,9 +1,9 @@
-import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/vendor.model';
+import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/auth.vendor.model';
 import { vendorService } from '@/services/vendor.service';
 import { handleServiceResponse } from '@repo/server/lib/http-handlers';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 
-class VendorController {
+class AuthVendorController {
   public signUp: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const data = VendorSignUpSchema.parse(req.body);
     const serviceResponse = await vendorService.signUp(data, next);
@@ -33,4 +33,4 @@ class VendorController {
   };
 }
 
-export const vendorController = new VendorController();
+export const authVendorController = new AuthVendorController();

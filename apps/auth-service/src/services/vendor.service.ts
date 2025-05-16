@@ -3,7 +3,7 @@ import { getRedisClient } from '@/db/redis';
 import type { InsertVendor, Vendor } from '@/db/schemas/vendors';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
-import type { VendorSignInInput, VendorSignUpInput, VerifyVendorInput } from '@/models/vendor.model';
+import type { VendorSignInInput, VendorSignUpInput, VerifyVendorInput } from '@/models/auth.vendor.model';
 import { VendorRepository } from '@/repositories/vendor.repository';
 import { RefreshTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
