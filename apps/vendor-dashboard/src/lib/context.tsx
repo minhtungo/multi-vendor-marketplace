@@ -19,7 +19,7 @@ export const createZustandContext = <TInitial, TStore extends StoreApi<any>>(
   };
 
   return {
-    useStore: (selector: (state: ExtractState<TStore>) => any) => {
+    useStore: <T,>(selector: (state: ExtractState<TStore>) => T) => {
       const store = useContext(Context);
       return useStore(store, selector);
     },

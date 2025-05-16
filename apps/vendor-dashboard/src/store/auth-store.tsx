@@ -52,10 +52,10 @@ const authStore = createStore<AuthState & { actions: AuthActions }>((set) => ({
 
 const { useStore, Provider: AuthProvider } = createZustandContext(() => authStore);
 
-export const useAuthActions = (): AuthActions => useStore((state) => state.actions);
-export const useAuthIsAuthenticated = (): AuthState['isAuthenticated'] => useStore((state) => state.isAuthenticated);
-export const useAuthIsLoaded = (): AuthState['isLoaded'] => useStore((state) => state.isLoaded);
-export const useAuthToken = (): AuthState['token'] => useStore((state) => state.token);
-export const useAuthUserId = (): AuthState['userId'] => useStore((state) => state.userId);
+export const useAuthActions = () => useStore((state) => state.actions);
+export const useAuthIsAuthenticated = () => useStore((state) => state.isAuthenticated);
+export const useAuthIsLoaded = () => useStore((state) => state.isLoaded);
+export const useAuthToken = () => useStore((state) => state.token);
+export const useAuthUserId = () => useStore((state) => state.userId);
 
 export { AuthProvider };
