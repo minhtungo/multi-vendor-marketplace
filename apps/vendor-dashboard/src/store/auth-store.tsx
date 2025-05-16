@@ -7,13 +7,14 @@ import { createStore } from 'zustand';
 export type AuthState = {
   isAuthenticated: boolean;
   token: string;
-  userId: string;
+  vendorId: string;
   isLoaded: boolean;
 };
 
 export type AuthActions = {
   clearSession: () => void;
-  createSession: (token: AuthState['token'], userId: AuthState['userId']) => void;
+  createSession: (token: AuthState['token'], userId: AuthState['vendorId']) => void;
+  setToken: (token: AuthState['token']) => void;
   initializeAuth: () => Promise<void>;
 };
 
@@ -21,14 +22,15 @@ export const initialAuthState: AuthState = {
   isAuthenticated: false,
   isLoaded: false,
   token: '',
-  userId: '',
+  vendorId: '',
 };
 
-const authStore = createStore<AuthState & { actions: AuthActions }>((set) => ({
+export const authStore = createStore<AuthState & { actions: AuthActions }>((set) => ({
   ...initialAuthState,
   actions: {
     clearSession: () => set(initialAuthState),
-    createSession: (token, userId) => set({ token, userId, isAuthenticated: true, isLoaded: true }),
+    createSession: (token, vendorId) => set({ token, vendorId, isAuthenticated: true, isLoaded: true }),
+    setToken: (token) => set({ token }),
     initializeAuth: async () => {
       try {
         const { data } = await renewToken();
@@ -36,12 +38,12 @@ const authStore = createStore<AuthState & { actions: AuthActions }>((set) => ({
           set({ token: data.accessToken });
         }
         const vendor = await getVendor();
-        queryClient.setQueryData(getVendorQueryOptions().queryKey, vendor.data);
         console.log('vendor', vendor);
+        queryClient.setQueryData(getVendorQueryOptions().queryKey, vendor.data);
         set({
           isAuthenticated: true,
           isLoaded: true,
-          userId: vendor.data.id,
+          vendorId: vendor.data.id,
         });
       } catch (error) {
         set({ isAuthenticated: false, isLoaded: true });
@@ -56,6 +58,6 @@ export const useAuthActions = () => useStore((state) => state.actions);
 export const useAuthIsAuthenticated = () => useStore((state) => state.isAuthenticated);
 export const useAuthIsLoaded = () => useStore((state) => state.isLoaded);
 export const useAuthToken = () => useStore((state) => state.token);
-export const useAuthUserId = () => useStore((state) => state.userId);
+export const useAuthVendorId = () => useStore((state) => state.vendorId);
 
 export { AuthProvider };

@@ -20,6 +20,7 @@ import { Route as authResetPasswordImport } from './routes/(auth)/reset-password
 import { Route as authForgotPasswordImport } from './routes/(auth)/forgot-password'
 import { Route as StripeConnectReturnImport } from './routes/stripe/connect/return'
 import { Route as StripeConnectRefreshImport } from './routes/stripe/connect/refresh'
+import { Route as dashboardProductNewImport } from './routes/(dashboard)/product/new'
 
 // Create/Update Routes
 
@@ -75,6 +76,12 @@ const StripeConnectRefreshRoute = StripeConnectRefreshImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const dashboardProductNewRoute = dashboardProductNewImport.update({
+  id: '/product/new',
+  path: '/product/new',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -128,6 +135,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardIndexImport
       parentRoute: typeof dashboardRouteImport
     }
+    '/(dashboard)/product/new': {
+      id: '/(dashboard)/product/new'
+      path: '/product/new'
+      fullPath: '/product/new'
+      preLoaderRoute: typeof dashboardProductNewImport
+      parentRoute: typeof dashboardRouteImport
+    }
     '/stripe/connect/refresh': {
       id: '/stripe/connect/refresh'
       path: '/stripe/connect/refresh'
@@ -167,10 +181,12 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface dashboardRouteRouteChildren {
   dashboardIndexRoute: typeof dashboardIndexRoute
+  dashboardProductNewRoute: typeof dashboardProductNewRoute
 }
 
 const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
   dashboardIndexRoute: dashboardIndexRoute,
+  dashboardProductNewRoute: dashboardProductNewRoute,
 }
 
 const dashboardRouteRouteWithChildren = dashboardRouteRoute._addFileChildren(
@@ -183,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/product/new': typeof dashboardProductNewRoute
   '/stripe/connect/refresh': typeof StripeConnectRefreshRoute
   '/stripe/connect/return': typeof StripeConnectReturnRoute
 }
@@ -193,6 +210,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/product/new': typeof dashboardProductNewRoute
   '/stripe/connect/refresh': typeof StripeConnectRefreshRoute
   '/stripe/connect/return': typeof StripeConnectReturnRoute
 }
@@ -206,6 +224,7 @@ export interface FileRoutesById {
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
   '/(dashboard)/': typeof dashboardIndexRoute
+  '/(dashboard)/product/new': typeof dashboardProductNewRoute
   '/stripe/connect/refresh': typeof StripeConnectRefreshRoute
   '/stripe/connect/return': typeof StripeConnectReturnRoute
 }
@@ -218,6 +237,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/product/new'
     | '/stripe/connect/refresh'
     | '/stripe/connect/return'
   fileRoutesByTo: FileRoutesByTo
@@ -227,6 +247,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/product/new'
     | '/stripe/connect/refresh'
     | '/stripe/connect/return'
   id:
@@ -238,6 +259,7 @@ export interface FileRouteTypes {
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
     | '/(dashboard)/'
+    | '/(dashboard)/product/new'
     | '/stripe/connect/refresh'
     | '/stripe/connect/return'
   fileRoutesById: FileRoutesById
@@ -285,7 +307,8 @@ export const routeTree = rootRoute
     "/(dashboard)": {
       "filePath": "(dashboard)/route.tsx",
       "children": [
-        "/(dashboard)/"
+        "/(dashboard)/",
+        "/(dashboard)/product/new"
       ]
     },
     "/(auth)/forgot-password": {
@@ -306,6 +329,10 @@ export const routeTree = rootRoute
     },
     "/(dashboard)/": {
       "filePath": "(dashboard)/index.tsx",
+      "parent": "/(dashboard)"
+    },
+    "/(dashboard)/product/new": {
+      "filePath": "(dashboard)/product/new.tsx",
       "parent": "/(dashboard)"
     },
     "/stripe/connect/refresh": {

@@ -1,4 +1,4 @@
-import { Home, Package, Settings, ShoppingBag, Users } from 'lucide-react';
+import { Home, Package, PackagePlus, Settings, ShoppingBag, Users } from 'lucide-react';
 
 export const menu = {
   main: [
@@ -31,6 +31,11 @@ export const menu = {
         title: 'Products',
         href: '/products',
         icon: Package,
+      },
+      {
+        title: 'New Product',
+        href: '/product/new',
+        icon: PackagePlus,
       },
       {
         title: 'Customers',

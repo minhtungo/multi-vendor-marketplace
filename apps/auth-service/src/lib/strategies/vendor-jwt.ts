@@ -15,6 +15,7 @@ export default passport.use(
   'vendor-jwt',
   new Strategy(opts, async (payload: AccessTokenPayload, done) => {
     try {
+      console.log('payload', payload);
       // Only verify vendor tokens here
       if (payload.role !== 'vendor') {
         return done(null, false);

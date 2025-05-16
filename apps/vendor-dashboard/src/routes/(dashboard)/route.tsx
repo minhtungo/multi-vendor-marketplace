@@ -1,10 +1,11 @@
 import { AppSidebar } from '@/components/app-sidebar';
 import { client } from '@/configs/client';
-import { SidebarProvider } from '@repo/ui/components/sidebar';
+import { SidebarInset, SidebarProvider } from '@repo/ui/components/sidebar';
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/(dashboard)')({
   beforeLoad: async ({ context }) => {
+    console.log('context', context);
     if (!context.isAuthenticated) {
       throw redirect({ to: client.path.signIn });
     }
@@ -14,15 +15,17 @@ export const Route = createFileRoute('/(dashboard)')({
 
 function RouteComponent() {
   return (
-    <div className="flex min-h-screen">
-      <SidebarProvider>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full">
         <AppSidebar />
-      </SidebarProvider>
-      <main className="flex-1">
-        <div className="overflow-auto">
-          <Outlet />
-        </div>
-      </main>
-    </div>
+        <SidebarInset>
+          <main className="w-full flex-1">
+            <div className="w-full overflow-auto p-4">
+              <Outlet />
+            </div>
+          </main>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
   );
 }

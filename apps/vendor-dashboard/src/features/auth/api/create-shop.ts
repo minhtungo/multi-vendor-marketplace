@@ -34,9 +34,5 @@ export async function createShop(data: CreateShopInput): Promise<
 export function useCreateShopMutation() {
   return useMutation({
     mutationFn: createShop,
-    onSuccess: () => {},
-    onError: (error: Error) => {
-      console.error(error);
-    },
   });
 }

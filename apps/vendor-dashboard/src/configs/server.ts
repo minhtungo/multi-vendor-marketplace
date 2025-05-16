@@ -20,5 +20,8 @@ export const server = {
     payment: {
       createConnectLink: `${vendorPath}/payment/create-connect-link`,
     },
+    product: {
+      createProduct: `${vendorPath}/product`,
+    },
   },
 };

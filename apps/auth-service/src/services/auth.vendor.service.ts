@@ -13,7 +13,7 @@ import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { verify } from 'jsonwebtoken';
 
-export class VendorService {
+export class AuthVendorService {
   private vendorRepository: VendorRepository;
 
   constructor(repository: VendorRepository = new VendorRepository()) {
@@ -59,39 +59,39 @@ export class VendorService {
   ): Promise<
     ServiceResponse<{
       accessToken: string;
-      user: { id: string };
+      vendor: Omit<Vendor, 'password'>;
     } | null>
   > {
     try {
-      const user = await this.vendorRepository.getVendorByEmail(data.email);
+      const vendor = await this.vendorRepository.getVendorByEmail(data.email);
 
-      if (!user || !user.id || !user.password) {
+      if (!vendor || !vendor.id || !vendor.password) {
         return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
       }
 
-      const isPasswordValid = await verifyPassword(user.password, data.password);
+      const isPasswordValid = await verifyPassword(vendor.password, data.password);
 
       if (!isPasswordValid) {
         return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
       }
 
-      const { token: refreshToken, sessionId } = await generateRefreshToken(user.id, 'vendor');
+      const { token: refreshToken, sessionId } = await generateRefreshToken(vendor.id, 'vendor');
 
       const accessToken = generateAccessToken({
-        sub: user.id,
-        email: user.email,
-        userId: user.id,
+        sub: vendor.id,
+        email: vendor.email,
+        userId: vendor.id,
         sessionId,
         role: 'vendor',
       });
 
       setRefreshTokenCookie(res, refreshToken, 'vendor');
-      const { password, ...rest } = user;
+      const { password, ...rest } = vendor;
       return ServiceResponse.success(
         'Signed in successfully',
         {
           accessToken,
-          user: {
+          vendor: {
             ...rest,
           },
         },
@@ -156,7 +156,6 @@ export class VendorService {
 
   async renewToken(req: Request, res: Response): Promise<ServiceResponse<{ accessToken: string } | null>> {
     const refreshToken = req.cookies[env.VENDOR_REFRESH_TOKEN_COOKIE_NAME];
-    console.log('refreshToken', req.cookies);
     if (!refreshToken) {
       return ServiceResponse.failure('No refresh token provided', null, StatusCodes.UNAUTHORIZED);
     }
@@ -213,4 +212,4 @@ export class VendorService {
   }
 }
 
-export const vendorService = new VendorService();
+export const authVendorService = new AuthVendorService();
