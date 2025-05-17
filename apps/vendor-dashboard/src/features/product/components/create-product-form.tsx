@@ -1,11 +1,13 @@
-import { client } from '@/configs/client';
 import { createProductSchema, useCreateProductMutation } from '@/features/product/api/create-product';
+import { UploadProductImages } from '@/features/product/components/upload-product-images';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/components/form';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { Input } from '@repo/ui/components/input';
 import { LoaderButton } from '@repo/ui/components/loader-button';
-import { Link } from '@tanstack/react-router';
+import { Textarea } from '@repo/ui/components/textarea';
+import { type Tag } from 'emblor';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -14,10 +16,7 @@ const defaultFormValues = {
   description: '',
   price: 0,
   image: '',
-  state: '',
-  country: '',
-  postalCode: '',
-  phoneNumber: '',
+  tags: [],
 };
 
 export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
@@ -38,6 +37,7 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
 
   return (
     <Form {...form}>
+      <UploadProductImages />
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
           <FormField
@@ -60,7 +60,7 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Textarea {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -79,71 +79,35 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
-            name="image"
+            name="tags"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image URL</FormLabel>
+              <FormItem className="flex flex-col items-start">
+                <FormLabel className="text-left">Tags</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <TagInput
+                    {...field}
+                    placeholder="Enter a topic"
+                    tags={tags}
+                    className="sm:min-w-[450px]"
+                    setTags={(newTags) => {
+                      console.log(newTags);
+                      const newTagsArray = newTags.map((tag) => ({
+                        id: tag.id,
+                        name: tag.name,
+                      }));
+                      console.log(newTagsArray);
+                      setTags(newTagsArray);
+                    }}
+                    inlineTags={false}
+                    inputFieldPosition="top"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-          />
-          <FormField
-            control={form.control}
-            name="state"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>State</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="country"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Country</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="postalCode"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Postal Code</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="phoneNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          /> */}
         </div>
         {isSuccess && (
           <FormResponse

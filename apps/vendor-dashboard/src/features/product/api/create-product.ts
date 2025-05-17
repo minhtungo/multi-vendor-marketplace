@@ -9,11 +9,9 @@ export const createProductSchema = z.object({
   name: z.string().min(1),
   description: z.string(),
   price: z.number(),
-  image: z.string(),
-  state: z.string(),
-  country: z.string(),
-  postalCode: z.string(),
-  phoneNumber: z.string(),
+  // images: z.array(z.string()),
+
+  // tags: z.array(z.string()),
 });
 
 export type CreateProductInput = z.infer<typeof createProductSchema>;
