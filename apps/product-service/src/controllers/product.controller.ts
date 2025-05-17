@@ -10,6 +10,14 @@ class ProductController {
     const serviceResponse = await productService.createProduct(data, vendorId);
     handleServiceResponse(serviceResponse, res);
   };
+
+  public updateProduct = async (req: Request, res: Response, next: NextFunction) => {
+    const productId = req.params.id;
+    const data = insertProductSchema.partial().parse(req.body);
+    const vendorId = req.user?.id;
+    const serviceResponse = await productService.updateProduct(productId, data, vendorId);
+    handleServiceResponse(serviceResponse, res);
+  };
 }
 
 export const productController = new ProductController();

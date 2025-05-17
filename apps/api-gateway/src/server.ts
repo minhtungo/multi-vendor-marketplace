@@ -38,6 +38,7 @@ app.use(rateLimiter);
 // Routes
 app.use('/health-check', healthCheckRouter);
 app.use('/', proxy(env.AUTH_SERVICE_URL));
+app.use('/product', proxy(env.PRODUCT_SERVICE_URL));
 
 // Swagger UI
 app.use(openAPIRouter);

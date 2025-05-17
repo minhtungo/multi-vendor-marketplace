@@ -33,5 +33,34 @@ productRegistry.registerPath({
     'Product created successfully'
   ),
 });
-
 productRouter.post(paths.products, productController.createProduct);
+
+// Update Product Route
+productRegistry.registerPath({
+  method: 'put',
+  path: `${paths.product}/{id}`,
+  tags: ['Products'],
+  request: {
+    params: z.object({
+      id: z.string().uuid(),
+    }),
+    body: {
+      content: {
+        'application/json': {
+          schema: insertProductSchema.partial(),
+        },
+      },
+    },
+  },
+  responses: createApiResponse(
+    z.object({
+      id: z.string().uuid(),
+      name: z.string(),
+      slug: z.string(),
+      price: z.number(),
+    }),
+    'Product updated successfully'
+  ),
+});
+
+productRouter.put(`${paths.product}/:id`, productController.updateProduct);

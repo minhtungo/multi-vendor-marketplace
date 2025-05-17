@@ -360,7 +360,7 @@ importers:
         specifier: 3.1.2
         version: 3.1.2(@types/node@22.15.17)(jiti@2.4.2)(jsdom@26.1.0)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1)
 
-  apps/store:
+  apps/storefront:
     dependencies:
       '@hookform/resolvers':
         specifier: ^5.0.1

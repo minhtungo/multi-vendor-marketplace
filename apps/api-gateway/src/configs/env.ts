@@ -25,6 +25,9 @@ const envSchema = z.object({
   COMMON_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(1000),
   //URLs
   AUTH_SERVICE_URL: z.string().default('http://localhost:8081'),
+  PRODUCT_SERVICE_URL: z.string().default('http://localhost:8082'),
+  PAYMENT_SERVICE_URL: z.string().default('http://localhost:8083'),
+  UPLOAD_SERVICE_URL: z.string().default('http://localhost:8084'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
