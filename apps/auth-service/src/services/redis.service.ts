@@ -1,5 +1,5 @@
 import { tokenConfig } from '@/configs/token';
-import { getRedisClient } from '@/db/redis';
+import { getRedisClient } from '@repo/redis';
 import { logger } from '@/utils/logger';
 
 export class RedisService {

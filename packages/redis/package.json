@@ -1,0 +1,29 @@
+{
+  "name": "@repo/redis",
+  "version": "1.0.0",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo && rm -rf node_modules"
+  },
+  "dependencies": {
+    "dotenv": "16.5.0",
+    "ioredis": "^5.6.1",
+    "pino": "9.6.0",
+    "pino-http": "10.4.0",
+    "zod": "3.24.3"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/express": "5.0.1"
+  },
+  "peerDependencies": {
+    "express": "5.1.0"
+  }
+}

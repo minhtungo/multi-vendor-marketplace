@@ -1,6 +1,6 @@
 import { hello } from '@repo/server';
 import { env } from '@/configs/env';
-import { closeRedisConnection, getRedisClient } from '@/db/redis';
+import { closeRedisConnection, getRedisClient } from '@repo/redis';
 import { app } from '@/server';
 import { logger } from '@/utils/logger';
 

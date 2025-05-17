@@ -1,6 +1,6 @@
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
-import { getRedisClient } from '@/db/redis';
+import { getRedisClient } from '@repo/redis';
 import type { User } from '@/db/schemas/users';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
 import { emailService } from '@repo/email';

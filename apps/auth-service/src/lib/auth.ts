@@ -1,6 +1,6 @@
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
-import { getRedisClient } from '@/db/redis';
+import { getRedisClient } from '@repo/redis';
 import { emailService } from '@repo/email';
 import { generateOtp } from '@/utils/otp';
 import { ValidationError } from '@repo/server/lib/error-handlers';

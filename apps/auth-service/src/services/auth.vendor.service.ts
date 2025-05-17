@@ -1,5 +1,5 @@
 import { env } from '@/configs/env';
-import { getRedisClient } from '@/db/redis';
+import { getRedisClient } from '@repo/redis';
 import type { InsertVendor, Vendor } from '@/db/schemas/vendors';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
