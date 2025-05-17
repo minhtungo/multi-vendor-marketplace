@@ -1,9 +1,9 @@
-import VerificationEmail from '@/lib/emails/templates/VerificationEmail';
-import PasswordResetEmail from '@/lib/emails/templates/PasswordResetEmail';
-import { env } from '@/configs/env';
 import { render } from '@react-email/components';
 import nodemailer from 'nodemailer';
-import { logger } from '@/utils/logger';
+import { env } from './env';
+import VerificationEmail from './templates/VerificationEmail';
+import PasswordResetEmail from './templates/PasswordResetEmail';
+// import { logger } from '@/utils/logger';
 
 // Configure MailHog transport
 const transporter = nodemailer.createTransport({
@@ -32,11 +32,11 @@ export const emailService = {
         html,
       });
 
-      logger.info(`Email sent to ${to}`);
+      //   logger.info(`Email sent to ${to}`);
 
       return { success: true, messageId: info.messageId };
     } catch (error) {
-      logger.error('Error sending email:', error);
+      //   logger.error('Error sending email:', error);
       throw error;
     }
   },

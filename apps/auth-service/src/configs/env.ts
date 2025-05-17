@@ -34,13 +34,6 @@ const envSchema = z.object({
   REDIS_PASSWORD: z.string().min(1).default(''),
   REDIS_DB_NUMBER: z.coerce.number().int().positive().default(0),
   REDIS_TLS_ENABLED: z.boolean().default(false),
-  //SMTP
-  SMTP_HOST: z.string().min(1).default('localhost'),
-  SMTP_PORT: z.coerce.number().int().positive().default(1025),
-  SMTP_USER: z.string().min(1).default('user'),
-  SMTP_PASSWORD: z.string().min(1).default('password'),
-  SMTP_SERVICE: z.string().min(1).default('gmail'),
-  EMAIL_FROM: z.string().min(1).default('noreply@example.com'),
   // Stripe
   STRIPE_SECRET_KEY: z.string().min(1),
   STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),

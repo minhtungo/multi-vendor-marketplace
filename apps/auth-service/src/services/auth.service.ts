@@ -3,7 +3,7 @@ import { tokenConfig } from '@/configs/token';
 import { getRedisClient } from '@/db/redis';
 import type { User } from '@/db/schemas/users';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
-import { emailService } from '@/lib/emails';
+import { emailService } from '@repo/email';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
 import type { SignInInput, SignUpInput, VerifyUserInput } from '@/models/auth.user.model';
 import { tokenRepository } from '@/repositories/token.repository';

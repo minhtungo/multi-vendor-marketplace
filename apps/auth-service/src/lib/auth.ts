@@ -1,7 +1,7 @@
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
 import { getRedisClient } from '@/db/redis';
-import { emailService } from '@/lib/emails';
+import { emailService } from '@repo/email';
 import { generateOtp } from '@/utils/otp';
 import { ValidationError } from '@repo/server/lib/error-handlers';
 import type { NextFunction, Response } from 'express';
