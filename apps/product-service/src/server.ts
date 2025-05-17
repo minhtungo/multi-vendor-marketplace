@@ -1,22 +1,21 @@
 import cors from 'cors';
 import express, { type Express } from 'express';
-import helmet from 'helmet';
-import proxy from 'express-http-proxy';
+
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
-import rateLimiter from '@/middlewares/rate-limiter';
-import { healthCheckRouter } from '@/routes/health-check.route';
-import { createRequestLogger } from '@repo/server/middlewares/request-logger';
 import errorHandler from '@repo/server/middlewares/error-handler';
+import cookieParser from 'cookie-parser';
+import { productRouter } from '@/routes/product.route';
 
 const app: Express = express();
 
 // Set the application to trust the reverse proxy
-app.set('trust proxy', true);
+// app.set('trust proxy', true);
 
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -30,15 +29,14 @@ app.use(
     credentials: true,
   })
 );
-app.use(helmet());
-app.use(rateLimiter);
+// app.use(helmet());
+// app.use(rateLimiter);
 
 // Request logging
 // app.use(createRequestLogger(env));
 
 // Routes
-app.use('/health-check', healthCheckRouter);
-app.use('/', proxy(env.AUTH_SERVICE_URL));
+app.use('/api/product', productRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
