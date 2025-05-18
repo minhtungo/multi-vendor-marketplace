@@ -146,7 +146,7 @@ authUserRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-authUserRouter.get(paths.me, assertUserAuthentication, authUserController.getMe);
+authUserRouter.get(paths.me, authUserController.getMe);
 
 authUserRegistry.registerPath({
   method: 'get',

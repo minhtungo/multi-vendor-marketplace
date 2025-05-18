@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express, { type Express } from 'express';
+import express, { RequestHandler, type Express } from 'express';
 
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
@@ -7,6 +7,7 @@ import errorHandler from '@repo/server/middlewares/error-handler';
 import cookieParser from 'cookie-parser';
 import { productRouter } from '@/routes/product.route';
 import { productCategoryRouter } from '@/routes/product-category.route';
+import { extractUserContext } from '@/middlewares/user-context';
 
 const app: Express = express();
 
@@ -35,6 +36,8 @@ app.use(
 
 // Request logging
 // app.use(createRequestLogger(env));
+
+app.use(extractUserContext as RequestHandler);
 
 // Routes
 app.use('/api/product', productRouter);

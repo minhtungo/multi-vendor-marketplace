@@ -1,7 +1,7 @@
 import { appConfig } from '@/configs/app';
 import { env } from '@/configs/env';
-import { proxyOptions } from '@/lib/proxy-options';
-import validateToken from '@/middlewares/auth';
+import { proxyOptions, forwardUserContext } from '@/lib/proxy-options';
+import { validateToken, requireVendorRole } from '@/middlewares/auth';
 import rateLimiter from '@/middlewares/rate-limiter';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import { logger } from '@/utils/logger';
@@ -47,6 +47,7 @@ app.use(
       if (srcReq.headers.authorization) {
         proxyReqOpts.headers = proxyReqOpts.headers || {};
       }
+
       return proxyReqOpts;
     },
     userResDecorator: (proxyRes, proxyResData) => {
@@ -58,14 +59,11 @@ app.use(
 
 app.use(
   `/${appConfig.apiVersion}/product`,
+  validateToken,
+  requireVendorRole,
   proxy(env.PRODUCT_SERVICE_URL, {
     ...proxyOptions,
-    proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
-      if (srcReq.headers.authorization) {
-        proxyReqOpts.headers = proxyReqOpts.headers || {};
-      }
-      return proxyReqOpts;
-    },
+    proxyReqOptDecorator: forwardUserContext,
     userResDecorator: (proxyRes, proxyResData) => {
       logger.info(`Response received from Product service: ${proxyRes.statusCode}`);
       return proxyResData;

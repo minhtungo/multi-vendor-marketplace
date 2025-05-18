@@ -3,6 +3,25 @@ import { logger } from '@/utils/logger';
 import type { Request, Response, NextFunction } from 'express';
 import type { ProxyOptions } from 'express-http-proxy';
 
+type ProxyReqOptDecorator = (proxyReqOpts: any, srcReq: Request) => any;
+
+export const forwardUserContext: ProxyReqOptDecorator = (proxyReqOpts, srcReq) => {
+  proxyReqOpts.headers = proxyReqOpts.headers || {};
+
+  if (srcReq.headers.authorization) {
+    proxyReqOpts.headers.authorization = srcReq.headers.authorization;
+  }
+
+  if (srcReq.user) {
+    const headers = proxyReqOpts.headers as Record<string, string>;
+    headers['x-user-id'] = srcReq.user.id;
+    headers['x-user-email'] = srcReq.user.email;
+    headers['x-user-role'] = srcReq.user.role;
+  }
+
+  return proxyReqOpts;
+};
+
 export const proxyOptions: ProxyOptions = {
   proxyReqPathResolver: (req: Request) => {
     console.log(req.originalUrl);

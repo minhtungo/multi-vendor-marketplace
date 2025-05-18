@@ -9,6 +9,7 @@ export const createToken = (user: User) => {
       sub: user.id,
       email: user.email,
       userId: user.id,
+      role: user.role,
     },
     JWT_SECRET,
     {

@@ -1,6 +1,7 @@
 declare namespace Express {
-  interface User {
+  export interface User {
     id: string;
     email: string;
+    role: string;
   }
 }

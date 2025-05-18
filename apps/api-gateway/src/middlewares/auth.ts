@@ -1,17 +1,9 @@
-import { appConfig } from '@/configs/app';
 import { env } from '@/configs/env';
 import { logger } from '@/utils/logger';
-import { NextFunction, Request, Response, RequestHandler } from 'express';
-import jwt from 'jsonwebtoken';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { verify } from 'jsonwebtoken';
 
 const validateToken = ((req: Request, res: Response, next: NextFunction) => {
-  if (
-    req.path.startsWith(`/${appConfig.apiVersion}/api/auth`) ||
-    req.path === `/${appConfig.apiVersion}/health-check`
-  ) {
-    return next();
-  }
-
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith('Bearer ')) {
@@ -29,12 +21,33 @@ const validateToken = ((req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    const decoded = jwt.verify(token, env.JWT_SECRET);
-    req.user = decoded;
+    const decoded = verify(token, env.JWT_SECRET) as {
+      sub: string;
+      email: string;
+      userId: string;
+      role: 'user' | 'vendor';
+    };
+
+    req.user = {
+      id: decoded.userId,
+      email: decoded.email,
+      role: decoded.role,
+    };
+
     next();
   } catch (error) {
     return res.status(401).json({ message: 'Invalid token' });
   }
 }) as RequestHandler;
 
-export default validateToken;
+const requireVendorRole = ((req: Request, res: Response, next: NextFunction) => {
+  if (req.user?.role !== 'vendor') {
+    return res.status(403).json({
+      message: 'Access denied. Only vendors can access this resource.',
+      success: false,
+    });
+  }
+  next();
+}) as RequestHandler;
+
+export { requireVendorRole, validateToken };
