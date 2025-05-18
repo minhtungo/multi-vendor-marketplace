@@ -1,10 +1,6 @@
 {
   "name": "@repo/product-service",
-  "version": "1.0.14",
-  "description": "An Express boilerplate backend",
-  "author": "Edwin Hernandez",
-  "repository": "edwinhern/express-typescript-2024",
-  "license": "MIT",
+  "version": "1",
   "main": "index.ts",
   "private": true,
   "scripts": {

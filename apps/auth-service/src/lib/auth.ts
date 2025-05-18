@@ -3,7 +3,7 @@ import { tokenConfig } from '@/configs/token';
 import { getRedisClient } from '@repo/redis';
 import { emailService } from '@repo/email';
 import { generateOtp } from '@/utils/otp';
-import { ValidationError } from '@repo/server/lib/error-handlers';
+import { ValidationError } from '@repo/server/lib/core/errors';
 import type { NextFunction, Response } from 'express';
 
 const OTP_EXPIRY = 60 * 5;

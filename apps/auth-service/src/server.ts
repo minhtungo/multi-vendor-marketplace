@@ -5,13 +5,15 @@ import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
 import '@/lib/strategies/jwt';
 import '@/lib/strategies/vendor-jwt';
+import rateLimiter from '@/middlewares/rateLimiter';
 import { authUserRouter } from '@/routes/auth.user.route';
+import { authVendorRouter } from '@/routes/auth.vendor.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
+import { paymentRouter } from '@/routes/payment.route';
 import errorHandler from '@repo/server/middlewares/error-handler';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import passport from 'passport';
-import { authVendorRouter } from '@/routes/auth.vendor.route';
-import { paymentRouter } from '@/routes/payment.route';
 
 const app: Express = express();
 
@@ -36,8 +38,8 @@ app.use(
     credentials: true,
   })
 );
-// app.use(helmet());
-// app.use(rateLimiter);
+app.use(helmet());
+app.use(rateLimiter);
 
 // Request logging
 // app.use(createRequestLogger(env));

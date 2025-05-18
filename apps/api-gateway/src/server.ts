@@ -1,7 +1,10 @@
+import { appConfig } from '@/configs/app';
 import { env } from '@/configs/env';
-import { openAPIRouter } from '@/docs/openAPIRouter';
+import { proxyOptions } from '@/lib/proxy-options';
+import validateToken from '@/middlewares/auth';
 import rateLimiter from '@/middlewares/rate-limiter';
 import { healthCheckRouter } from '@/routes/health-check.route';
+import { logger } from '@/utils/logger';
 import errorHandler from '@repo/server/middlewares/error-handler';
 import cors from 'cors';
 import express, { type Express } from 'express';
@@ -32,16 +35,43 @@ app.use(
 app.use(helmet());
 app.use(rateLimiter);
 
-// Request logging
-// app.use(createRequestLogger(env));
-
 // Routes
-app.use('/health-check', healthCheckRouter);
-app.use('/', proxy(env.AUTH_SERVICE_URL));
-app.use('/product', proxy(env.PRODUCT_SERVICE_URL));
+app.use(`/${appConfig.apiVersion}/health-check`, healthCheckRouter);
 
-// Swagger UI
-app.use(openAPIRouter);
+app.use(
+  `/${appConfig.apiVersion}/auth`,
+  proxy(env.AUTH_SERVICE_URL, {
+    ...proxyOptions,
+    proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
+      // Forward the authorization header
+      if (srcReq.headers.authorization) {
+        proxyReqOpts.headers = proxyReqOpts.headers || {};
+      }
+      return proxyReqOpts;
+    },
+    userResDecorator: (proxyRes, proxyResData) => {
+      logger.info(`Response received from Auth service: ${proxyRes.statusCode}`);
+      return proxyResData;
+    },
+  })
+);
+
+app.use(
+  `/${appConfig.apiVersion}/product`,
+  proxy(env.PRODUCT_SERVICE_URL, {
+    ...proxyOptions,
+    proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
+      if (srcReq.headers.authorization) {
+        proxyReqOpts.headers = proxyReqOpts.headers || {};
+      }
+      return proxyReqOpts;
+    },
+    userResDecorator: (proxyRes, proxyResData) => {
+      logger.info(`Response received from Product service: ${proxyRes.statusCode}`);
+      return proxyResData;
+    },
+  })
+);
 
 // Error handlers
 app.use(errorHandler());

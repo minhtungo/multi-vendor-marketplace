@@ -1,4 +1,4 @@
-const basePath = '/api';
+const basePath = '/v1';
 const authPath = `${basePath}/auth/user`;
 
 export const server = {

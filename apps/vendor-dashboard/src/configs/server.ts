@@ -1,4 +1,4 @@
-const basePath = '/api';
+const basePath = '/v1';
 const authPath = `${basePath}/auth/vendor`;
 const vendorPath = `${basePath}/vendor`;
 

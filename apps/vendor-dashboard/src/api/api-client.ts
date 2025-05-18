@@ -2,7 +2,7 @@ import { renewToken } from '@/api/auth/renew-token';
 import { type CustomAxiosRequestConfig, baseAxiosConfig } from '@/api/axios';
 import { client } from '@/configs/client';
 import { env } from '@/configs/env';
-import { authStore, useAuthActions, useAuthToken } from '@/store/auth-store';
+import { authStore } from '@/store/auth-store';
 import Axios, { type AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'sonner';
 

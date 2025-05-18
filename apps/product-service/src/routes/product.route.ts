@@ -10,28 +10,28 @@ export const productRegistry = new OpenAPIRegistry();
 export const productRouter: Router = Router();
 
 // Get Single Product Route
-productRegistry.registerPath({
-  method: 'get',
-  path: `${paths.product}/{id}`,
-  tags: ['Products'],
-  request: {
-    params: z.object({
-      id: z.string().uuid(),
-    }),
-  },
-  responses: createApiResponse(
-    z.object({
-      id: z.string().uuid(),
-      name: z.string(),
-      slug: z.string(),
-      price: z.number(),
-      vendorId: z.string().uuid(),
-      createdAt: z.string().datetime(),
-      updatedAt: z.string().datetime(),
-    }),
-    'Product retrieved successfully'
-  ),
-});
+// productRegistry.registerPath({
+//   method: 'get',
+//   path: `${paths.product}/{id}`,
+//   tags: ['Products'],
+//   request: {
+//     params: z.object({
+//       id: z.string().uuid(),
+//     }),
+//   },
+//   responses: createApiResponse(
+//     z.object({
+//       id: z.string().uuid(),
+//       name: z.string(),
+//       slug: z.string(),
+//       price: z.number(),
+//       vendorId: z.string().uuid(),
+//       createdAt: z.string().datetime(),
+//       updatedAt: z.string().datetime(),
+//     }),
+//     'Product retrieved successfully'
+//   ),
+// });
 
 productRouter.get(`${paths.product}/:id`, productController.getProduct);
 
@@ -92,7 +92,7 @@ productRouter.post(paths.products, productController.createProduct);
 // Update Product Route
 productRegistry.registerPath({
   method: 'put',
-  path: `${paths.product}/{id}`,
+  path: '/product/{id}',
   tags: ['Products'],
   request: {
     params: z.object({

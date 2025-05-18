@@ -98,4 +98,4 @@ productCategoryRegistry.registerPath({
   responses: createApiResponse(productCategorySchema, 'All product categories deleted successfully'),
 });
 
-productCategoryRouter.delete(paths.productCategories, productCategoryController.deleteAllProductCategories);
+productCategoryRouter.delete(`${paths.productCategories}/all`, productCategoryController.deleteAllProductCategories);
