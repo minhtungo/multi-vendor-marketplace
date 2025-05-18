@@ -1,6 +1,6 @@
 import { paths } from '@/configs/paths';
 import { productController } from '@/controllers/product.controller';
-import { insertProductSchema } from '@/db/schemas/products';
+import { insertProductSchema, productSchema } from '@/db/schemas/products';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
@@ -35,6 +35,33 @@ productRegistry.registerPath({
 
 productRouter.get(`${paths.product}/:id`, productController.getProduct);
 
+// Get All Products Route with Pagination
+productRegistry.registerPath({
+  method: 'get',
+  path: paths.products,
+  tags: ['Products'],
+  request: {
+    query: z.object({
+      page: z.string().transform(Number).default('1'),
+      limit: z.string().transform(Number).default('20'),
+    }),
+  },
+  responses: createApiResponse(
+    z.object({
+      products: z.array(productSchema),
+      pagination: z.object({
+        total: z.number(),
+        page: z.number(),
+        limit: z.number(),
+        totalPages: z.number(),
+      }),
+    }),
+    'Products retrieved successfully'
+  ),
+});
+
+productRouter.get(paths.products, productController.getAllProducts);
+
 // Create Product Route
 productRegistry.registerPath({
   method: 'post',
@@ -59,6 +86,7 @@ productRegistry.registerPath({
     'Product created successfully'
   ),
 });
+
 productRouter.post(paths.products, productController.createProduct);
 
 // Update Product Route
