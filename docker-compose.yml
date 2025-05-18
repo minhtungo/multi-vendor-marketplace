@@ -3,14 +3,12 @@ services:
   auth-db:
     image: postgres:latest
     restart: always
-    environment:
-      POSTGRES_DB: ${AUTH_DB_DB}
-      POSTGRES_USER: ${AUTH_DB_USER}
-      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
+    env_file:
+      - apps/auth-service/.env
     volumes:
       - ./docker-data/auth-db:/var/lib/postgresql/data
     ports:
-      - ${AUTH_DB_PORT}:5432
+      - 5432:5432
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${AUTH_DB_USER} -d ${AUTH_DB_DB}']
       interval: 5s
@@ -23,14 +21,12 @@ services:
   product-db:
     image: postgres:latest
     restart: always
-    environment:
-      POSTGRES_DB: ${PRODUCT_DB_DB}
-      POSTGRES_USER: ${PRODUCT_DB_USER}
-      POSTGRES_PASSWORD: ${PRODUCT_DB_PASSWORD}
+    env_file:
+      - apps/product-service/.env
     volumes:
       - ./docker-data/product-db:/var/lib/postgresql/data
     ports:
-      - ${PRODUCT_DB_PORT}:5432
+      - 5433:5432
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${PRODUCT_DB_USER} -d ${PRODUCT_DB_DB}']
       interval: 5s
