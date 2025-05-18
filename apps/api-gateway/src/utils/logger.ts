@@ -1,3 +1,3 @@
-import { pino } from 'pino';
+import { createLogger } from '@repo/server/lib/logger';
 
-export const logger = pino({ name: 'server start' });
+export const logger = createLogger({ name: 'api-gateway' });
