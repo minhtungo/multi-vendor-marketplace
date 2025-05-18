@@ -65,10 +65,10 @@ class ProductCategoryService {
     }
   }
 
-  public async deleteAllProductCategories(): Promise<ServiceResponse<ProductCategory[] | null>> {
+  public async deleteAllProductCategories(): Promise<ServiceResponse<null>> {
     try {
-      const deletedCategories = await this.categoryRepo.deleteAllCategories();
-      return ServiceResponse.success('All product categories deleted successfully', deletedCategories, StatusCodes.OK);
+      await this.categoryRepo.deleteAllCategories();
+      return ServiceResponse.success('All product categories deleted successfully', null, StatusCodes.OK);
     } catch (error) {
       const errorMessage = `Error deleting all product categories: ${(error as Error).message}`;
       logger.error(errorMessage);
@@ -76,7 +76,7 @@ class ProductCategoryService {
     }
   }
 
-  public async deleteProductCategory(categoryId: string): Promise<ServiceResponse<ProductCategory | null>> {
+  public async deleteProductCategory(categoryId: string): Promise<ServiceResponse<null>> {
     try {
       const category = await this.categoryRepo.getCategoryById(categoryId);
 
@@ -84,8 +84,8 @@ class ProductCategoryService {
         return ServiceResponse.failure('Product category not found', null, StatusCodes.NOT_FOUND);
       }
 
-      const deletedCategory = await this.categoryRepo.deleteCategory(categoryId);
-      return ServiceResponse.success('Product category deleted successfully', deletedCategory, StatusCodes.OK);
+      await this.categoryRepo.deleteCategory(categoryId);
+      return ServiceResponse.success('Product category deleted successfully', null, StatusCodes.OK);
     } catch (error) {
       const errorMessage = `Error deleting product category: ${(error as Error).message}`;
       logger.error(errorMessage);

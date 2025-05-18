@@ -21,7 +21,11 @@ export const server = {
       connect: `${vendorPath}/payment/create-connect-link`,
     },
     product: {
-      createProduct: `${vendorPath}/product`,
+      root: `${vendorPath}/product`,
+      create: `${vendorPath}/product`,
+    },
+    productCategory: {
+      root: `${vendorPath}/product-category`,
     },
   },
-};
+} as const;

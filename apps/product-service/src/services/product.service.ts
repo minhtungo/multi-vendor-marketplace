@@ -115,7 +115,7 @@ class ProductService {
     }
   }
 
-  public async deleteProduct(productId: string, vendorId: string): Promise<ServiceResponse<Product | null>> {
+  public async deleteProduct(productId: string, vendorId: string): Promise<ServiceResponse<null>> {
     try {
       const product = await this.productRepo.getProductById(productId);
 
@@ -126,9 +126,8 @@ class ProductService {
       if (product.vendorId !== vendorId) {
         return ServiceResponse.failure('Unauthorized to delete this product', null, StatusCodes.FORBIDDEN);
       }
-
-      const deletedProduct = await this.productRepo.deleteProduct(productId);
-      return ServiceResponse.success('Product deleted successfully', deletedProduct, StatusCodes.OK);
+      await this.productRepo.deleteProduct(productId);
+      return ServiceResponse.success('Product deleted successfully', null, StatusCodes.OK);
     } catch (error) {
       const errorMessage = `Error deleting product: ${(error as Error).message}`;
       logger.error(errorMessage);
