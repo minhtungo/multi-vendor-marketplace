@@ -29,6 +29,18 @@ export class ProductRepository {
 
     return updatedProduct;
   }
+
+  public async deleteAllProducts(vendorId: string, trx: typeof db = this.dbInstance) {
+    const deletedProducts = await trx.delete(products).where(eq(products.vendorId, vendorId)).returning();
+
+    return deletedProducts;
+  }
+
+  public async deleteProduct(productId: string, trx: typeof db = this.dbInstance) {
+    const [deletedProduct] = await trx.delete(products).where(eq(products.id, productId)).returning();
+
+    return deletedProduct;
+  }
 }
 
 export const productRepository = new ProductRepository();

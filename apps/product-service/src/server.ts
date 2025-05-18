@@ -6,6 +6,7 @@ import { openAPIRouter } from '@/docs/openAPIRouter';
 import errorHandler from '@repo/server/middlewares/error-handler';
 import cookieParser from 'cookie-parser';
 import { productRouter } from '@/routes/product.route';
+import { productCategoryRouter } from '@/routes/product-category.route';
 
 const app: Express = express();
 
@@ -37,6 +38,7 @@ app.use(
 
 // Routes
 app.use('/api/product', productRouter);
+app.use('/api/product-category', productCategoryRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
