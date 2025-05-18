@@ -30,7 +30,7 @@ services:
     volumes:
       - ./docker-data/product-db:/var/lib/postgresql/data
     ports:
-      - ${PRODUCT_DB_PORT}:5433
+      - ${PRODUCT_DB_PORT}:5432
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${PRODUCT_DB_USER} -d ${PRODUCT_DB_DB}']
       interval: 5s
@@ -77,5 +77,6 @@ networks:
 
 volumes:
   auth-db-data:
+  product-db-data:
   redis-data:
   mailhog-data:
