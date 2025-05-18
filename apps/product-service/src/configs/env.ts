@@ -28,6 +28,12 @@ const envSchema = z.object({
   REDIS_PASSWORD: z.string().min(1).default(''),
   REDIS_DB_NUMBER: z.coerce.number().int().positive().default(0),
   REDIS_TLS_ENABLED: z.boolean().default(false),
+  // Database
+  POSTGRES_PORT: z.coerce.number().int().positive().default(5433),
+  POSTGRES_USER: z.string().min(1),
+  POSTGRES_PASSWORD: z.string().min(1),
+  POSTGRES_DB: z.string().min(1),
+  DATABASE_URL: z.string().min(1),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

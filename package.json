@@ -12,9 +12,14 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "db:migrate": "pnpm run --filter @repo/auth-service db:migrate",
-    "db:push": "pnpm run --filter @repo/auth-service db:push",
-    "db:studio": "pnpm run --filter @repo/auth-service db:studio"
+    "auth-db:generate": "pnpm run --filter @repo/auth-service db:generate",
+    "auth-db:migrate": "pnpm run --filter @repo/auth-service db:migrate",
+    "auth-db:push": "pnpm run --filter @repo/auth-service db:push",
+    "auth-db:studio": "pnpm run --filter @repo/auth-service db:studio",
+    "product-db:generate": "pnpm run --filter @repo/product-service db:generate",
+    "product-db:migrate": "pnpm run --filter @repo/product-service db:migrate",
+    "product-db:push": "pnpm run --filter @repo/product-service db:push",
+    "product-db:studio": "pnpm run --filter @repo/product-service db:studio"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

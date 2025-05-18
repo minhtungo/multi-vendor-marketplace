@@ -1,23 +1,44 @@
 services:
   # Auth service database
-  db:
+  auth-db:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${AUTH_DB_DB}
+      POSTGRES_USER: ${AUTH_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
     volumes:
-      - ./docker-data/db:/var/lib/postgresql/data
+      - ./docker-data/auth-db:/var/lib/postgresql/data
     ports:
-      - ${DB_PORT}:5432
+      - ${AUTH_DB_PORT}:5432
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
+      test: ['CMD-SHELL', 'pg_isready -U ${AUTH_DB_USER} -d ${AUTH_DB_DB}']
       interval: 5s
       timeout: 5s
       retries: 5
     networks:
       - backend-network
+
+  # Product service database
+  product-db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: ${PRODUCT_DB_DB}
+      POSTGRES_USER: ${PRODUCT_DB_USER}
+      POSTGRES_PASSWORD: ${PRODUCT_DB_PASSWORD}
+    volumes:
+      - ./docker-data/product-db:/var/lib/postgresql/data
+    ports:
+      - ${PRODUCT_DB_PORT}:5433
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${PRODUCT_DB_USER} -d ${PRODUCT_DB_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend-network
+
   # Redis service
   redis:
     image: redis:alpine
@@ -26,6 +47,11 @@ services:
     volumes:
       - ./docker-data/redis:/data
     command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - backend-network
   # MailHog for email testing
@@ -36,7 +62,12 @@ services:
       - '1025:1025' # SMTP server
       - '8025:8025' # Web UI
     volumes:
-      - ./docker-data/mailhog-data:/var/lib/mailhog
+      - ./docker-data/mailhog:/var/lib/mailhog
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', 'http://localhost:8025/api/v2/messages']
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - backend-network
 
@@ -47,3 +78,4 @@ networks:
 volumes:
   auth-db-data:
   redis-data:
+  mailhog-data:
