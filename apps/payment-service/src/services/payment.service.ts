@@ -1,17 +1,19 @@
 import { env } from '@/configs/env';
 import { stripe } from '@/lib/stripe';
-import { vendorRepository } from '@/repositories/vendor.repository';
-import { ServiceResponse } from '@repo/server/lib';
+import { paymentRepository } from '@/repositories/payment.repository';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
+import { ServiceResponse } from '@repo/server/lib';
 
-class StripeService {
-  public async createConnectAccountLink(vendorId: string): Promise<ServiceResponse<{ url: string } | null>> {
+class PaymentService {
+  constructor(private readonly paymentRepo = paymentRepository) {}
+
+  public async createConnectAccountLink(vendor: Express.User): Promise<ServiceResponse<{ url: string } | null>> {
     try {
-      const vendor = await vendorRepository.getVendorById(vendorId);
+      // const vendor = await vendorRepository.getVendorById(vendorId);
 
-      if (!vendor) {
-        return ServiceResponse.failure('Vendor not found', null, HTTP_STATUS_CODES.NOT_FOUND);
-      }
+      // if (!vendor) {
+      //   return ServiceResponse.failure('Vendor not found', null, HTTP_STATUS_CODES.NOT_FOUND);
+      // }
 
       const account = await stripe.accounts.create({
         type: 'express',
@@ -23,7 +25,7 @@ class StripeService {
         },
       });
 
-      await vendorRepository.updateVendor(vendorId, { stripeId: account.id });
+      // await vendorRepository.updateVendor(vendorId, { stripeId: account.id });
 
       const accountLink = await stripe.accountLinks.create({
         account: account.id,
@@ -46,4 +48,4 @@ class StripeService {
   }
 }
 
-export const stripeService = new StripeService();
+export const paymentService = new PaymentService();

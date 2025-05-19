@@ -1,5 +1,5 @@
 {
-  "name": "@repo/product-service",
+  "name": "@repo/payment-service",
   "version": "1",
   "main": "index.ts",
   "private": true,
@@ -30,6 +30,7 @@
     "express": "5.1.0",
     "express-rate-limit": "7.5.0",
     "pg": "^8.15.6",
+    "stripe": "^14.25.0",
     "swagger-ui-express": "5.0.1",
     "zod": "3.24.3"
   },

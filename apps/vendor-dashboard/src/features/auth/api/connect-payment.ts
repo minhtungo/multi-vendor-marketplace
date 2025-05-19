@@ -1,4 +1,4 @@
-import { privateApi, publicApi } from '@/api/api-client';
+import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
 import type { ApiResponse } from '@/types/api';
 import { useMutation } from '@tanstack/react-query';

@@ -1,5 +1,6 @@
-import { passwordRegex } from '../utils/regex'
-import { z } from 'zod'
+import { z } from 'zod';
+
+import { passwordRegex } from '../utils/regex';
 
 export const commonValidations = {
   id: z
@@ -20,8 +21,5 @@ export const commonValidations = {
     })
     .min(8, 'Password must be at least 8 characters long')
     .max(64, 'Password must be at most 64 characters')
-    .regex(
-      passwordRegex,
-      'Password must contain at least one uppercase letter, one lowercase letter, and one number',
-    ),
-}
+    .regex(passwordRegex, 'Password must contain at least one uppercase letter, one lowercase letter, and one number'),
+};

@@ -1,8 +1,5 @@
-import { paymentPaths } from '@/configs/paths';
 import { paymentController } from '@/controllers/payment.controller';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
-import { assertVendorAuthentication } from '@/middlewares/assertAuthentication';
-import { CreateConnectLinkSchema } from '@/models/stripe.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';
@@ -12,13 +9,13 @@ export const paymentRouter: Router = Router();
 
 paymentRegistry.registerPath({
   method: 'post',
-  path: `/vendor/payment/${paymentPaths.createConnectLink}`,
+  path: `/create-connect-link`,
   tags: ['Payment'],
   request: {
     body: {
       content: {
         'application/json': {
-          schema: CreateConnectLinkSchema,
+          schema: z.object({}),
         },
       },
     },
@@ -31,9 +28,4 @@ paymentRegistry.registerPath({
   ),
 });
 
-paymentRouter.post(
-  paymentPaths.createConnectLink,
-  assertVendorAuthentication,
-  // validateRequest(z.object({ body: CreateConnectLinkSchema })),
-  paymentController.createStripeConnectLink
-);
+paymentRouter.post('/create-connect-link', paymentController.createStripeConnectLink);

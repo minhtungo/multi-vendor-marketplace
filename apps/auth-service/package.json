@@ -22,7 +22,6 @@
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.0",
     "@repo/email": "workspace:*",
-    "@repo/lib": "workspace:*",
     "@repo/redis": "workspace:*",
     "@repo/server": "workspace:*",
     "@repo/typescript-config": "workspace:*",
@@ -38,7 +37,6 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.15.6",
-    "stripe": "^14.25.0",
     "swagger-ui-express": "5.0.1",
     "zod": "3.24.3"
   },

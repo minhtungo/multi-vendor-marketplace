@@ -1,6 +1,7 @@
 const basePath = '/v1';
 const authPath = `${basePath}/auth/vendor`;
 const vendorPath = `${basePath}/vendor`;
+const paymentPath = `${basePath}/payment`;
 
 export const server = {
   path: {
@@ -18,7 +19,7 @@ export const server = {
       root: `${authPath}/shop`,
     },
     payment: {
-      connect: `${vendorPath}/payment/create-connect-link`,
+      connect: `${paymentPath}/create-connect-link`,
     },
     product: {
       root: `${vendorPath}/product`,

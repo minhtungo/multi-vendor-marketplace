@@ -8,7 +8,6 @@ import '@/lib/strategies/vendor-jwt';
 import { authUserRouter } from '@/routes/auth.user.route';
 import { authVendorRouter } from '@/routes/auth.vendor.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
-import { paymentRouter } from '@/routes/payment.route';
 import { errorHandler, createRequestLogger } from '@repo/server/middlewares';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
@@ -44,7 +43,6 @@ env.isProduction && app.use(createRequestLogger(env));
 app.use('/api/health-check', healthCheckRouter);
 app.use('/api/auth/vendor', authVendorRouter);
 app.use('/api/auth/user', authUserRouter);
-app.use('/api/vendor/payment', paymentRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

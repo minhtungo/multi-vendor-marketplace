@@ -71,6 +71,21 @@ app.use(
   })
 );
 
+// Payment service
+app.use(
+  `/${appConfig.apiVersion}/payment`,
+  validateToken,
+  requireVendorRole,
+  proxy(env.PAYMENT_SERVICE_URL, {
+    ...proxyOptions,
+    proxyReqOptDecorator: forwardUserContext,
+    userResDecorator: (proxyRes, proxyResData) => {
+      logger.info(`Response received from Payment service: ${proxyRes.statusCode}`);
+      return proxyResData;
+    },
+  })
+);
+
 // Error handlers
 app.use(errorHandler());
 

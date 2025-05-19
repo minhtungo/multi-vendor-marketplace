@@ -1,11 +1,11 @@
-import { stripeService } from '@/services/stripe.service';
+import { paymentService } from '@/services/payment.service';
 import { handleServiceResponse } from '@repo/server/lib';
-import { Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 class PaymentController {
   public createStripeConnectLink = async (req: Request, res: Response) => {
     // const data = CreateConnectLinkSchema.parse(req.body);
-    const serviceResponse = await stripeService.createConnectAccountLink(req.user?.id!);
+    const serviceResponse = await paymentService.createConnectAccountLink(req.user!);
     handleServiceResponse(serviceResponse, res);
   };
 }

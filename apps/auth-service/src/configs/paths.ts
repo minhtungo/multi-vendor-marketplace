@@ -17,7 +17,3 @@ export const vendorPaths = {
   renewToken: '/renew-token',
   me: '/me',
 };
-
-export const paymentPaths = {
-  createConnectLink: '/create-connect-link',
-};
