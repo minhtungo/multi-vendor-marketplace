@@ -58,7 +58,7 @@ app.use(
 );
 
 app.use(
-  `/${appConfig.apiVersion}/product`,
+  `/${appConfig.apiVersion}/products`,
   validateToken,
   requireVendorRole,
   proxy(env.PRODUCT_SERVICE_URL, {

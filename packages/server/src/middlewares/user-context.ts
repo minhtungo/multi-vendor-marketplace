@@ -1,5 +1,5 @@
-import { handleServiceResponse } from '@repo/server/lib/http-handlers';
-import { ServiceResponse } from '@repo/server/lib/service-response';
+import { handleServiceResponse } from '../lib/http-handlers';
+import { ServiceResponse } from '../lib/service-response';
 import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 

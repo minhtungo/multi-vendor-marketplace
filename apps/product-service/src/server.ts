@@ -7,7 +7,7 @@ import errorHandler from '@repo/server/middlewares/error-handler';
 import cookieParser from 'cookie-parser';
 import { productRouter } from '@/routes/product.route';
 import { productCategoryRouter } from '@/routes/product-category.route';
-import { extractUserContext } from '@/middlewares/user-context';
+import { extractUserContext } from '@repo/server/middlewares/user-context';
 
 const app: Express = express();
 
@@ -40,8 +40,8 @@ app.use(
 app.use(extractUserContext as RequestHandler);
 
 // Routes
-app.use('/api/product', productRouter);
-app.use('/api/product-category', productCategoryRouter);
+app.use('/api/products/categories', productCategoryRouter);
+app.use('/api/products', productRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

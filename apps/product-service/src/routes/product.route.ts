@@ -12,7 +12,7 @@ export const productRouter: Router = Router();
 // Get Single Product Route
 productRegistry.registerPath({
   method: 'get',
-  path: `${paths.product}/{id}`,
+  path: `/products/{id}`,
   tags: ['Products'],
   request: {
     params: z.object({
@@ -22,7 +22,7 @@ productRegistry.registerPath({
   responses: createApiResponse(productSchema, 'Product retrieved successfully'),
 });
 
-productRouter.get(`${paths.product}/:id`, productController.getProduct);
+productRouter.get(`/:id`, productController.getProduct);
 
 // Get All Products Route with Pagination
 productRegistry.registerPath({
@@ -49,7 +49,7 @@ productRegistry.registerPath({
   ),
 });
 
-productRouter.get(paths.products, productController.getAllProducts);
+productRouter.get('/', productController.getAllProducts);
 
 // Create Product Route
 productRegistry.registerPath({
@@ -81,7 +81,7 @@ productRouter.post(paths.products, productController.createProduct);
 // Update Product Route
 productRegistry.registerPath({
   method: 'put',
-  path: '/product/{id}',
+  path: `${paths.products}{id}`,
   tags: ['Products'],
   request: {
     params: z.object({
@@ -106,22 +106,22 @@ productRegistry.registerPath({
   ),
 });
 
-productRouter.put(`${paths.product}/:id`, productController.updateProduct);
+productRouter.put(`/:id`, productController.updateProduct);
 
 // Delete All Products Route
 productRegistry.registerPath({
   method: 'delete',
-  path: `${paths.products}/all`,
+  path: `/products/all`,
   tags: ['Products'],
   responses: createApiResponse(z.null(), 'All products deleted successfully'),
 });
 
-productRouter.delete(`${paths.products}/all`, productController.deleteAllProducts);
+productRouter.delete(`/all`, productController.deleteAllProducts);
 
 // Delete Product Route
 productRegistry.registerPath({
   method: 'delete',
-  path: `${paths.product}/{id}`,
+  path: `${paths.products}{id}`,
   tags: ['Products'],
   request: {
     params: z.object({
@@ -131,4 +131,4 @@ productRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Product deleted successfully'),
 });
 
-productRouter.delete(`${paths.product}/:id`, productController.deleteProduct);
+productRouter.delete(`/:id`, productController.deleteProduct);
