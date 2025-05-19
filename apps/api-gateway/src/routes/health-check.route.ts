@@ -1,5 +1,4 @@
-import { handleServiceResponse } from '@repo/server/lib/http-handlers';
-import { ServiceResponse } from '@repo/server/lib/service-response';
+import { handleServiceResponse, ServiceResponse } from '@repo/server/lib';
 import express, { type Request, type Response, type Router } from 'express';
 
 export const healthCheckRouter: Router = express.Router();

@@ -1,5 +1,5 @@
-import { ServiceResponseSchema } from '@repo/server/lib/service-response';
-import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+import { ServiceResponseSchema } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/server/core';
 
 import type { z } from 'zod';
 

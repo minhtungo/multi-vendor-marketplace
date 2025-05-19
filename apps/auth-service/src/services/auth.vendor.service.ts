@@ -8,9 +8,9 @@ import { VendorRepository } from '@/repositories/vendor.repository';
 import { RefreshTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import { hashPassword, verifyPassword } from '@/utils/password';
-import { ServiceResponse } from '@repo/server/lib/service-response';
+import { ServiceResponse } from '@repo/server/lib';
 import type { NextFunction, Request, Response } from 'express';
-import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/core';
 
 import { verify } from 'jsonwebtoken';
 

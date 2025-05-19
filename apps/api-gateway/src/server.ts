@@ -5,7 +5,7 @@ import { validateToken, requireVendorRole } from '@/middlewares/auth';
 import rateLimiter from '@/middlewares/rate-limiter';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import { logger } from '@/utils/logger';
-import errorHandler from '@repo/server/middlewares/error-handler';
+import { errorHandler } from '@repo/server/middlewares';
 import cors from 'cors';
 import express, { type Express } from 'express';
 import proxy from 'express-http-proxy';

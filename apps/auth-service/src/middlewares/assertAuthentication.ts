@@ -1,8 +1,7 @@
 import { logger } from '@/utils/logger';
-import { handleServiceResponse } from '@repo/server/lib/http-handlers';
-import { ServiceResponse } from '@repo/server/lib/service-response';
+import { handleServiceResponse, ServiceResponse } from '@repo/server/lib';
 import type { NextFunction, Request, Response } from 'express';
-import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/core';
 
 import passport from 'passport';
 

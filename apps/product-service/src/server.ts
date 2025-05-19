@@ -2,11 +2,9 @@ import express, { RequestHandler, type Express } from 'express';
 
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
-import errorHandler from '@repo/server/middlewares/error-handler';
 import { productRouter } from '@/routes/product.route';
 import { productCategoryRouter } from '@/routes/product-category.route';
-import { extractUserContext } from '@repo/server/middlewares/user-context';
-import { createRequestLogger } from '@repo/server/middlewares/request-logger';
+import { extractUserContext, createRequestLogger, errorHandler } from '@repo/server/middlewares';
 
 const app: Express = express();
 

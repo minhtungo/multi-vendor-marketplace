@@ -1,14 +1,14 @@
 import type { ErrorRequestHandler, RequestHandler } from 'express';
-import { HTTP_STATUS_CODES } from '../lib/http-status-codes';
-import { AppError } from '../lib/errors';
+import { HTTP_STATUS_CODES } from '../core/http-status-codes';
 import { ServiceResponse } from '../lib/service-response';
+import { AppError } from '../core';
 
 const unexpectedRequest: RequestHandler = (_req, res) => {
   const response = ServiceResponse.failure('Not Found', null, HTTP_STATUS_CODES.NOT_FOUND);
   res.status(response.statusCode).json(response);
 };
 
-const errorHandler: ErrorRequestHandler = (err, _req, res, _) => {
+const errorHandlerFunc: ErrorRequestHandler = (err, _req, res, _) => {
   // Handle known error types
   if (err instanceof AppError) {
     const response = ServiceResponse.failure(err.message, null, err.statusCode);
@@ -24,5 +24,4 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _) => {
   );
   res.status(response.statusCode).json(response);
 };
-
-export default (): [RequestHandler, ErrorRequestHandler] => [unexpectedRequest, errorHandler];
+export const errorHandler = (): [RequestHandler, ErrorRequestHandler] => [unexpectedRequest, errorHandlerFunc];

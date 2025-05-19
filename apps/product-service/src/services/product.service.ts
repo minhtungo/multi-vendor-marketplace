@@ -1,8 +1,8 @@
 import { InsertProduct, Product } from '@/db/schemas/products';
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
-import { ServiceResponse } from '@repo/server/lib/service-response';
-import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+import { ServiceResponse } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/server/core';
 
 class ProductService {
   constructor(private readonly productRepo = productRepository) {}

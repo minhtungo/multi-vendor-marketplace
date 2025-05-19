@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { HTTP_STATUS_CODES } from './http-status-codes';
+import { HTTP_STATUS_CODES } from '../core/http-status-codes';
 
 export class ServiceResponse<T = null> {
   readonly success: boolean;

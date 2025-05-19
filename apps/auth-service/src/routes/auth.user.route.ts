@@ -1,7 +1,6 @@
 import { paths } from '@/configs/paths';
 import { authUserController } from '@/controllers/auth.user.controller';
 import { createApiResponse } from '@/docs/openAPIResponseBuilders';
-import { assertUserAuthentication } from '@/middlewares/assertAuthentication';
 import {
   ForgotPasswordSchema,
   ResetPasswordSchema,
@@ -11,9 +10,9 @@ import {
 } from '@/models/auth.user.model';
 import { tokenRepository } from '@/repositories/token.repository';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import { validateRequest } from '@repo/server/lib/http-handlers';
+import { HTTP_STATUS_CODES } from '@repo/server/core';
+import { validateRequest } from '@repo/server/middlewares';
 import express, { NextFunction, Request, Response, type Router } from 'express';
-import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
 
 import z from 'zod';
 

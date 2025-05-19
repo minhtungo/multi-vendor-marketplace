@@ -7,15 +7,20 @@
       "import": "./src/index.ts",
       "require": "./src/index.ts"
     },
-    "./lib/*": {
-      "types": "./src/lib/*.ts",
-      "import": "./src/lib/*.ts",
-      "require": "./src/lib/*.ts"
+    "./lib": {
+      "types": "./src/lib/index.ts",
+      "import": "./src/lib/index.ts",
+      "require": "./src/lib/index.ts"
     },
-    "./middlewares/*": {
-      "types": "./src/middlewares/*.ts",
-      "import": "./src/middlewares/*.ts",
-      "require": "./src/middlewares/*.ts"
+    "./core": {
+      "types": "./src/core/index.ts",
+      "import": "./src/core/index.ts",
+      "require": "./src/core/index.ts"
+    },
+    "./middlewares": {
+      "types": "./src/middlewares/index.ts",
+      "import": "./src/middlewares/index.ts",
+      "require": "./src/middlewares/index.ts"
     }
   },
   "scripts": {

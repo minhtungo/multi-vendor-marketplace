@@ -1,6 +1,6 @@
 import { insertProductCategorySchema } from '@/db/schemas/product-categories';
 import { productCategoryService } from '@/services/product-category.service';
-import { handleServiceResponse } from '@repo/server/lib/http-handlers';
+import { handleServiceResponse } from '@repo/server/lib';
 import type { NextFunction, Request, Response } from 'express';
 
 class ProductCategoryController {

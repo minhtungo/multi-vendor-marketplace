@@ -9,10 +9,9 @@ import { authUserRouter } from '@/routes/auth.user.route';
 import { authVendorRouter } from '@/routes/auth.vendor.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import { paymentRouter } from '@/routes/payment.route';
-import errorHandler from '@repo/server/middlewares/error-handler';
+import { errorHandler, createRequestLogger } from '@repo/server/middlewares';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
-import { createRequestLogger } from '@repo/server/middlewares/request-logger';
 
 const app: Express = express();
 

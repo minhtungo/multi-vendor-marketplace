@@ -6,7 +6,7 @@ import { createApiResponse } from '@/docs/openAPIResponseBuilders';
 import { assertVendorAuthentication } from '@/middlewares/assertAuthentication';
 import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/auth.vendor.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import { validateRequest } from '@repo/server/lib/http-handlers';
+import { validateRequest } from '@repo/server/middlewares';
 import express, { type Router } from 'express';
 import z from 'zod';
 

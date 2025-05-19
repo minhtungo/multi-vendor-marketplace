@@ -1,5 +1,5 @@
 import { stripeService } from '@/services/stripe.service';
-import { handleServiceResponse } from '@repo/server/lib/http-handlers';
+import { handleServiceResponse } from '@repo/server/lib';
 import { Request, Response } from 'express';
 
 class PaymentController {

@@ -1,7 +1,7 @@
 import { handleServiceResponse } from '../lib/http-handlers';
 import { ServiceResponse } from '../lib/service-response';
 import type { NextFunction, Request, Response } from 'express';
-import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/core';
 
 export const extractUserContext = (req: Request, res: Response, next: NextFunction) => {
   if (req.headers['x-user-id']) {
