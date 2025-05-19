@@ -1,13 +1,12 @@
-import cors from 'cors';
 import express, { RequestHandler, type Express } from 'express';
 
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
 import errorHandler from '@repo/server/middlewares/error-handler';
-import cookieParser from 'cookie-parser';
 import { productRouter } from '@/routes/product.route';
 import { productCategoryRouter } from '@/routes/product-category.route';
 import { extractUserContext } from '@repo/server/middlewares/user-context';
+import { createRequestLogger } from '@repo/server/middlewares/request-logger';
 
 const app: Express = express();
 
@@ -17,25 +16,9 @@ const app: Express = express();
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      const allowedOrigins = Array.isArray(env.APP_ORIGIN) ? env.APP_ORIGIN : [env.APP_ORIGIN];
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  })
-);
-// app.use(helmet());
-// app.use(rateLimiter);
 
-// Request logging
-// app.use(createRequestLogger(env));
+// Request logging only in production
+env.isProduction && app.use(createRequestLogger(env));
 
 app.use(extractUserContext as RequestHandler);
 

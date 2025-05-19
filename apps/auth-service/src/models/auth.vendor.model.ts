@@ -1,5 +1,5 @@
+import { commonValidations } from '@repo/lib/validations/commonValidation';
 import { z } from 'zod';
-import { commonValidations } from './common';
 
 export const VendorSignUpSchema = z.object({
   email: commonValidations.email,
