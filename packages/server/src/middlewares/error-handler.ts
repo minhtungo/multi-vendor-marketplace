@@ -1,10 +1,10 @@
 import type { ErrorRequestHandler, RequestHandler } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { AppError } from '../lib/core/errors';
+import { HTTP_STATUS_CODES } from '../lib/http-status-codes';
+import { AppError } from '../lib/errors';
 import { ServiceResponse } from '../lib/service-response';
 
 const unexpectedRequest: RequestHandler = (_req, res) => {
-  const response = ServiceResponse.failure('Not Found', null, StatusCodes.NOT_FOUND);
+  const response = ServiceResponse.failure('Not Found', null, HTTP_STATUS_CODES.NOT_FOUND);
   res.status(response.statusCode).json(response);
 };
 
@@ -20,7 +20,7 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _) => {
   const response = ServiceResponse.failure(
     'Internal Server Error',
     process.env.NODE_ENV === 'development' ? err.message : null,
-    StatusCodes.INTERNAL_SERVER_ERROR
+    HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
   );
   res.status(response.statusCode).json(response);
 };

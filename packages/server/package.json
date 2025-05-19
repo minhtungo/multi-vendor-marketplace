@@ -22,7 +22,6 @@
     "clean": "rm -rf .turbo && rm -rf node_modules"
   },
   "dependencies": {
-    "http-status-codes": "2.3.0",
     "pino": "9.6.0",
     "pino-http": "10.4.0",
     "zod": "3.24.3"

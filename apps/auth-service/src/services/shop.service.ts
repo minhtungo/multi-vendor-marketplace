@@ -4,7 +4,7 @@ import { vendorRepository } from '@/repositories/vendor.repository';
 import { logger } from '@/utils/logger';
 import { ServiceResponse } from '@repo/server/lib/service-response';
 import type { NextFunction } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
 
 class ShopService {
   public async createShop(
@@ -16,7 +16,7 @@ class ShopService {
       const vendor = await vendorRepository.getVendorById(vendorId);
 
       if (!vendor) {
-        return ServiceResponse.failure('Vendor not found', null, StatusCodes.NOT_FOUND);
+        return ServiceResponse.failure('Vendor not found', null, HTTP_STATUS_CODES.NOT_FOUND);
       }
 
       await shopRepository.createShop({
@@ -24,11 +24,11 @@ class ShopService {
         vendorId,
       });
 
-      return ServiceResponse.success('Shop created successfully', null, StatusCodes.CREATED);
+      return ServiceResponse.success('Shop created successfully', null, HTTP_STATUS_CODES.CREATED);
     } catch (error) {
       const errorMessage = `Error creating shop: ${(error as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
   }
 }

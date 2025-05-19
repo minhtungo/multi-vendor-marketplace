@@ -2,7 +2,7 @@ import { InsertProduct, Product } from '@/db/schemas/products';
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
 import { ServiceResponse } from '@repo/server/lib/service-response';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
 
 class ProductService {
   constructor(private readonly productRepo = productRepository) {}
@@ -12,14 +12,14 @@ class ProductService {
       const product = await this.productRepo.getProductById(productId);
 
       if (!product) {
-        return ServiceResponse.failure('Product not found', null, StatusCodes.NOT_FOUND);
+        return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);
       }
 
-      return ServiceResponse.success('Product retrieved successfully', product, StatusCodes.OK);
+      return ServiceResponse.success('Product retrieved successfully', product, HTTP_STATUS_CODES.OK);
     } catch (error) {
       const errorMessage = `Error fetching product: ${(error as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -51,12 +51,12 @@ class ProductService {
             totalPages: result.totalPages,
           },
         },
-        StatusCodes.OK
+        HTTP_STATUS_CODES.OK
       );
     } catch (error) {
       const errorMessage = `Error fetching products: ${(error as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -67,11 +67,11 @@ class ProductService {
         vendorId,
       });
 
-      return ServiceResponse.success('Product created successfully', null, StatusCodes.CREATED);
+      return ServiceResponse.success('Product created successfully', null, HTTP_STATUS_CODES.CREATED);
     } catch (error) {
       const errorMessage = `Error creating product: ${(error as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -84,11 +84,11 @@ class ProductService {
       const product = await this.productRepo.getProductById(productId);
 
       if (!product) {
-        return ServiceResponse.failure('Product not found', null, StatusCodes.NOT_FOUND);
+        return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);
       }
 
       if (product.vendorId !== vendorId) {
-        return ServiceResponse.failure('Unauthorized to update this product', null, StatusCodes.FORBIDDEN);
+        return ServiceResponse.failure('Unauthorized to update this product', null, HTTP_STATUS_CODES.FORBIDDEN);
       }
 
       await this.productRepo.updateProduct(productId, {
@@ -96,22 +96,22 @@ class ProductService {
         updatedAt: new Date(),
       });
 
-      return ServiceResponse.success('Product updated successfully', null, StatusCodes.OK);
+      return ServiceResponse.success('Product updated successfully', null, HTTP_STATUS_CODES.OK);
     } catch (error) {
       const errorMessage = `Error updating product: ${(error as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
   }
 
   public async deleteAllProducts(vendorId: string): Promise<ServiceResponse<Product[] | null>> {
     try {
       const deletedProducts = await this.productRepo.deleteAllProducts(vendorId);
-      return ServiceResponse.success('All products deleted successfully', deletedProducts, StatusCodes.OK);
+      return ServiceResponse.success('All products deleted successfully', deletedProducts, HTTP_STATUS_CODES.OK);
     } catch (error) {
       const errorMessage = `Error deleting all products: ${(error as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -120,18 +120,18 @@ class ProductService {
       const product = await this.productRepo.getProductById(productId);
 
       if (!product) {
-        return ServiceResponse.failure('Product not found', null, StatusCodes.NOT_FOUND);
+        return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);
       }
 
       if (product.vendorId !== vendorId) {
-        return ServiceResponse.failure('Unauthorized to delete this product', null, StatusCodes.FORBIDDEN);
+        return ServiceResponse.failure('Unauthorized to delete this product', null, HTTP_STATUS_CODES.FORBIDDEN);
       }
       await this.productRepo.deleteProduct(productId);
-      return ServiceResponse.success('Product deleted successfully', null, StatusCodes.OK);
+      return ServiceResponse.success('Product deleted successfully', null, HTTP_STATUS_CODES.OK);
     } catch (error) {
       const errorMessage = `Error deleting product: ${(error as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
   }
 }

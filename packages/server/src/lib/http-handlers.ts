@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+
 import { ServiceResponse } from './service-response';
 import type { ZodError, ZodSchema } from 'zod';
 
@@ -16,7 +17,7 @@ export const validateRequest = (schema: ZodSchema) => async (req: Request, res: 
     const missingFields = zodError.errors.map((e) => e.path.slice(1).join('.')).join(', ');
 
     const errorMessage = `Missing required fields: ${missingFields}`;
-    const statusCode = StatusCodes.BAD_REQUEST;
+    const statusCode = HTTP_STATUS_CODES.BAD_REQUEST;
     const serviceResponse = ServiceResponse.failure(errorMessage, null, statusCode);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   }

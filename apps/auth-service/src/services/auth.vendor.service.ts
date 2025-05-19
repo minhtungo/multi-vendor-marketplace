@@ -10,7 +10,8 @@ import { logger } from '@/utils/logger';
 import { hashPassword, verifyPassword } from '@/utils/password';
 import { ServiceResponse } from '@repo/server/lib/service-response';
 import type { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+
 import { verify } from 'jsonwebtoken';
 
 export class AuthVendorService {
@@ -28,7 +29,7 @@ export class AuthVendorService {
         return ServiceResponse.success(
           'If your email is not registered, you will receive an email with an OTP shortly',
           null,
-          StatusCodes.OK
+          HTTP_STATUS_CODES.OK
         );
       }
 
@@ -40,7 +41,7 @@ export class AuthVendorService {
       return ServiceResponse.success(
         'If your email is not registered, you will receive an email with an OTP shortly',
         null,
-        StatusCodes.OK
+        HTTP_STATUS_CODES.OK
       );
     } catch (ex) {
       const errorMessage = `Error signing up vendor: ${(ex as Error).message}`;
@@ -48,7 +49,7 @@ export class AuthVendorService {
       return ServiceResponse.failure(
         'An error occurred while signing up vendor.',
         null,
-        StatusCodes.INTERNAL_SERVER_ERROR
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -66,13 +67,13 @@ export class AuthVendorService {
       const vendor = await this.vendorRepository.getVendorByEmail(data.email);
 
       if (!vendor || !vendor.id || !vendor.password) {
-        return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
 
       const isPasswordValid = await verifyPassword(vendor.password, data.password);
 
       if (!isPasswordValid) {
-        return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
 
       const { token: refreshToken, sessionId } = await generateRefreshToken(vendor.id, 'vendor');
@@ -95,13 +96,17 @@ export class AuthVendorService {
             ...rest,
           },
         },
-        StatusCodes.OK
+        HTTP_STATUS_CODES.OK
       );
     } catch (ex) {
       const errorMessage = `Error signing in: ${(ex as Error).message}`;
       logger.error(errorMessage);
 
-      return ServiceResponse.failure('An error occurred while signing in.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure(
+        'An error occurred while signing in.',
+        null,
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
@@ -111,7 +116,7 @@ export class AuthVendorService {
       const storedOtp = await redis.get(`otp:${email}`);
 
       if (!storedOtp) {
-        return ServiceResponse.failure('Invalid OTP', null, StatusCodes.BAD_REQUEST);
+        return ServiceResponse.failure('Invalid OTP', null, HTTP_STATUS_CODES.BAD_REQUEST);
       }
 
       const failedAttemptsKey = `otp_attempts:${email}`;
@@ -124,12 +129,12 @@ export class AuthVendorService {
           return ServiceResponse.failure(
             'Account locked due to multiple OTP requests. Try again after 30 minutes.',
             null,
-            StatusCodes.TOO_MANY_REQUESTS
+            HTTP_STATUS_CODES.TOO_MANY_REQUESTS
           );
         }
 
         await redis.set(failedAttemptsKey, failedAttempts + 1, 'EX', 300);
-        return ServiceResponse.failure('Invalid OTP', null, StatusCodes.BAD_REQUEST);
+        return ServiceResponse.failure('Invalid OTP', null, HTTP_STATUS_CODES.BAD_REQUEST);
       }
 
       await redis.del(`otp:${email}`, failedAttemptsKey);
@@ -142,14 +147,14 @@ export class AuthVendorService {
         password: hashedPassword,
       });
 
-      return ServiceResponse.success('Vendor account created successfully', null, StatusCodes.CREATED);
+      return ServiceResponse.success('Vendor account created successfully', null, HTTP_STATUS_CODES.CREATED);
     } catch (ex) {
       const errorMessage = `Error verifying vendor: ${(ex as Error).message}`;
       logger.error(errorMessage);
       return ServiceResponse.failure(
         'An error occurred while verifying vendor',
         null,
-        StatusCodes.INTERNAL_SERVER_ERROR
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -157,7 +162,7 @@ export class AuthVendorService {
   async renewToken(req: Request, res: Response): Promise<ServiceResponse<{ accessToken: string } | null>> {
     const refreshToken = req.cookies[env.VENDOR_REFRESH_TOKEN_COOKIE_NAME];
     if (!refreshToken) {
-      return ServiceResponse.failure('No refresh token provided', null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure('No refresh token provided', null, HTTP_STATUS_CODES.UNAUTHORIZED);
     }
 
     try {
@@ -166,13 +171,13 @@ export class AuthVendorService {
       const isValid = await validateRefreshToken(payload.sessionId, refreshToken);
 
       if (!isValid) {
-        return ServiceResponse.failure('Token has been revoked', null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure('Token has been revoked', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
 
       const vendor = await this.vendorRepository.getVendorById(payload.sub);
 
       if (!vendor) {
-        return ServiceResponse.failure('Vendor not found', null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure('Vendor not found', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
 
       await invalidateRefreshToken(vendor.id, payload.sessionId);
@@ -188,25 +193,33 @@ export class AuthVendorService {
 
       setRefreshTokenCookie(res, newRefreshToken, 'vendor');
 
-      return ServiceResponse.success('Token refreshed', { accessToken, vendor: { id: vendor.id } }, StatusCodes.OK);
+      return ServiceResponse.success(
+        'Token refreshed',
+        { accessToken, vendor: { id: vendor.id } },
+        HTTP_STATUS_CODES.OK
+      );
     } catch (ex) {
       const errorMessage = `Error renewing token: ${(ex as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('An error occurred while renewing token', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure(
+        'An error occurred while renewing token',
+        null,
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
   async getVendor(req: Request): Promise<ServiceResponse<Vendor | null>> {
     try {
       const vendor = req.user as Vendor;
-      return ServiceResponse.success('Vendor fetched successfully', vendor, StatusCodes.OK);
+      return ServiceResponse.success('Vendor fetched successfully', vendor, HTTP_STATUS_CODES.OK);
     } catch (ex) {
       const errorMessage = `Error fetching vendor: ${(ex as Error).message}`;
       logger.error(errorMessage);
       return ServiceResponse.failure(
         'An error occurred while fetching vendor.',
         null,
-        StatusCodes.INTERNAL_SERVER_ERROR
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
       );
     }
   }

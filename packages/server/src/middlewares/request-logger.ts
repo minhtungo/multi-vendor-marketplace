@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 
@@ -11,8 +12,8 @@ export function createRequestLogger(env: { isProduction: boolean }) {
   });
 
   const getLogLevel = (status: number) => {
-    if (status >= StatusCodes.INTERNAL_SERVER_ERROR) return 'error';
-    if (status >= StatusCodes.BAD_REQUEST) return 'warn';
+    if (status >= HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR) return 'error';
+    if (status >= HTTP_STATUS_CODES.BAD_REQUEST) return 'warn';
     return 'info';
   };
 

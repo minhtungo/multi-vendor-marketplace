@@ -13,7 +13,8 @@ import { tokenRepository } from '@/repositories/token.repository';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { validateRequest } from '@repo/server/lib/http-handlers';
 import express, { NextFunction, Request, Response, type Router } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+
 import z from 'zod';
 
 export const authUserRegistry = new OpenAPIRegistry();
@@ -169,7 +170,7 @@ authUserRouter.get(
       const existingToken = await tokenRepository.getResetPasswordTokenByToken(token);
 
       if (!existingToken || existingToken.expires < new Date()) {
-        res.status(StatusCodes.BAD_REQUEST).json({
+        res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({
           success: false,
           message: 'Invalid or expired token',
           data: null,
@@ -177,7 +178,7 @@ authUserRouter.get(
         return;
       }
 
-      res.status(StatusCodes.OK).json({
+      res.status(HTTP_STATUS_CODES.OK).json({
         success: true,
         message: 'Token is valid',
         data: null,

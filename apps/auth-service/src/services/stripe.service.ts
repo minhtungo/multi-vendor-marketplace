@@ -2,7 +2,7 @@ import { env } from '@/configs/env';
 import { stripe } from '@/lib/stripe';
 import { vendorRepository } from '@/repositories/vendor.repository';
 import { ServiceResponse } from '@repo/server/lib/service-response';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
 
 class StripeService {
   public async createConnectAccountLink(vendorId: string): Promise<ServiceResponse<{ url: string } | null>> {
@@ -10,7 +10,7 @@ class StripeService {
       const vendor = await vendorRepository.getVendorById(vendorId);
 
       if (!vendor) {
-        return ServiceResponse.failure('Vendor not found', null, StatusCodes.NOT_FOUND);
+        return ServiceResponse.failure('Vendor not found', null, HTTP_STATUS_CODES.NOT_FOUND);
       }
 
       const account = await stripe.accounts.create({
@@ -37,11 +37,11 @@ class StripeService {
         {
           url: accountLink.url,
         },
-        StatusCodes.CREATED
+        HTTP_STATUS_CODES.CREATED
       );
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      return ServiceResponse.failure(errorMessage, null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure(errorMessage, null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
   }
 }

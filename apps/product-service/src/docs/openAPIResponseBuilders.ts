@@ -1,8 +1,9 @@
 import { ServiceResponseSchema } from '@repo/server/lib/service-response';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+
 import type { z } from 'zod';
 
-export function createApiResponse(schema: z.ZodTypeAny, description: string, statusCode = StatusCodes.OK) {
+export function createApiResponse(schema: z.ZodTypeAny, description: string, statusCode = HTTP_STATUS_CODES.OK) {
   return {
     [statusCode]: {
       description,

@@ -14,7 +14,8 @@ import { hashPassword, verifyPassword } from '@/utils/password';
 import { createTransaction } from '@/utils/transaction';
 import { ServiceResponse } from '@repo/server/lib/service-response';
 import type { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+
 import { verify } from 'jsonwebtoken';
 
 export class AuthService {
@@ -32,7 +33,7 @@ export class AuthService {
         return ServiceResponse.success(
           'If your email is not registered, you will receive an email with a otp shortly',
           null,
-          StatusCodes.OK
+          HTTP_STATUS_CODES.OK
         );
       }
 
@@ -44,12 +45,16 @@ export class AuthService {
       return ServiceResponse.success(
         'If your email is not registered, you will receive an email with a otp shortly',
         null,
-        StatusCodes.OK
+        HTTP_STATUS_CODES.OK
       );
     } catch (ex) {
       const errorMessage = `Error signing up: ${(ex as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('An error occurred while signing up.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure(
+        'An error occurred while signing up.',
+        null,
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
@@ -66,13 +71,13 @@ export class AuthService {
       const user = await this.userRepository.getUserByEmail(data.email);
 
       if (!user || !user.id || !user.password) {
-        return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
 
       const isPasswordValid = await verifyPassword(user.password, data.password);
 
       if (!isPasswordValid) {
-        return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
 
       const { token: refreshToken, sessionId } = await generateRefreshToken(user.id, 'user');
@@ -95,13 +100,17 @@ export class AuthService {
             id: user.id,
           },
         },
-        StatusCodes.OK
+        HTTP_STATUS_CODES.OK
       );
     } catch (ex) {
       const errorMessage = `Error signing in: ${(ex as Error).message}`;
       logger.error(errorMessage);
 
-      return ServiceResponse.failure('An error occurred while signing in.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure(
+        'An error occurred while signing in.',
+        null,
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
@@ -113,7 +122,7 @@ export class AuthService {
         return ServiceResponse.success(
           'If a matching account is found, a password reset email will be sent to you shortly',
           null,
-          StatusCodes.OK
+          HTTP_STATUS_CODES.OK
         );
       }
 
@@ -124,7 +133,7 @@ export class AuthService {
       return ServiceResponse.success(
         'If a matching account is found, a password reset email will be sent to you shortly',
         null,
-        StatusCodes.OK
+        HTTP_STATUS_CODES.OK
       );
     } catch (ex) {
       const errorMessage = `Error forgetting password: ${(ex as Error).message}`;
@@ -132,7 +141,7 @@ export class AuthService {
       return ServiceResponse.failure(
         'An error occurred while forgetting password',
         null,
-        StatusCodes.INTERNAL_SERVER_ERROR
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -142,7 +151,7 @@ export class AuthService {
       const existingToken = await tokenRepository.getResetPasswordTokenByToken(token);
 
       if (!existingToken || existingToken.expires < new Date()) {
-        return ServiceResponse.failure('Invalid token', null, StatusCodes.BAD_REQUEST);
+        return ServiceResponse.failure('Invalid token', null, HTTP_STATUS_CODES.BAD_REQUEST);
       }
 
       await createTransaction(async (trx) => {
@@ -150,14 +159,14 @@ export class AuthService {
         await tokenRepository.deleteResetPasswordTokenByToken(token, trx);
       });
 
-      return ServiceResponse.success('Password reset successfully', null, StatusCodes.OK);
+      return ServiceResponse.success('Password reset successfully', null, HTTP_STATUS_CODES.OK);
     } catch (ex) {
       const errorMessage = `Error resetting password: ${(ex as Error).message}`;
       logger.error(errorMessage);
       return ServiceResponse.failure(
         'An error occurred while resetting password',
         null,
-        StatusCodes.INTERNAL_SERVER_ERROR
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -173,7 +182,7 @@ export class AuthService {
   > {
     const refreshToken = req.cookies[env.ACCESS_TOKEN_SECRET];
     if (!refreshToken) {
-      return ServiceResponse.failure('Refresh token not found', null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure('Refresh token not found', null, HTTP_STATUS_CODES.UNAUTHORIZED);
     }
 
     try {
@@ -182,12 +191,12 @@ export class AuthService {
       const isValid = await validateRefreshToken(payload.sessionId, refreshToken);
 
       if (!isValid) {
-        return ServiceResponse.failure('Token has been revoked', null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure('Token has been revoked', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
 
       const user = await this.userRepository.getUserById(payload.sub);
       if (!user) {
-        return ServiceResponse.failure('User not found', null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure('User not found', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
 
       await invalidateRefreshToken(user.id, payload.sessionId);
@@ -203,17 +212,17 @@ export class AuthService {
 
       setRefreshTokenCookie(res, newRefreshToken);
 
-      return ServiceResponse.success('Token refreshed', { accessToken, userId: user.id }, StatusCodes.OK);
+      return ServiceResponse.success('Token refreshed', { accessToken, userId: user.id }, HTTP_STATUS_CODES.OK);
     } catch (ex) {
       // Clear the refresh token cookie on any error
       res.clearCookie(tokenConfig.refreshToken.cookieName);
 
       if (ex instanceof Error) {
         if (ex.name === 'TokenExpiredError') {
-          return ServiceResponse.failure('Refresh token has expired', null, StatusCodes.UNAUTHORIZED);
+          return ServiceResponse.failure('Refresh token has expired', null, HTTP_STATUS_CODES.UNAUTHORIZED);
         }
         if (ex.name === 'JsonWebTokenError') {
-          return ServiceResponse.failure('Invalid refresh token', null, StatusCodes.UNAUTHORIZED);
+          return ServiceResponse.failure('Invalid refresh token', null, HTTP_STATUS_CODES.UNAUTHORIZED);
         }
       }
 
@@ -222,7 +231,7 @@ export class AuthService {
       return ServiceResponse.failure(
         'An error occurred while refreshing token',
         null,
-        StatusCodes.INTERNAL_SERVER_ERROR
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -233,7 +242,7 @@ export class AuthService {
       const storedOtp = await redis.get(`otp:${email}`);
 
       if (!storedOtp) {
-        return ServiceResponse.failure('Invalid OTP', null, StatusCodes.BAD_REQUEST);
+        return ServiceResponse.failure('Invalid OTP', null, HTTP_STATUS_CODES.BAD_REQUEST);
       }
 
       const failedAttemptsKey = `otp_attempts:${email}`;
@@ -246,12 +255,12 @@ export class AuthService {
           return ServiceResponse.failure(
             'Account locked due to multiple OTP requests. Try again after 30 minutes.',
             null,
-            StatusCodes.TOO_MANY_REQUESTS
+            HTTP_STATUS_CODES.TOO_MANY_REQUESTS
           );
         }
 
         await redis.set(failedAttemptsKey, failedAttempts + 1, 'EX', 300);
-        return ServiceResponse.failure('Invalid OTP', null, StatusCodes.BAD_REQUEST);
+        return ServiceResponse.failure('Invalid OTP', null, HTTP_STATUS_CODES.BAD_REQUEST);
       }
 
       await redis.del(`otp:${email}`, failedAttemptsKey);
@@ -264,14 +273,14 @@ export class AuthService {
         name: 'New user',
       });
 
-      return ServiceResponse.success('User created successfully', null, StatusCodes.CREATED);
+      return ServiceResponse.success('User created successfully', null, HTTP_STATUS_CODES.CREATED);
     } catch (ex) {
       const errorMessage = `Error verifying email: ${(ex as Error).message}`;
       logger.error(errorMessage);
       return ServiceResponse.failure(
         'An error occurred while verifying email',
         null,
-        StatusCodes.INTERNAL_SERVER_ERROR
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -280,22 +289,30 @@ export class AuthService {
     try {
       const payload = verify(refreshToken, tokenConfig.refreshToken.secret) as RefreshTokenPayload;
       await invalidateRefreshToken(payload.sub, payload.sessionId);
-      return ServiceResponse.success('Signed out successfully', null, StatusCodes.OK);
+      return ServiceResponse.success('Signed out successfully', null, HTTP_STATUS_CODES.OK);
     } catch (ex) {
       const errorMessage = `Error signing out: ${(ex as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('An error occurred while signing out.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure(
+        'An error occurred while signing out.',
+        null,
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
   async getMe(req: Request): Promise<ServiceResponse<User | null>> {
     try {
       const user = req.user as User;
-      return ServiceResponse.success('User fetched successfully', user, StatusCodes.OK);
+      return ServiceResponse.success('User fetched successfully', user, HTTP_STATUS_CODES.OK);
     } catch (ex) {
       const errorMessage = `Error fetching user: ${(ex as Error).message}`;
       logger.error(errorMessage);
-      return ServiceResponse.failure('An error occurred while fetching user.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+      return ServiceResponse.failure(
+        'An error occurred while fetching user.',
+        null,
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+      );
     }
   }
 }

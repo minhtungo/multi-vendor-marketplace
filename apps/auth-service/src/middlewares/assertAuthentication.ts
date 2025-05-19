@@ -2,7 +2,8 @@ import { logger } from '@/utils/logger';
 import { handleServiceResponse } from '@repo/server/lib/http-handlers';
 import { ServiceResponse } from '@repo/server/lib/service-response';
 import type { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
+
 import passport from 'passport';
 
 type AuthStrategy = 'jwt' | 'vendor-jwt';
@@ -16,7 +17,7 @@ const assertAuthentication = (strategy: AuthStrategy) => {
       }
 
       if (!user) {
-        const serviceResponse = ServiceResponse.failure('Unauthorized', null, StatusCodes.UNAUTHORIZED);
+        const serviceResponse = ServiceResponse.failure('Unauthorized', null, HTTP_STATUS_CODES.UNAUTHORIZED);
         return handleServiceResponse(serviceResponse, res);
       }
 

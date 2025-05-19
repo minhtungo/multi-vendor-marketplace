@@ -1,7 +1,7 @@
 import { handleServiceResponse } from '../lib/http-handlers';
 import { ServiceResponse } from '../lib/service-response';
 import type { NextFunction, Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { HTTP_STATUS_CODES } from '@repo/server/lib/http-status-codes';
 
 export const extractUserContext = (req: Request, res: Response, next: NextFunction) => {
   if (req.headers['x-user-id']) {
@@ -11,7 +11,7 @@ export const extractUserContext = (req: Request, res: Response, next: NextFuncti
       role: req.headers['x-user-role'] as 'user' | 'vendor',
     };
   } else {
-    const serviceResponse = ServiceResponse.failure('Unauthorized', null, StatusCodes.UNAUTHORIZED);
+    const serviceResponse = ServiceResponse.failure('Unauthorized', null, HTTP_STATUS_CODES.UNAUTHORIZED);
     return handleServiceResponse(serviceResponse, res);
   }
 
