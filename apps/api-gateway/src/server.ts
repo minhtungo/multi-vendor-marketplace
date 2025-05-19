@@ -38,6 +38,7 @@ app.use(rateLimiter);
 // Routes
 app.use(`/${appConfig.apiVersion}/health-check`, healthCheckRouter);
 
+// Auth service
 app.use(
   `/${appConfig.apiVersion}/auth`,
   proxy(env.AUTH_SERVICE_URL, {
@@ -57,6 +58,7 @@ app.use(
   })
 );
 
+// Product service
 app.use(
   `/${appConfig.apiVersion}/products`,
   validateToken,
@@ -86,6 +88,18 @@ app.use(
   })
 );
 
+// Order service
+app.use(
+  `/${appConfig.apiVersion}/orders`,
+  proxy(env.ORDER_SERVICE_URL, {
+    ...proxyOptions,
+    proxyReqOptDecorator: forwardUserContext,
+    userResDecorator: (proxyRes, proxyResData) => {
+      logger.info(`Response received from Payment service: ${proxyRes.statusCode}`);
+      return proxyResData;
+    },
+  })
+);
 // Error handlers
 app.use(errorHandler());
 
