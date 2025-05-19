@@ -1,31 +1,70 @@
-import { orderController } from '@/controllers/order.controller';
-import { createApiResponse } from '@/docs/openAPIResponseBuilders';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';
+import { createApiResponse } from '@/docs/openAPIResponseBuilders';
+import { orderSchema, insertOrderSchema } from '@/db/schemas/orders/validation';
+import { orderController } from '@/controllers/order.controller';
 
 export const orderRegistry = new OpenAPIRegistry();
 export const orderRouter: Router = Router();
 
+// Get All Orders Route with Pagination
+orderRegistry.registerPath({
+  method: 'get',
+  path: '/orders',
+  tags: ['Orders'],
+  request: {
+    query: z.object({
+      page: z.string().transform(Number).default('1'),
+      limit: z.string().transform(Number).default('20'),
+    }),
+  },
+  responses: createApiResponse(
+    z.object({
+      orders: z.array(orderSchema),
+      pagination: z.object({
+        total: z.number(),
+        page: z.number(),
+        limit: z.number(),
+        totalPages: z.number(),
+      }),
+    }),
+    'Orders retrieved successfully'
+  ),
+});
+
+orderRouter.get('/', orderController.getAllOrders);
+
+// Get Order by ID Route
+orderRegistry.registerPath({
+  method: 'get',
+  path: '/orders/:id',
+  tags: ['Orders'],
+  request: {
+    params: z.object({
+      id: z.string().uuid(),
+    }),
+  },
+  responses: createApiResponse(orderSchema, 'Order retrieved successfully'),
+});
+
+orderRouter.get('/:id', orderController.getOrderById);
+
+// Create Order Route
 orderRegistry.registerPath({
   method: 'post',
-  path: `/create-connect-link`,
-  tags: ['Payment'],
+  path: '/orders',
+  tags: ['Orders'],
   request: {
     body: {
       content: {
         'application/json': {
-          schema: z.object({}),
+          schema: insertOrderSchema,
         },
       },
     },
   },
-  responses: createApiResponse(
-    z.object({
-      url: z.string().url(),
-    }),
-    'Success'
-  ),
+  responses: createApiResponse(orderSchema, 'Order created successfully'),
 });
 
-orderRouter.post('/create-connect-link', orderController.createStripeConnectLink);
+orderRouter.post('/', orderController.createOrder);

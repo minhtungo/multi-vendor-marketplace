@@ -1,5 +1,5 @@
 import { pgTable, serial, varchar, timestamp, decimal, text, jsonb, uuid } from 'drizzle-orm/pg-core';
-import { discountCodes } from './discount-codes';
+import { discountCodes } from '../discount-codes/discount-codes';
 
 export const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
