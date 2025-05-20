@@ -1,11 +1,11 @@
-import { uploadRegistry } from '@/routes/upload.route';
+import { userRegistry } from '@/routes/user.route';
+import { healthCheckRegistry } from '@/routes/health-check.route';
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from '@asteasolutions/zod-to-openapi';
 
 export type OpenAPIDocument = ReturnType<OpenApiGeneratorV3['generateDocument']>;
 
-//TODO: Add the registry for the upload service
 export function generateOpenAPIDocument(): OpenAPIDocument {
-  const registry = new OpenAPIRegistry([]);
+  const registry = new OpenAPIRegistry([healthCheckRegistry, userRegistry]);
   const generator = new OpenApiGeneratorV3(registry.definitions);
 
   return generator.generateDocument({

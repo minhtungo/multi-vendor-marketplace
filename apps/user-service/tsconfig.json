@@ -1,0 +1,11 @@
+{
+  "extends": "@repo/typescript-config/express.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    }
+  },
+  "include": ["src/**/*", "../../packages/server/src/docs/openAPIResponseBuilders.ts"],
+  "exclude": ["node_modules"]
+}

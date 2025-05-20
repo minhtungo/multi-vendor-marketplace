@@ -1,0 +1,45 @@
+import dotenv from 'dotenv';
+import { z } from 'zod';
+
+dotenv.config();
+
+const envSchema = z.object({
+  //Config
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('production'),
+  HOST: z.string().min(1).default('localhost'),
+  PORT: z.coerce.number().int().positive().default(3001),
+  APP_ORIGIN: z
+    .string()
+    .transform((val) => {
+      try {
+        return JSON.parse(val);
+      } catch {
+        return val.split(',').map((url) => url.trim());
+      }
+    })
+    .pipe(z.array(z.string().url()))
+    .default('http://localhost:5173,http://localhost:5174'),
+  VENDOR_ORIGIN: z.string().url().default('http://localhost:5174'),
+  COMMON_RATE_LIMIT_MAX_REQUESTS: z.coerce.number().int().positive().default(1000),
+  COMMON_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(1000),
+  // Database
+  POSTGRES_PORT: z.coerce.number().int().positive().default(5432),
+  POSTGRES_USER: z.string().min(1),
+  POSTGRES_PASSWORD: z.string().min(1),
+  POSTGRES_DB: z.string().min(1),
+  DATABASE_URL: z.string().min(1),
+});
+
+const parsedEnv = envSchema.safeParse(process.env);
+
+if (!parsedEnv.success) {
+  console.error('❌ Invalid environment variables:', parsedEnv.error.format());
+  throw new Error('Invalid environment variables');
+}
+
+export const env = {
+  ...parsedEnv.data,
+  isDevelopment: parsedEnv.data.NODE_ENV === 'development',
+  isProduction: parsedEnv.data.NODE_ENV === 'production',
+  isTest: parsedEnv.data.NODE_ENV === 'test',
+};
