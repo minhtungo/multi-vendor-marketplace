@@ -28,8 +28,8 @@ COPY --from=build --chown=node:node /app/dist ./dist
 # Use the node user from the image
 USER node
 
-# Expose port 8080
-EXPOSE 8080
+# Expose port 3000
+EXPOSE 3000
 
 # Start the server
 CMD ["node", "dist/index.js"]

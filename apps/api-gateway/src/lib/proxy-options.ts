@@ -24,7 +24,7 @@ export const forwardUserContext: ProxyReqOptDecorator = (proxyReqOpts, srcReq) =
 
 export const proxyOptions: ProxyOptions = {
   proxyReqPathResolver: (req: Request) => {
-    console.log(req.originalUrl);
+    logger.info(`Proxying request to: ${req.originalUrl}`);
     return req.originalUrl.replace(new RegExp(`^/${appConfig.apiVersion}`), '/api');
   },
   proxyErrorHandler: (err: Error, res: Response, next: NextFunction) => {

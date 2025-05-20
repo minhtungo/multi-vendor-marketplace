@@ -11,7 +11,7 @@ export const orderRouter: Router = Router();
 // Get All Orders Route with Pagination
 orderRegistry.registerPath({
   method: 'get',
-  path: '/orders',
+  path: '/',
   tags: ['Orders'],
   request: {
     query: z.object({

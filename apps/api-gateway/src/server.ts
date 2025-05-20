@@ -43,14 +43,7 @@ app.use(
   `/${appConfig.apiVersion}/auth`,
   proxy(env.AUTH_SERVICE_URL, {
     ...proxyOptions,
-    proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
-      // Forward the authorization header
-      if (srcReq.headers.authorization) {
-        proxyReqOpts.headers = proxyReqOpts.headers || {};
-      }
-
-      return proxyReqOpts;
-    },
+    proxyReqOptDecorator: forwardUserContext,
     userResDecorator: (proxyRes, proxyResData) => {
       logger.info(`Response received from Auth service: ${proxyRes.statusCode}`);
       return proxyResData;
@@ -95,11 +88,25 @@ app.use(
     ...proxyOptions,
     proxyReqOptDecorator: forwardUserContext,
     userResDecorator: (proxyRes, proxyResData) => {
-      logger.info(`Response received from Payment service: ${proxyRes.statusCode}`);
+      logger.info(`Response received from Order service: ${proxyRes.statusCode}`);
       return proxyResData;
     },
   })
 );
+
+// Upload service
+app.use(
+  `/${appConfig.apiVersion}/uploads`,
+  proxy(env.UPLOAD_SERVICE_URL, {
+    ...proxyOptions,
+    proxyReqOptDecorator: forwardUserContext,
+    userResDecorator: (proxyRes, proxyResData) => {
+      logger.info(`Response received from Upload service: ${proxyRes.statusCode}`);
+      return proxyResData;
+    },
+  })
+);
+
 // Error handlers
 app.use(errorHandler());
 

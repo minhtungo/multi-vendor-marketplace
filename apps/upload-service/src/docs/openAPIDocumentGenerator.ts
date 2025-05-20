@@ -1,11 +1,10 @@
-import { orderRegistry } from '@/routes/order.route';
+import { paymentRegistry } from '@/routes/upload.route';
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from '@asteasolutions/zod-to-openapi';
 
 export type OpenAPIDocument = ReturnType<OpenApiGeneratorV3['generateDocument']>;
 
-//TODO: Add all the routes to the registry
 export function generateOpenAPIDocument(): OpenAPIDocument {
-  const registry = new OpenAPIRegistry([]);
+  const registry = new OpenAPIRegistry([paymentRegistry]);
   const generator = new OpenApiGeneratorV3(registry.definitions);
 
   return generator.generateDocument({
