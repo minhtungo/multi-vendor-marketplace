@@ -40,7 +40,7 @@ services:
     image: postgres:latest
     restart: always
     env_file:
-      - apps/product-service/.env
+      - apps/payment-service/.env
     volumes:
       - ./docker-data/payment-db:/var/lib/postgresql/data
     ports:
@@ -56,13 +56,45 @@ services:
     image: postgres:latest
     restart: always
     env_file:
-      - apps/product-service/.env
+      - apps/upload-service/.env
     volumes:
       - ./docker-data/upload-db:/var/lib/postgresql/data
     ports:
       - 5435:5432
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${UPLOAD_DB_USER} -d ${UPLOAD_DB_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend-network
+  user-db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - apps/user-service/.env
+    volumes:
+      - ./docker-data/user-db:/var/lib/postgresql/data
+    ports:
+      - 5436:5432
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${USER_DB_USER} -d ${USER_DB_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend-network
+  vendor-db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - apps/vendor-service/.env
+    volumes:
+      - ./docker-data/vendor-db:/var/lib/postgresql/data
+    ports:
+      - 5437:5432
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${VENDOR_DB_USER} -d ${VENDOR_DB_DB}']
       interval: 5s
       timeout: 5s
       retries: 5
