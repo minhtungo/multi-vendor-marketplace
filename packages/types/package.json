@@ -1,0 +1,9 @@
+{
+  "name": "@repo/types",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "devDependencies": {
+    "@types/node": "^20.17.46"
+  }
+}

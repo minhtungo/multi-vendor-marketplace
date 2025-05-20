@@ -1,7 +1,6 @@
-import { paths } from '@/configs/paths';
 import { productCategoryController } from '@/controllers/product-category.controller';
 import { insertProductCategorySchema, productCategorySchema } from '@/db/schemas/product-categories';
-import { createApiResponse } from '@/docs/openAPIResponseBuilders';
+import { createApiResponse } from '@repo/server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';
@@ -12,17 +11,17 @@ export const productCategoryRouter: Router = Router();
 // Get All Product Categories Route
 productCategoryRegistry.registerPath({
   method: 'get',
-  path: paths.productCategories,
+  path: '/product-categories',
   tags: ['Product Categories'],
   responses: createApiResponse(z.array(productCategorySchema), 'Product categories retrieved successfully'),
 });
 
-productCategoryRouter.get(paths.productCategories, productCategoryController.getAllProductCategories);
+productCategoryRouter.get('/product-categories', productCategoryController.getAllProductCategories);
 
 // Get Single Product Category Route
 productCategoryRegistry.registerPath({
   method: 'get',
-  path: `${paths.productCategories}/{id}`,
+  path: `/product-categories/{id}`,
   tags: ['Product Categories'],
   request: {
     params: z.object({
@@ -32,12 +31,12 @@ productCategoryRegistry.registerPath({
   responses: createApiResponse(productCategorySchema, 'Product category retrieved successfully'),
 });
 
-productCategoryRouter.get(`${paths.productCategories}/:id`, productCategoryController.getProductCategory);
+productCategoryRouter.get(`/product-categories/:id`, productCategoryController.getProductCategory);
 
 // Create Product Category Route
 productCategoryRegistry.registerPath({
   method: 'post',
-  path: paths.productCategories,
+  path: '/product-categories',
   tags: ['Product Categories'],
   request: {
     body: {
@@ -51,12 +50,12 @@ productCategoryRegistry.registerPath({
   responses: createApiResponse(productCategorySchema, 'Product category created successfully'),
 });
 
-productCategoryRouter.post(paths.productCategories, productCategoryController.createProductCategory);
+productCategoryRouter.post('/product-categories', productCategoryController.createProductCategory);
 
 // Update Product Category Route
 productCategoryRegistry.registerPath({
   method: 'put',
-  path: `${paths.productCategories}/{id}`,
+  path: `/product-categories/{id}`,
   tags: ['Product Categories'],
   request: {
     params: z.object({
@@ -73,12 +72,12 @@ productCategoryRegistry.registerPath({
   responses: createApiResponse(productCategorySchema, 'Product category updated successfully'),
 });
 
-productCategoryRouter.put(`${paths.productCategories}/:id`, productCategoryController.updateProductCategory);
+productCategoryRouter.put(`/product-categories/:id`, productCategoryController.updateProductCategory);
 
 // Delete Product Category Route
 productCategoryRegistry.registerPath({
   method: 'delete',
-  path: `${paths.productCategories}/{id}`,
+  path: `/product-categories/{id}`,
   tags: ['Product Categories'],
   request: {
     params: z.object({
@@ -88,14 +87,14 @@ productCategoryRegistry.registerPath({
   responses: createApiResponse(productCategorySchema, 'Product category deleted successfully'),
 });
 
-productCategoryRouter.delete(`${paths.productCategories}/:id`, productCategoryController.deleteProductCategory);
+productCategoryRouter.delete(`/product-categories/:id`, productCategoryController.deleteProductCategory);
 
 // Delete All Product Categories Route
 productCategoryRegistry.registerPath({
   method: 'delete',
-  path: paths.productCategories,
+  path: '/product-categories',
   tags: ['Product Categories'],
   responses: createApiResponse(productCategorySchema, 'All product categories deleted successfully'),
 });
 
-productCategoryRouter.delete(`${paths.productCategories}/all`, productCategoryController.deleteAllProductCategories);
+productCategoryRouter.delete('/product-categories/all', productCategoryController.deleteAllProductCategories);

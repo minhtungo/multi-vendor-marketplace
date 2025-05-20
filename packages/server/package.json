@@ -21,6 +21,11 @@
       "types": "./src/middlewares/index.ts",
       "import": "./src/middlewares/index.ts",
       "require": "./src/middlewares/index.ts"
+    },
+    "./docs": {
+      "types": "./src/docs/index.ts",
+      "import": "./src/docs/index.ts",
+      "require": "./src/docs/index.ts"
     }
   },
   "scripts": {
@@ -34,7 +39,8 @@
   "devDependencies": {
     "@types/express": "5.0.1",
     "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@repo/types": "workspace:*"
   },
   "peerDependencies": {
     "express": "5.1.0"

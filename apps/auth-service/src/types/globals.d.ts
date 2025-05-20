@@ -1,6 +1,1 @@
-declare namespace Express {
-  export interface User {
-    id: string;
-    email: string;
-  }
-}
+import { type Express } from '@repo/types/express';

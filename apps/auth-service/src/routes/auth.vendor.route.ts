@@ -2,7 +2,7 @@ import { vendorPaths } from '@/configs/paths';
 import { shopController } from '@/controllers/shop.controller';
 import { authVendorController } from '@/controllers/auth.vendor.controller';
 import { insertShopSchema } from '@/db/schemas/shops';
-import { createApiResponse } from '@/docs/openAPIResponseBuilders';
+import { createApiResponse } from '@repo/server/docs';
 import { assertVendorAuthentication } from '@/middlewares/assertAuthentication';
 import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/auth.vendor.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';

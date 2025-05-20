@@ -1,19 +1,10 @@
 {
-  "extends": "@repo/typescript-config/base.json",
+  "extends": "@repo/typescript-config/express.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
-    },
-    "moduleResolution": "NodeNext",
-    "outDir": "dist",
-    "importsNotUsedAsValues": "remove",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

@@ -20,6 +20,7 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@repo/types": "workspace:*",
     "@asteasolutions/zod-to-openapi": "7.3.0",
     "@repo/redis": "workspace:*",
     "@repo/server": "workspace:*",

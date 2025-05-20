@@ -1,6 +1,6 @@
 import { paths } from '@/configs/paths';
 import { authUserController } from '@/controllers/auth.user.controller';
-import { createApiResponse } from '@/docs/openAPIResponseBuilders';
+import { createApiResponse } from '@repo/server/docs';
 import {
   ForgotPasswordSchema,
   ResetPasswordSchema,

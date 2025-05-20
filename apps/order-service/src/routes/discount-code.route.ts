@@ -1,6 +1,6 @@
 import { discountCodeController } from '@/controllers/discount-code.controller';
 import { discountCodeSchema, insertDiscountCodeSchema } from '@/db/schemas';
-import { createApiResponse } from '@/docs/openAPIResponseBuilders';
+import { createApiResponse } from '@repo/server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';

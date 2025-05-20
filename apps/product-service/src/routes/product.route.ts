@@ -1,7 +1,6 @@
-import { paths } from '@/configs/paths';
 import { productController } from '@/controllers/product.controller';
 import { insertProductSchema, productSchema } from '@/db/schemas/products';
-import { createApiResponse } from '@/docs/openAPIResponseBuilders';
+import { createApiResponse } from '@repo/server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';
@@ -27,7 +26,7 @@ productRouter.get(`/:id`, productController.getProduct);
 // Get All Products Route with Pagination
 productRegistry.registerPath({
   method: 'get',
-  path: paths.products,
+  path: '/products',
   tags: ['Products'],
   request: {
     query: z.object({
@@ -54,7 +53,7 @@ productRouter.get('/', productController.getAllProducts);
 // Create Product Route
 productRegistry.registerPath({
   method: 'post',
-  path: paths.products,
+  path: '/products',
   tags: ['Products'],
   request: {
     body: {
@@ -76,12 +75,12 @@ productRegistry.registerPath({
   ),
 });
 
-productRouter.post(paths.products, productController.createProduct);
+productRouter.post('/', productController.createProduct);
 
 // Update Product Route
 productRegistry.registerPath({
   method: 'put',
-  path: `${paths.products}{id}`,
+  path: `/products/{id}`,
   tags: ['Products'],
   request: {
     params: z.object({
@@ -121,7 +120,7 @@ productRouter.delete(`/all`, productController.deleteAllProducts);
 // Delete Product Route
 productRegistry.registerPath({
   method: 'delete',
-  path: `${paths.products}{id}`,
+  path: `/products/{id}`,
   tags: ['Products'],
   request: {
     params: z.object({
