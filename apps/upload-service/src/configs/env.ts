@@ -21,9 +21,17 @@ const envSchema = z.object({
   POSTGRES_PASSWORD: z.string().min(1),
   POSTGRES_DB: z.string().min(1),
   DATABASE_URL: z.string().min(1),
-  // Stripe
-  STRIPE_SECRET_KEY: z.string().min(1),
-  STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
+  // S3
+  USE_LOCAL_S3: z.boolean().default(true),
+  AWS_ACCESS_KEY_ID: z.string().min(1),
+  AWS_SECRET_ACCESS_KEY: z.string().min(1),
+  AWS_REGION: z.string().min(1),
+  AWS_S3_BUCKET_NAME: z.string().min(1),
+  AWS_S3_ENDPOINT: z.string().min(1),
+  AWS_S3_PORT: z.coerce.number().int().positive().default(9000),
+  // MinIO
+  MINIO_ROOT_USER: z.string().min(1),
+  MINIO_ROOT_PASSWORD: z.string().min(1),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
