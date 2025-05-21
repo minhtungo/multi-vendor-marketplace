@@ -1,10 +1,21 @@
-import { authVendorService } from '@/services/auth.vendor.service';
+import { vendorService } from '@/services/vendor.service';
 import { handleServiceResponse } from '@repo/server/lib';
 import type { Request, RequestHandler, Response } from 'express';
 
 class VendorController {
-  public getVendor: RequestHandler = async (req: Request, res: Response) => {
-    const serviceResponse = await authVendorService.getVendor(req);
+  public getVendorById: RequestHandler = async (req: Request, res: Response) => {
+    const serviceResponse = await vendorService.getVendorById(req.params.id);
+    handleServiceResponse(serviceResponse, res);
+  };
+
+  public getVendorByEmail: RequestHandler = async (req: Request, res: Response) => {
+    const serviceResponse = await vendorService.getVendorByEmail(req.params.email);
+    handleServiceResponse(serviceResponse, res);
+  };
+
+  public verifyPassword: RequestHandler = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    const serviceResponse = await vendorService.verifyPassword(email, password);
     handleServiceResponse(serviceResponse, res);
   };
 }
