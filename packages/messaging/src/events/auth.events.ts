@@ -80,11 +80,8 @@ export const UserDeletedSchema = baseEventSchema.extend({
 
 // Vendor event schemas
 export const VendorRegisteredSchema = baseEventSchema.extend({
-  vendorId: z.string(),
   email: z.string().email(),
-  storeName: z.string(),
-  verified: z.boolean().default(false),
-  metadata: metadataSchema,
+  password: z.string(),
 });
 
 export const VendorVerifiedSchema = baseEventSchema.extend({

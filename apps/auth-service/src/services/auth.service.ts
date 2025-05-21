@@ -63,6 +63,8 @@ export class AuthService {
     try {
       const user = await userServiceClient.getUserByEmail(data.email);
 
+      console.log('user', user);
+
       if (!user || !user.id) {
         return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
@@ -83,7 +85,7 @@ export class AuthService {
         role: 'user',
       });
 
-      setRefreshTokenCookie(res, refreshToken);
+      setRefreshTokenCookie(res, refreshToken, 'user');
 
       return ServiceResponse.success(
         'Signed in successfully',
@@ -147,10 +149,14 @@ export class AuthService {
         return ServiceResponse.failure('Invalid token', null, HTTP_STATUS_CODES.BAD_REQUEST);
       }
 
+      if (!existingToken.userId) {
+        return ServiceResponse.failure('Invalid token', null, HTTP_STATUS_CODES.BAD_REQUEST);
+      }
+
       await createTransaction(async (trx) => {
         await userAuthProducer.initialize();
         await userAuthProducer.publishUserPasswordReset({
-          userId: existingToken.userId,
+          userId: existingToken.userId!,
           password,
           timestamp: Date.now(),
         });

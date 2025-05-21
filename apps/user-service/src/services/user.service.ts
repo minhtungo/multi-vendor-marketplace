@@ -13,7 +13,9 @@ export class UserService {
   }
 
   public async createUser(data: InsertUser) {
+    console.log('createUser', data);
     const user = await this.userRepository.createUser(data);
+    console.log('after createUser', user);
     return ServiceResponse.success('User created successfully', user, HTTP_STATUS_CODES.CREATED);
   }
 
@@ -25,7 +27,7 @@ export class UserService {
   public async getUserByEmail(email: string) {
     console.log('email getUserByEmail', email);
     const user = await this.userRepository.getUserByEmail(email);
-    console.log(user);
+    console.log('after getUserByEmail', user);
     if (!user) {
       return ServiceResponse.failure('User not found', null, HTTP_STATUS_CODES.NOT_FOUND);
     }

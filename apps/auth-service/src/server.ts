@@ -4,11 +4,11 @@ import express, { type Express } from 'express';
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
 import { authUserRouter } from '@/routes/auth.user.route';
-// import { authVendorRouter } from '@/routes/auth.vendor.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import { errorHandler, createRequestLogger } from '@repo/server/middlewares';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
+import { authVendorRouter } from '@/routes/auth.vendor.route';
 
 const app: Express = express();
 
@@ -39,8 +39,8 @@ env.isProduction && app.use(createRequestLogger(env));
 
 // Routes
 app.use('/api/health-check', healthCheckRouter);
-// app.use('/api/auth/vendor', authVendorRouter);
 app.use('/api/auth/user', authUserRouter);
+app.use('/api/auth/vendor', authVendorRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
