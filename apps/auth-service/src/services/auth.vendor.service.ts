@@ -1,10 +1,8 @@
 import { env } from '@/configs/env';
 import { getRedisClient } from '@repo/redis';
-import type { InsertVendor, Vendor } from '@/db/schemas/vendors';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
 import type { VendorSignInInput, VendorSignUpInput, VerifyVendorInput } from '@/models/auth.vendor.model';
-import { VendorRepository } from '@/repositories/vendor.repository';
 import { RefreshTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import { hashPassword, verifyPassword } from '@/utils/password';
@@ -15,23 +13,17 @@ import { HTTP_STATUS_CODES } from '@repo/server/core';
 import { verify } from 'jsonwebtoken';
 
 export class AuthVendorService {
-  private vendorRepository: VendorRepository;
-
-  constructor(repository: VendorRepository = new VendorRepository()) {
-    this.vendorRepository = repository;
-  }
-
   async signUp(data: VendorSignUpInput, next: NextFunction): Promise<ServiceResponse> {
     try {
-      const existingVendor = await this.vendorRepository.getVendorByEmail(data.email);
+      // const existingVendor = await this.vendorRepository.getVendorByEmail(data.email);
 
-      if (existingVendor) {
-        return ServiceResponse.success(
-          'If your email is not registered, you will receive an email with an OTP shortly',
-          null,
-          HTTP_STATUS_CODES.OK
-        );
-      }
+      // if (existingVendor) {
+      //   return ServiceResponse.success(
+      //     'If your email is not registered, you will receive an email with an OTP shortly',
+      //     null,
+      //     HTTP_STATUS_CODES.OK
+      //   );
+      // }
 
       await checkOtpRestrictions(data.email, next);
       await trackOtpRequests(data.email, next);
@@ -60,31 +52,31 @@ export class AuthVendorService {
   ): Promise<
     ServiceResponse<{
       accessToken: string;
-      vendor: Omit<Vendor, 'password'>;
+      vendor: Omit<Express.User, 'password'>;
     } | null>
   > {
     try {
-      const vendor = await this.vendorRepository.getVendorByEmail(data.email);
+      // const vendor = await this.vendorRepository.getVendorByEmail(data.email);
 
-      if (!vendor || !vendor.id || !vendor.password) {
-        return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
-      }
+      // if (!vendor || !vendor.id || !vendor.password) {
+      //   return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
+      // }
 
-      const isPasswordValid = await verifyPassword(vendor.password, data.password);
+      // const isPasswordValid = await verifyPassword(vendor.password, data.password);
 
-      if (!isPasswordValid) {
-        return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
-      }
+      // if (!isPasswordValid) {
+      //   return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
+      // }
 
       const { token: refreshToken, sessionId } = await generateRefreshToken(vendor.id, 'vendor');
 
-      const accessToken = generateAccessToken({
-        sub: vendor.id,
-        email: vendor.email,
-        userId: vendor.id,
-        sessionId,
-        role: 'vendor',
-      });
+      // const accessToken = generateAccessToken({
+      //   sub: vendor.id,
+      //   email: vendor.email,
+      //   userId: vendor.id,
+      //   sessionId,
+      //   role: 'vendor',
+      // });
 
       setRefreshTokenCookie(res, refreshToken, 'vendor');
       const { password, ...rest } = vendor;

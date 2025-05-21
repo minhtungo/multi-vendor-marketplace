@@ -1,9 +1,8 @@
 import jwt from 'jsonwebtoken';
-import { type User } from '@/db/schemas/users';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
-export const createToken = (user: User) => {
+export const createToken = (user: Express.User) => {
   return jwt.sign(
     {
       sub: user.id,

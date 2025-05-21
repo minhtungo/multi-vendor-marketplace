@@ -1,5 +1,5 @@
 {
-  "name": "@repo/auth-service",
+  "name": "@repo/vendor-service",
   "version": "1",
   "main": "index.ts",
   "private": true,

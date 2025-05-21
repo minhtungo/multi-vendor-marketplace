@@ -9,7 +9,7 @@ const rabbitMQConfigSchema = z.object({
 });
 
 export const rabbitMQConfig = rabbitMQConfigSchema.parse({
-  url: process.env.RABBITMQ_URL || 'amqp://admin:admin@localhost:5672',
+  url: process.env.RABBITMQ_URL || 'amqp://username:password@localhost:5672',
   reconnectTimeInSeconds: 5,
 });
 

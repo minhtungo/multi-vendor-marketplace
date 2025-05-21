@@ -1,20 +1,19 @@
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
-import { getRedisClient } from '@repo/redis';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
-import { emailService } from '@repo/email';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
+import { userServiceClient } from '@/lib/user-service.client';
 import type { SignInInput, SignUpInput, VerifyUserInput } from '@/models/auth.user.model';
 import { tokenRepository } from '@/repositories/token.repository';
-import { userServiceClient } from '@/lib/user-service.client';
-import { userAuthProducer, AuthEventType } from '@repo/messaging';
 import type { RefreshTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
-import { hashPassword, verifyPassword } from '@/utils/password';
 import { createTransaction } from '@/utils/transaction';
+import { emailService } from '@repo/email';
+import { userAuthProducer } from '@repo/messaging';
+import { getRedisClient } from '@repo/redis';
+import { HTTP_STATUS_CODES } from '@repo/server/core';
 import { ServiceResponse } from '@repo/server/lib';
 import type { NextFunction, Request, Response } from 'express';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
 
 import { verify } from 'jsonwebtoken';
 

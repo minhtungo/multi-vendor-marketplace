@@ -23,7 +23,9 @@ export class UserService {
   }
 
   public async getUserByEmail(email: string) {
+    console.log('email getUserByEmail', email);
     const user = await this.userRepository.getUserByEmail(email);
+    console.log(user);
     if (!user) {
       return ServiceResponse.failure('User not found', null, HTTP_STATUS_CODES.NOT_FOUND);
     }

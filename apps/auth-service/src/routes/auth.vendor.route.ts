@@ -1,7 +1,5 @@
 import { vendorPaths } from '@/configs/paths';
-import { shopController } from '@/controllers/shop.controller';
 import { authVendorController } from '@/controllers/auth.vendor.controller';
-import { insertShopSchema } from '@/db/schemas/shops';
 import { createApiResponse } from '@repo/server/docs';
 import { assertVendorAuthentication } from '@/middlewares/assertAuthentication';
 import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/auth.vendor.model';
@@ -87,29 +85,6 @@ authVendorRegistry.registerPath({
 });
 
 authVendorRouter.put(vendorPaths.renewToken, authVendorController.renewToken);
-
-authVendorRegistry.registerPath({
-  method: 'post',
-  path: `/auth/vendor/${vendorPaths.shop}`,
-  tags: ['Shops'],
-  request: {
-    body: {
-      content: {
-        'application/json': {
-          schema: insertShopSchema,
-        },
-      },
-    },
-  },
-  responses: createApiResponse(z.null(), 'Success'),
-});
-
-authVendorRouter.post(
-  vendorPaths.shop,
-  validateRequest(z.object({ body: insertShopSchema })),
-  assertVendorAuthentication,
-  shopController.createShop
-);
 
 authVendorRegistry.registerPath({
   method: 'get',

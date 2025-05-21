@@ -1,14 +1,11 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import crypto from "crypto";
-import { users } from "@/db/schemas/users";
+import crypto from 'node:crypto';
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
-export const resetPasswordTokens = pgTable("resetPasswordTokens", {
-	id: text()
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
-	token: text().notNull(),
-	expires: timestamp({ mode: "date" }).notNull(),
-	userId: text()
-		.notNull()
-		.references(() => users.id, { onDelete: "cascade" }),
+export const resetPasswordTokens = pgTable('resetPasswordTokens', {
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  token: text().notNull(),
+  expires: timestamp({ mode: 'date' }).notNull(),
+  userId: uuid(),
 });

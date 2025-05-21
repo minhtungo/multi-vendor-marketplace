@@ -3,10 +3,8 @@ import express, { type Express } from 'express';
 
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPIRouter';
-import '@/lib/strategies/jwt';
-import '@/lib/strategies/vendor-jwt';
 import { authUserRouter } from '@/routes/auth.user.route';
-import { authVendorRouter } from '@/routes/auth.vendor.route';
+// import { authVendorRouter } from '@/routes/auth.vendor.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import { errorHandler, createRequestLogger } from '@repo/server/middlewares';
 import cookieParser from 'cookie-parser';
@@ -41,7 +39,7 @@ env.isProduction && app.use(createRequestLogger(env));
 
 // Routes
 app.use('/api/health-check', healthCheckRouter);
-app.use('/api/auth/vendor', authVendorRouter);
+// app.use('/api/auth/vendor', authVendorRouter);
 app.use('/api/auth/user', authUserRouter);
 
 // Swagger UI

@@ -41,7 +41,7 @@ class UserServiceClient {
   }
 
   async verifyPassword(email: string, password: string) {
-    const response = await this.request<{ isValid: boolean }>('POST', `/api/users/verify-password`, {
+    const response = await this.request<{ isValid: boolean }>('POST', '/api/users/verify-password', {
       email,
       password,
     });
