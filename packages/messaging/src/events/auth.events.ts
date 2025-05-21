@@ -35,11 +35,8 @@ const metadataSchema = z.record(z.string(), z.any()).optional();
 
 // User event schemas
 export const UserRegisteredSchema = baseEventSchema.extend({
-  userId: z.string(),
   email: z.string().email(),
-  role: z.enum(['USER', 'ADMIN']),
-  verified: z.boolean().default(false),
-  metadata: metadataSchema,
+  password: z.string(),
 });
 
 export const UserVerifiedSchema = baseEventSchema.extend({
@@ -66,7 +63,7 @@ export const UserLogoutSchema = baseEventSchema.extend({
 
 export const UserPasswordSchema = baseEventSchema.extend({
   userId: z.string(),
-  email: z.string().email(),
+  password: z.string(),
 });
 
 export const UserUpdatedSchema = baseEventSchema.extend({

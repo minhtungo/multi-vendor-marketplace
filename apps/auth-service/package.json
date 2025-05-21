@@ -24,8 +24,10 @@
     "@repo/email": "workspace:*",
     "@repo/redis": "workspace:*",
     "@repo/server": "workspace:*",
+    "@repo/messaging": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "argon2": "^0.43.0",
+    "axios": "^1.9.0",
     "cookie-parser": "^1.4.7",
     "cors": "2.8.5",
     "dotenv": "16.5.0",
@@ -41,8 +43,8 @@
     "zod": "3.24.3"
   },
   "devDependencies": {
-    "@repo/types": "workspace:*",
     "@biomejs/biome": "1.9.4",
+    "@repo/types": "workspace:*",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "2.8.17",
     "@types/express": "5.0.1",

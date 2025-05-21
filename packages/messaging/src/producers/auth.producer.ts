@@ -19,7 +19,7 @@ import {
   VendorDeleted,
 } from '../events/auth.events';
 
-export class UserAuthProducer extends BaseProducer {
+class UserAuthProducer extends BaseProducer {
   constructor(routingKey: string = 'user.#') {
     super(AUTH_EXCHANGE, AUTH_EXCHANGE_TYPE, routingKey);
   }
@@ -142,3 +142,6 @@ export class VendorAuthProducer extends BaseProducer {
     });
   }
 }
+
+export const userAuthProducer = new UserAuthProducer();
+export const vendorAuthProducer = new VendorAuthProducer();

@@ -27,6 +27,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(1),
   //URLs
   AUTH_SERVICE_URL: z.string().default('http://localhost:8081'),
+  USER_SERVICE_URL: z.string().default('http://localhost:8086'),
   PRODUCT_SERVICE_URL: z.string().default('http://localhost:8082'),
   PAYMENT_SERVICE_URL: z.string().default('http://localhost:8083'),
   UPLOAD_SERVICE_URL: z.string().default('http://localhost:8084'),

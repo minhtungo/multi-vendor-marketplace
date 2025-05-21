@@ -17,7 +17,7 @@ userRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-userRouter.post('/users', userController.createUser);
+userRouter.post('/', userController.createUser);
 
 userRegistry.registerPath({
   method: 'get',
@@ -27,4 +27,53 @@ userRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-userRouter.get('/users/me', userController.getMe);
+userRouter.get('/me', userController.getMe);
+
+userRegistry.registerPath({
+  method: 'get',
+  path: `/users/email/{email}`,
+  tags: ['Users'],
+  request: {
+    params: z.object({
+      email: z.string().email(),
+    }),
+  },
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+userRouter.get('/email/:email', userController.getUserByEmail);
+
+userRegistry.registerPath({
+  method: 'get',
+  path: `/users/{id}`,
+  tags: ['Users'],
+  request: {
+    params: z.object({
+      id: z.string(),
+    }),
+  },
+  responses: createApiResponse(z.null(), 'Success'),
+});
+
+userRouter.get('/:id', userController.getUserById);
+
+userRegistry.registerPath({
+  method: 'post',
+  path: `/users/verify-password`,
+  tags: ['Users'],
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: z.object({
+            email: z.string().email(),
+            password: z.string(),
+          }),
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.object({ isValid: z.boolean() }), 'Success'),
+});
+
+userRouter.post('/verify-password', userController.verifyPassword);

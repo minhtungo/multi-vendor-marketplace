@@ -13,6 +13,24 @@ class UserController {
     const serviceResponse = await userService.getMe(req);
     handleServiceResponse(serviceResponse, res);
   };
+
+  public getUserByEmail: RequestHandler = async (req: Request, res: Response) => {
+    const { email } = req.params;
+    const serviceResponse = await userService.getUserByEmail(email);
+    handleServiceResponse(serviceResponse, res);
+  };
+
+  public getUserById: RequestHandler = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const serviceResponse = await userService.getUserById(id);
+    handleServiceResponse(serviceResponse, res);
+  };
+
+  public verifyPassword: RequestHandler = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    const serviceResponse = await userService.verifyPassword(email, password);
+    handleServiceResponse(serviceResponse, res);
+  };
 }
 
 export const userController = new UserController();

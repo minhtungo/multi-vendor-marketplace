@@ -9,11 +9,11 @@ services:
       - ./docker-data/auth-db:/var/lib/postgresql/data
     ports:
       - 5432:5432
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${AUTH_DB_USER} -d ${AUTH_DB_DB}']
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${AUTH_DB_USER} -d ${AUTH_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
     networks:
       - backend-network
 
@@ -27,11 +27,11 @@ services:
       - ./docker-data/product-db:/var/lib/postgresql/data
     ports:
       - 5433:5432
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${PRODUCT_DB_USER} -d ${PRODUCT_DB_DB}']
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${PRODUCT_DB_USER} -d ${PRODUCT_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
     networks:
       - backend-network
 
@@ -45,11 +45,11 @@ services:
       - ./docker-data/payment-db:/var/lib/postgresql/data
     ports:
       - 5434:5432
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${PAYMENT_DB_USER} -d ${PAYMENT_DB_DB}']
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${PAYMENT_DB_USER} -d ${PAYMENT_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
     networks:
       - backend-network
   upload-db:
@@ -61,11 +61,11 @@ services:
       - ./docker-data/upload-db:/var/lib/postgresql/data
     ports:
       - 5435:5432
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${UPLOAD_DB_USER} -d ${UPLOAD_DB_DB}']
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${UPLOAD_DB_USER} -d ${UPLOAD_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
     networks:
       - backend-network
   user-db:
@@ -77,11 +77,11 @@ services:
       - ./docker-data/user-db:/var/lib/postgresql/data
     ports:
       - 5436:5432
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${USER_DB_USER} -d ${USER_DB_DB}']
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${USER_DB_USER} -d ${USER_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
     networks:
       - backend-network
   vendor-db:
@@ -93,11 +93,11 @@ services:
       - ./docker-data/vendor-db:/var/lib/postgresql/data
     ports:
       - 5437:5432
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${VENDOR_DB_USER} -d ${VENDOR_DB_DB}']
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${VENDOR_DB_USER} -d ${VENDOR_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
     networks:
       - backend-network
   # Redis service
@@ -108,11 +108,11 @@ services:
     volumes:
       - ./docker-data/redis:/data
     command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
-    healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ['CMD', 'redis-cli', 'ping']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
     networks:
       - backend-network
   # MailHog for email testing
@@ -124,11 +124,11 @@ services:
       - '8025:8025' # Web UI
     volumes:
       - ./docker-data/mailhog:/var/lib/mailhog
-    healthcheck:
-      test: ['CMD', 'wget', '--spider', 'http://localhost:8025/api/v2/messages']
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ['CMD', 'wget', '--spider', 'http://localhost:8025/api/v2/messages']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
     networks:
       - backend-network
 
@@ -159,5 +159,10 @@ networks:
 volumes:
   auth-db-data:
   product-db-data:
+  payment-db-data:
+  upload-db-data:
+  order-db-data:
+  user-db-data:
+  vendor-db-data:
   redis-data:
   mailhog-data:

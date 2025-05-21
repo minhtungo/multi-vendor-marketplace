@@ -25,9 +25,9 @@ app.use('/api/health-check', healthCheckRouter);
 app.use('/api/users', userRouter);
 
 // Swagger UI
-app.use(openAPIRouter);
+app.use('/api-docs', openAPIRouter);
 
 // Error handlers
 app.use(errorHandler());
 
-export { app };
+export default app;

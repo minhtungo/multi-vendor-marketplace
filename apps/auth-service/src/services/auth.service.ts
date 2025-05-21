@@ -1,13 +1,13 @@
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
 import { getRedisClient } from '@repo/redis';
-import type { User } from '@/db/schemas/users';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
 import { emailService } from '@repo/email';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
 import type { SignInInput, SignUpInput, VerifyUserInput } from '@/models/auth.user.model';
 import { tokenRepository } from '@/repositories/token.repository';
-import { userRepository, UserRepository } from '@/repositories/user.repository';
+import { userServiceClient } from '@/lib/user-service.client';
+import { userAuthProducer, AuthEventType } from '@repo/messaging';
 import type { RefreshTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import { hashPassword, verifyPassword } from '@/utils/password';
@@ -19,15 +19,9 @@ import { HTTP_STATUS_CODES } from '@repo/server/core';
 import { verify } from 'jsonwebtoken';
 
 export class AuthService {
-  private userRepository: UserRepository;
-
-  constructor(repository: UserRepository = new UserRepository()) {
-    this.userRepository = repository;
-  }
-
   async signUp(data: SignUpInput, next: NextFunction): Promise<ServiceResponse> {
     try {
-      const existingUser = await this.userRepository.getUserByEmail(data.email);
+      const existingUser = await userServiceClient.getUserByEmail(data.email);
 
       if (existingUser) {
         return ServiceResponse.success(
@@ -68,13 +62,13 @@ export class AuthService {
     } | null>
   > {
     try {
-      const user = await this.userRepository.getUserByEmail(data.email);
+      const user = await userServiceClient.getUserByEmail(data.email);
 
-      if (!user || !user.id || !user.password) {
+      if (!user || !user.id) {
         return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
 
-      const isPasswordValid = await verifyPassword(user.password, data.password);
+      const isPasswordValid = await userServiceClient.verifyPassword(user.email, data.password);
 
       if (!isPasswordValid) {
         return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
@@ -116,7 +110,7 @@ export class AuthService {
 
   async forgotPassword(email: string, next: NextFunction): Promise<ServiceResponse> {
     try {
-      const user = await this.userRepository.getUserByEmail(email);
+      const user = await userServiceClient.getUserByEmail(email);
 
       if (!user || !user.id) {
         return ServiceResponse.success(
@@ -128,7 +122,7 @@ export class AuthService {
 
       const resetPasswordToken = await tokenRepository.createResetPasswordToken(user.id);
 
-      await emailService.sendPasswordResetEmail(user.email, user.name, resetPasswordToken);
+      await emailService.sendPasswordResetEmail(user.email, user.email, resetPasswordToken);
 
       return ServiceResponse.success(
         'If a matching account is found, a password reset email will be sent to you shortly',
@@ -155,7 +149,12 @@ export class AuthService {
       }
 
       await createTransaction(async (trx) => {
-        await this.userRepository.updateUserPassword(existingToken.userId, password, trx);
+        await userAuthProducer.initialize();
+        await userAuthProducer.publishUserPasswordReset({
+          userId: existingToken.userId,
+          password,
+          timestamp: Date.now(),
+        });
         await tokenRepository.deleteResetPasswordTokenByToken(token, trx);
       });
 
@@ -194,7 +193,7 @@ export class AuthService {
         return ServiceResponse.failure('Token has been revoked', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
 
-      const user = await this.userRepository.getUserById(payload.sub);
+      const user = await userServiceClient.getUserById(payload.sub);
       if (!user) {
         return ServiceResponse.failure('User not found', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
@@ -265,12 +264,11 @@ export class AuthService {
 
       await redis.del(`otp:${email}`, failedAttemptsKey);
 
-      const hashedPassword = password ? await hashPassword(password) : undefined;
-
-      await userRepository.createUser({
+      await userAuthProducer.initialize();
+      await userAuthProducer.publishUserRegistered({
         email,
-        password: hashedPassword,
-        name: 'New user',
+        password,
+        timestamp: Date.now(),
       });
 
       return ServiceResponse.success('User created successfully', null, HTTP_STATUS_CODES.CREATED);
@@ -295,21 +293,6 @@ export class AuthService {
       logger.error(errorMessage);
       return ServiceResponse.failure(
         'An error occurred while signing out.',
-        null,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
-  }
-
-  async getMe(req: Request): Promise<ServiceResponse<User | null>> {
-    try {
-      const user = req.user as User;
-      return ServiceResponse.success('User fetched successfully', user, HTTP_STATUS_CODES.OK);
-    } catch (ex) {
-      const errorMessage = `Error fetching user: ${(ex as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure(
-        'An error occurred while fetching user.',
         null,
         HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
       );

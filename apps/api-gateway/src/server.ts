@@ -51,6 +51,19 @@ app.use(
   })
 );
 
+// User service
+app.use(
+  `/${appConfig.apiVersion}/users`,
+  proxy(env.USER_SERVICE_URL, {
+    ...proxyOptions,
+    proxyReqOptDecorator: forwardUserContext,
+    userResDecorator: (proxyRes, proxyResData) => {
+      logger.info(`Response received from User service: ${proxyRes.statusCode}`);
+      return proxyResData;
+    },
+  })
+);
+
 // Product service
 app.use(
   `/${appConfig.apiVersion}/products`,
