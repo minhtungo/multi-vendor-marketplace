@@ -21,6 +21,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.3",
     "sonner": "^2.0.3",
+    "table": "git+https://github.com/tanstack/react-table.git",
     "zod": "^3.24.4",
     "zustand": "^5.0.4"
   },
