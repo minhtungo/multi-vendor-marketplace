@@ -6,7 +6,9 @@ const maxSizeMB = 5;
 const maxSize = maxSizeMB * 1024 * 1024;
 const maxFiles = 6;
 
-export function UploadProductImages() {
+type UploadProductImagesProps = React.ComponentProps<'input'>;
+
+export function UploadProductImages({ ...props }: UploadProductImagesProps) {
   const [
     { files, isDragging, errors },
     {

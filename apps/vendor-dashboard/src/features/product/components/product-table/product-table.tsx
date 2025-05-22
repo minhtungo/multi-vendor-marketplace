@@ -1,6 +1,8 @@
 import { DataTablePagination } from '@/components/table/data-table-pagination';
+import { Button } from '@repo/ui/components/button';
 import { Input } from '@repo/ui/components/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@repo/ui/components/table';
+import { Link } from '@tanstack/react-router';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -10,6 +12,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
 interface ProductTableProps<TData, TValue> {
@@ -34,13 +37,19 @@ export function ProductTable<TData, TValue>({ columns, data }: ProductTableProps
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Search product..."
           value={(table.getColumn('product')?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn('product')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
+        <Button asChild>
+          <Link to="/products/new">
+            <Plus />
+            Create
+          </Link>
+        </Button>
       </div>
       <div className="rounded-md border">
         <Table>

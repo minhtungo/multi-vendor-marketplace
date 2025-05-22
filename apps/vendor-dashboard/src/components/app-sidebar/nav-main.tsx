@@ -1,11 +1,5 @@
 import { menu } from '@/configs/menu';
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from '@repo/ui/components/sidebar';
+import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@repo/ui/components/sidebar';
 import { Link } from '@tanstack/react-router';
 
 type NavMainProps = React.ComponentProps<'div'>;
@@ -13,7 +7,6 @@ type NavMainProps = React.ComponentProps<'div'>;
 export function NavMain({}: NavMainProps) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
       <SidebarMenu>
         {menu.dashboard.main.map((item) => (
           <SidebarMenuItem key={`${item.title}-nav-item`}>

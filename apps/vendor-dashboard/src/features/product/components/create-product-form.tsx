@@ -3,11 +3,13 @@ import { ProductCategoriesSelection } from '@/features/product/components/produc
 import { UploadProductImages } from '@/features/product/components/upload-product-images';
 import { normalizeServerError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@repo/ui/components/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/components/form';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { Input } from '@repo/ui/components/input';
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { Textarea } from '@repo/ui/components/textarea';
+import { useNavigate } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -23,6 +25,7 @@ const defaultFormValues = {
 };
 
 export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof createProductSchema>>({
     resolver: zodResolver(createProductSchema),
     defaultValues: defaultFormValues,
@@ -40,7 +43,6 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
 
   return (
     <Form {...form}>
-      <UploadProductImages />
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
           <FormField
@@ -48,22 +50,9 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Title</FormLabel>
                 <FormControl>
                   <Input {...field} autoFocus />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="sku"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>SKU</FormLabel>
-                <FormControl>
-                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -84,11 +73,37 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
           />
           <FormField
             control={form.control}
+            name="sku"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>SKU</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="images"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Media</FormLabel>
+                <FormControl>
+                  <UploadProductImages {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="categories"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Categories</FormLabel>
-                <ProductCategoriesSelection onValueChange={field.onChange} />
+                <ProductCategoriesSelection onValueChange={field.onChange} className="w-full" />
                 <FormMessage />
               </FormItem>
             )}
@@ -130,10 +145,12 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
             description={normalizeServerError(error, 'An error occurred while creating the product.')}
           />
         )}
-
-        <LoaderButton isPending={isPending} className="w-full">
-          Create Product
-        </LoaderButton>
+        <div className="flex items-center justify-end gap-2">
+          <Button onClick={() => navigate({ to: '/products' })} variant="outline">
+            Cancel
+          </Button>
+          <LoaderButton isPending={isPending}>Create Product</LoaderButton>
+        </div>
       </form>
     </Form>
   );
