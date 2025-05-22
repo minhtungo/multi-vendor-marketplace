@@ -1,5 +1,6 @@
 import { AppSidebar } from '@/components/app-sidebar';
-import { SidebarInset, SidebarProvider } from '@repo/ui/components/sidebar';
+import Header from '@/components/header';
+import { SidebarProvider } from '@repo/ui/components/sidebar';
 import { Outlet, createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/(dashboard)')({
@@ -16,7 +17,8 @@ function RouteComponent() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <div className="flex h-screen w-full flex-1 flex-col overflow-auto">
+      <div className="flex w-full flex-col overflow-hidden">
+        <Header />
         <Outlet />
       </div>
     </SidebarProvider>

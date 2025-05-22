@@ -18,10 +18,14 @@ import { Route as authSignUpImport } from './routes/(auth)/sign-up'
 import { Route as authSignInImport } from './routes/(auth)/sign-in'
 import { Route as authResetPasswordImport } from './routes/(auth)/reset-password'
 import { Route as authForgotPasswordImport } from './routes/(auth)/forgot-password'
+import { Route as dashboardSettingsRouteImport } from './routes/(dashboard)/settings/route'
 import { Route as dashboardProductsRouteImport } from './routes/(dashboard)/products/route'
 import { Route as dashboardOrdersRouteImport } from './routes/(dashboard)/orders/route'
+import { Route as dashboardCustomersRouteImport } from './routes/(dashboard)/customers/route'
+import { Route as dashboardSettingsIndexImport } from './routes/(dashboard)/settings/index'
 import { Route as dashboardProductsIndexImport } from './routes/(dashboard)/products/index'
 import { Route as dashboardOrdersIndexImport } from './routes/(dashboard)/orders/index'
+import { Route as dashboardCustomersIndexImport } from './routes/(dashboard)/customers/index'
 import { Route as PaymentConnectReturnImport } from './routes/payment/connect/return'
 import { Route as PaymentConnectRefreshImport } from './routes/payment/connect/refresh'
 import { Route as dashboardProductsNewImport } from './routes/(dashboard)/products/new'
@@ -68,6 +72,12 @@ const authForgotPasswordRoute = authForgotPasswordImport.update({
   getParentRoute: () => authRouteRoute,
 } as any)
 
+const dashboardSettingsRouteRoute = dashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+
 const dashboardProductsRouteRoute = dashboardProductsRouteImport.update({
   id: '/products',
   path: '/products',
@@ -80,6 +90,18 @@ const dashboardOrdersRouteRoute = dashboardOrdersRouteImport.update({
   getParentRoute: () => dashboardRouteRoute,
 } as any)
 
+const dashboardCustomersRouteRoute = dashboardCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+
+const dashboardSettingsIndexRoute = dashboardSettingsIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => dashboardSettingsRouteRoute,
+} as any)
+
 const dashboardProductsIndexRoute = dashboardProductsIndexImport.update({
   id: '/',
   path: '/',
@@ -90,6 +112,12 @@ const dashboardOrdersIndexRoute = dashboardOrdersIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => dashboardOrdersRouteRoute,
+} as any)
+
+const dashboardCustomersIndexRoute = dashboardCustomersIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => dashboardCustomersRouteRoute,
 } as any)
 
 const PaymentConnectReturnRoute = PaymentConnectReturnImport.update({
@@ -128,6 +156,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardRouteImport
       parentRoute: typeof rootRoute
     }
+    '/(dashboard)/customers': {
+      id: '/(dashboard)/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof dashboardCustomersRouteImport
+      parentRoute: typeof dashboardRouteImport
+    }
     '/(dashboard)/orders': {
       id: '/(dashboard)/orders'
       path: '/orders'
@@ -140,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof dashboardProductsRouteImport
+      parentRoute: typeof dashboardRouteImport
+    }
+    '/(dashboard)/settings': {
+      id: '/(dashboard)/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof dashboardSettingsRouteImport
       parentRoute: typeof dashboardRouteImport
     }
     '/(auth)/forgot-password': {
@@ -198,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaymentConnectReturnImport
       parentRoute: typeof rootRoute
     }
+    '/(dashboard)/customers/': {
+      id: '/(dashboard)/customers/'
+      path: '/'
+      fullPath: '/customers/'
+      preLoaderRoute: typeof dashboardCustomersIndexImport
+      parentRoute: typeof dashboardCustomersRouteImport
+    }
     '/(dashboard)/orders/': {
       id: '/(dashboard)/orders/'
       path: '/'
@@ -211,6 +260,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/products/'
       preLoaderRoute: typeof dashboardProductsIndexImport
       parentRoute: typeof dashboardProductsRouteImport
+    }
+    '/(dashboard)/settings/': {
+      id: '/(dashboard)/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof dashboardSettingsIndexImport
+      parentRoute: typeof dashboardSettingsRouteImport
     }
   }
 }
@@ -234,6 +290,20 @@ const authRouteRouteChildren: authRouteRouteChildren = {
 const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 )
+
+interface dashboardCustomersRouteRouteChildren {
+  dashboardCustomersIndexRoute: typeof dashboardCustomersIndexRoute
+}
+
+const dashboardCustomersRouteRouteChildren: dashboardCustomersRouteRouteChildren =
+  {
+    dashboardCustomersIndexRoute: dashboardCustomersIndexRoute,
+  }
+
+const dashboardCustomersRouteRouteWithChildren =
+  dashboardCustomersRouteRoute._addFileChildren(
+    dashboardCustomersRouteRouteChildren,
+  )
 
 interface dashboardOrdersRouteRouteChildren {
   dashboardOrdersIndexRoute: typeof dashboardOrdersIndexRoute
@@ -262,15 +332,33 @@ const dashboardProductsRouteRouteWithChildren =
     dashboardProductsRouteRouteChildren,
   )
 
+interface dashboardSettingsRouteRouteChildren {
+  dashboardSettingsIndexRoute: typeof dashboardSettingsIndexRoute
+}
+
+const dashboardSettingsRouteRouteChildren: dashboardSettingsRouteRouteChildren =
+  {
+    dashboardSettingsIndexRoute: dashboardSettingsIndexRoute,
+  }
+
+const dashboardSettingsRouteRouteWithChildren =
+  dashboardSettingsRouteRoute._addFileChildren(
+    dashboardSettingsRouteRouteChildren,
+  )
+
 interface dashboardRouteRouteChildren {
+  dashboardCustomersRouteRoute: typeof dashboardCustomersRouteRouteWithChildren
   dashboardOrdersRouteRoute: typeof dashboardOrdersRouteRouteWithChildren
   dashboardProductsRouteRoute: typeof dashboardProductsRouteRouteWithChildren
+  dashboardSettingsRouteRoute: typeof dashboardSettingsRouteRouteWithChildren
   dashboardIndexRoute: typeof dashboardIndexRoute
 }
 
 const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
+  dashboardCustomersRouteRoute: dashboardCustomersRouteRouteWithChildren,
   dashboardOrdersRouteRoute: dashboardOrdersRouteRouteWithChildren,
   dashboardProductsRouteRoute: dashboardProductsRouteRouteWithChildren,
+  dashboardSettingsRouteRoute: dashboardSettingsRouteRouteWithChildren,
   dashboardIndexRoute: dashboardIndexRoute,
 }
 
@@ -280,8 +368,10 @@ const dashboardRouteRouteWithChildren = dashboardRouteRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof dashboardIndexRoute
+  '/customers': typeof dashboardCustomersRouteRouteWithChildren
   '/orders': typeof dashboardOrdersRouteRouteWithChildren
   '/products': typeof dashboardProductsRouteRouteWithChildren
+  '/settings': typeof dashboardSettingsRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
@@ -289,8 +379,10 @@ export interface FileRoutesByFullPath {
   '/products/new': typeof dashboardProductsNewRoute
   '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
   '/payment/connect/return': typeof PaymentConnectReturnRoute
+  '/customers/': typeof dashboardCustomersIndexRoute
   '/orders/': typeof dashboardOrdersIndexRoute
   '/products/': typeof dashboardProductsIndexRoute
+  '/settings/': typeof dashboardSettingsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -302,16 +394,20 @@ export interface FileRoutesByTo {
   '/products/new': typeof dashboardProductsNewRoute
   '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
   '/payment/connect/return': typeof PaymentConnectReturnRoute
+  '/customers': typeof dashboardCustomersIndexRoute
   '/orders': typeof dashboardOrdersIndexRoute
   '/products': typeof dashboardProductsIndexRoute
+  '/settings': typeof dashboardSettingsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/(auth)': typeof authRouteRouteWithChildren
   '/(dashboard)': typeof dashboardRouteRouteWithChildren
+  '/(dashboard)/customers': typeof dashboardCustomersRouteRouteWithChildren
   '/(dashboard)/orders': typeof dashboardOrdersRouteRouteWithChildren
   '/(dashboard)/products': typeof dashboardProductsRouteRouteWithChildren
+  '/(dashboard)/settings': typeof dashboardSettingsRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/reset-password': typeof authResetPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
@@ -320,16 +416,20 @@ export interface FileRoutesById {
   '/(dashboard)/products/new': typeof dashboardProductsNewRoute
   '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
   '/payment/connect/return': typeof PaymentConnectReturnRoute
+  '/(dashboard)/customers/': typeof dashboardCustomersIndexRoute
   '/(dashboard)/orders/': typeof dashboardOrdersIndexRoute
   '/(dashboard)/products/': typeof dashboardProductsIndexRoute
+  '/(dashboard)/settings/': typeof dashboardSettingsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/customers'
     | '/orders'
     | '/products'
+    | '/settings'
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
@@ -337,8 +437,10 @@ export interface FileRouteTypes {
     | '/products/new'
     | '/payment/connect/refresh'
     | '/payment/connect/return'
+    | '/customers/'
     | '/orders/'
     | '/products/'
+    | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -349,14 +451,18 @@ export interface FileRouteTypes {
     | '/products/new'
     | '/payment/connect/refresh'
     | '/payment/connect/return'
+    | '/customers'
     | '/orders'
     | '/products'
+    | '/settings'
   id:
     | '__root__'
     | '/(auth)'
     | '/(dashboard)'
+    | '/(dashboard)/customers'
     | '/(dashboard)/orders'
     | '/(dashboard)/products'
+    | '/(dashboard)/settings'
     | '/(auth)/forgot-password'
     | '/(auth)/reset-password'
     | '/(auth)/sign-in'
@@ -365,8 +471,10 @@ export interface FileRouteTypes {
     | '/(dashboard)/products/new'
     | '/payment/connect/refresh'
     | '/payment/connect/return'
+    | '/(dashboard)/customers/'
     | '/(dashboard)/orders/'
     | '/(dashboard)/products/'
+    | '/(dashboard)/settings/'
   fileRoutesById: FileRoutesById
 }
 
@@ -412,9 +520,18 @@ export const routeTree = rootRoute
     "/(dashboard)": {
       "filePath": "(dashboard)/route.tsx",
       "children": [
+        "/(dashboard)/customers",
         "/(dashboard)/orders",
         "/(dashboard)/products",
+        "/(dashboard)/settings",
         "/(dashboard)/"
+      ]
+    },
+    "/(dashboard)/customers": {
+      "filePath": "(dashboard)/customers/route.tsx",
+      "parent": "/(dashboard)",
+      "children": [
+        "/(dashboard)/customers/"
       ]
     },
     "/(dashboard)/orders": {
@@ -430,6 +547,13 @@ export const routeTree = rootRoute
       "children": [
         "/(dashboard)/products/new",
         "/(dashboard)/products/"
+      ]
+    },
+    "/(dashboard)/settings": {
+      "filePath": "(dashboard)/settings/route.tsx",
+      "parent": "/(dashboard)",
+      "children": [
+        "/(dashboard)/settings/"
       ]
     },
     "/(auth)/forgot-password": {
@@ -462,6 +586,10 @@ export const routeTree = rootRoute
     "/payment/connect/return": {
       "filePath": "payment/connect/return.tsx"
     },
+    "/(dashboard)/customers/": {
+      "filePath": "(dashboard)/customers/index.tsx",
+      "parent": "/(dashboard)/customers"
+    },
     "/(dashboard)/orders/": {
       "filePath": "(dashboard)/orders/index.tsx",
       "parent": "/(dashboard)/orders"
@@ -469,6 +597,10 @@ export const routeTree = rootRoute
     "/(dashboard)/products/": {
       "filePath": "(dashboard)/products/index.tsx",
       "parent": "/(dashboard)/products"
+    },
+    "/(dashboard)/settings/": {
+      "filePath": "(dashboard)/settings/index.tsx",
+      "parent": "/(dashboard)/settings"
     }
   }
 }
