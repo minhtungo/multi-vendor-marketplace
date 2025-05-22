@@ -63,8 +63,6 @@ export class AuthService {
     try {
       const user = await userServiceClient.getUserByEmail(data.email);
 
-      console.log('user', user);
-
       if (!user || !user.id) {
         return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       }
@@ -154,7 +152,6 @@ export class AuthService {
       }
 
       await createTransaction(async (trx) => {
-        await userAuthProducer.initialize();
         await userAuthProducer.publishUserPasswordReset({
           userId: existingToken.userId!,
           password,
@@ -184,7 +181,7 @@ export class AuthService {
       userId: string;
     } | null>
   > {
-    const refreshToken = req.cookies[env.ACCESS_TOKEN_SECRET];
+    const refreshToken = req.cookies[env.REFRESH_TOKEN_COOKIE_NAME];
     if (!refreshToken) {
       return ServiceResponse.failure('Refresh token not found', null, HTTP_STATUS_CODES.UNAUTHORIZED);
     }
@@ -269,7 +266,6 @@ export class AuthService {
 
       await redis.del(`otp:${email}`, failedAttemptsKey);
 
-      await userAuthProducer.initialize();
       await userAuthProducer.publishUserRegistered({
         email,
         password,
@@ -304,9 +300,9 @@ export class AuthService {
     }
   }
 
-  async getMe(req: Request): Promise<ServiceResponse<Express.User | null>> {
+  async getMe(userId: string): Promise<ServiceResponse<Express.User | null>> {
     try {
-      const user = await userServiceClient.getUserById(req.params.id);
+      const user = await userServiceClient.getUserById(userId);
       return ServiceResponse.success('User retrieved successfully', user, HTTP_STATUS_CODES.OK);
     } catch (error) {
       const errorMessage = `Error getting user: ${(error as Error).message}`;

@@ -1,5 +1,5 @@
 import { env } from '@/configs/env';
-import { userRepository } from '@/repositories/user.repository';
+import { userServiceClient } from '@/lib/user-service.client';
 import type { AccessTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import passport from 'passport';
@@ -19,13 +19,11 @@ export default passport.use(
         return done(null, false);
       }
 
-      const user = await userRepository.getUserByEmail(payload.email);
+      const user = await userServiceClient.getUserByEmail(payload.email);
       if (!user) {
         return done(null, false);
       }
-      const { password, ...userWithoutPassword } = user;
-
-      done(null, userWithoutPassword, { payload });
+      done(null, user, { payload });
     } catch (err) {
       logger.error('Error verifying access token', err);
       done(err, false);

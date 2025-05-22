@@ -28,7 +28,8 @@ class AuthVendorController {
   };
 
   public getVendor: RequestHandler = async (req: Request, res: Response) => {
-    const serviceResponse = await authVendorService.getVendor(req);
+    const vendorId = req.user?.id;
+    const serviceResponse = await authVendorService.getVendor(vendorId!);
     handleServiceResponse(serviceResponse, res);
   };
 

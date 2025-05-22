@@ -132,7 +132,6 @@ export class AuthVendorService {
 
       await redis.del(`otp:${email}`, failedAttemptsKey);
 
-      await vendorAuthProducer.initialize();
       await vendorAuthProducer.publishVendorRegistered({
         email,
         password,
@@ -200,8 +199,8 @@ export class AuthVendorService {
     }
   }
 
-  async getVendor(req: Request): Promise<ServiceResponse<Express.User | null>> {
-    const vendor = await vendorServiceClient.getVendorById(req.params.id);
+  async getVendor(vendorId: string): Promise<ServiceResponse<Express.User | null>> {
+    const vendor = await vendorServiceClient.getVendorById(vendorId);
     return ServiceResponse.success('Vendor retrieved successfully', vendor, HTTP_STATUS_CODES.OK);
   }
 }

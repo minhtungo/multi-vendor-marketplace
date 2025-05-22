@@ -1,4 +1,5 @@
 import { env } from '@/configs/env';
+import { vendorServiceClient } from '@/lib/vendor-service.client';
 import type { AccessTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import passport from 'passport';
@@ -18,11 +19,11 @@ export default passport.use(
         return done(null, false);
       }
 
-      // const vendor = await vendorRepository.getVendorByEmail(payload.email);
-      // if (!vendor) {
-      //   return done(null, false);
-      // }
-      done(null, null, { payload });
+      const vendor = await vendorServiceClient.getVendorByEmail(payload.email);
+      if (!vendor) {
+        return done(null, false);
+      }
+      done(null, vendor, { payload });
     } catch (err) {
       logger.error('Error verifying vendor access token', err);
       done(err, false);

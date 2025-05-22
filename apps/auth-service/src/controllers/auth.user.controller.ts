@@ -44,7 +44,6 @@ class AuthUserController {
 
   public renewToken: RequestHandler = async (req: Request, res: Response) => {
     const serviceResponse = await authService.refreshToken(req, res);
-
     handleServiceResponse(serviceResponse, res);
   };
 
@@ -57,7 +56,8 @@ class AuthUserController {
   };
 
   public getMe: RequestHandler = async (req: Request, res: Response) => {
-    const serviceResponse = await authService.getMe(req);
+    const userId = req.user?.id;
+    const serviceResponse = await authService.getMe(userId!);
     handleServiceResponse(serviceResponse, res);
   };
 

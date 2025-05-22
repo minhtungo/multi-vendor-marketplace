@@ -13,9 +13,7 @@ export class UserService {
   }
 
   public async createUser(data: InsertUser) {
-    console.log('createUser', data);
     const user = await this.userRepository.createUser(data);
-    console.log('after createUser', user);
     return ServiceResponse.success('User created successfully', user, HTTP_STATUS_CODES.CREATED);
   }
 
@@ -25,13 +23,12 @@ export class UserService {
   }
 
   public async getUserByEmail(email: string) {
-    console.log('email getUserByEmail', email);
     const user = await this.userRepository.getUserByEmail(email);
-    console.log('after getUserByEmail', user);
     if (!user) {
       return ServiceResponse.failure('User not found', null, HTTP_STATUS_CODES.NOT_FOUND);
     }
-    return ServiceResponse.success('User fetched successfully', user, HTTP_STATUS_CODES.OK);
+    const { password, ...userWithoutPassword } = user;
+    return ServiceResponse.success('User fetched successfully', userWithoutPassword, HTTP_STATUS_CODES.OK);
   }
 
   public async getUserById(id: string) {
@@ -39,7 +36,8 @@ export class UserService {
     if (!user) {
       return ServiceResponse.failure('User not found', null, HTTP_STATUS_CODES.NOT_FOUND);
     }
-    return ServiceResponse.success('User fetched successfully', user, HTTP_STATUS_CODES.OK);
+    const { password, ...userWithoutPassword } = user;
+    return ServiceResponse.success('User fetched successfully', userWithoutPassword, HTTP_STATUS_CODES.OK);
   }
 
   public async verifyPassword(email: string, password: string) {

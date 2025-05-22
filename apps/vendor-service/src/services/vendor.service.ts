@@ -17,7 +17,8 @@ export class VendorService {
       if (!vendor) {
         return ServiceResponse.failure('Vendor not found', null, HTTP_STATUS_CODES.NOT_FOUND);
       }
-      return ServiceResponse.success('Vendor found', vendor);
+      const { password, ...vendorWithoutPassword } = vendor;
+      return ServiceResponse.success('Vendor found', vendorWithoutPassword);
     } catch (error) {
       logger.error(`Error getting vendor by ID: ${(error as Error).message}`);
       return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
@@ -30,7 +31,8 @@ export class VendorService {
       if (!vendor) {
         return ServiceResponse.failure('Vendor not found', null, HTTP_STATUS_CODES.NOT_FOUND);
       }
-      return ServiceResponse.success('Vendor found', vendor);
+      const { password, ...vendorWithoutPassword } = vendor;
+      return ServiceResponse.success('Vendor found', vendorWithoutPassword);
     } catch (error) {
       logger.error(`Error getting vendor by email: ${(error as Error).message}`);
       return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);

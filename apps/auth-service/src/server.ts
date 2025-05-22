@@ -8,6 +8,8 @@ import { healthCheckRouter } from '@/routes/health-check.route';
 import { errorHandler, createRequestLogger } from '@repo/server/middlewares';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
+import '@/lib/strategies/jwt';
+import '@/lib/strategies/vendor-jwt';
 import { authVendorRouter } from '@/routes/auth.vendor.route';
 
 const app: Express = express();
