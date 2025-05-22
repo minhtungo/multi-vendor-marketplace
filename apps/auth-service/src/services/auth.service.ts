@@ -303,6 +303,21 @@ export class AuthService {
       );
     }
   }
+
+  async getMe(req: Request): Promise<ServiceResponse<Express.User | null>> {
+    try {
+      const user = await userServiceClient.getUserById(req.params.id);
+      return ServiceResponse.success('User retrieved successfully', user, HTTP_STATUS_CODES.OK);
+    } catch (error) {
+      const errorMessage = `Error getting user: ${(error as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        'An error occurred while getting user',
+        null,
+        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 }
 
 // Export a singleton instance for convenience

@@ -18,10 +18,19 @@ export class UserRepository {
     });
   }
 
-  async createUser(user: InsertUser, trx: typeof db = this.dbInstance) {
+  async createUser(
+    user: {
+      email: string;
+      password: string;
+      name: string;
+      role: string;
+    },
+    trx: typeof db = this.dbInstance
+  ) {
+    const hashedPassword = await hashPassword(user.password);
     const [newUser] = await trx
       .insert(users)
-      .values({ ...user })
+      .values({ ...user, password: hashedPassword })
       .returning();
 
     return newUser;

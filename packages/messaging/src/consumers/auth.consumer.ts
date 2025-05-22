@@ -106,7 +106,6 @@ export abstract class AuthConsumer extends BaseConsumer {
     }
   }
 
-  // User event handlers (to be implemented by concrete consumers)
   protected async onUserRegistered(data: UserRegistered): Promise<void> {}
   protected async onUserVerified(data: UserVerified): Promise<void> {}
   protected async onUserLoggedIn(data: UserLogin): Promise<void> {}
@@ -116,7 +115,6 @@ export abstract class AuthConsumer extends BaseConsumer {
   protected async onUserUpdated(data: UserUpdated): Promise<void> {}
   protected async onUserDeleted(data: UserDeleted): Promise<void> {}
 
-  // Vendor event handlers (to be implemented by concrete consumers)
   protected async onVendorRegistered(data: VendorRegistered): Promise<void> {}
   protected async onVendorVerified(data: VendorVerified): Promise<void> {}
   protected async onVendorLoggedIn(data: VendorLogin): Promise<void> {}

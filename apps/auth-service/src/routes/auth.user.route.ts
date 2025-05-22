@@ -163,27 +163,5 @@ authUserRegistry.registerPath({
 authUserRouter.get(
   `${paths.resetPassword}/verify/:token`,
   validateRequest(z.object({ params: z.object({ token: z.string() }) })),
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { token } = req.params;
-      const existingToken = await tokenRepository.getResetPasswordTokenByToken(token);
-
-      if (!existingToken || existingToken.expires < new Date()) {
-        res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({
-          success: false,
-          message: 'Invalid or expired token',
-          data: null,
-        });
-        return;
-      }
-
-      res.status(HTTP_STATUS_CODES.OK).json({
-        success: true,
-        message: 'Token is valid',
-        data: null,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
+  authUserController.verifyResetPasswordToken
 );

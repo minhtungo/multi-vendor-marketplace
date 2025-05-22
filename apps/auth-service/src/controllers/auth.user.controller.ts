@@ -9,6 +9,7 @@ import {
 import { authService } from '@/services/auth.service';
 import { handleServiceResponse } from '@repo/server/lib';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import { tokenService } from '@/services/token.service';
 
 class AuthUserController {
   public signUp: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -57,6 +58,12 @@ class AuthUserController {
 
   public getMe: RequestHandler = async (req: Request, res: Response) => {
     const serviceResponse = await authService.getMe(req);
+    handleServiceResponse(serviceResponse, res);
+  };
+
+  public verifyResetPasswordToken: RequestHandler = async (req: Request, res: Response) => {
+    const { token } = req.params;
+    const serviceResponse = await tokenService.verifyResetPasswordToken(token);
     handleServiceResponse(serviceResponse, res);
   };
 }

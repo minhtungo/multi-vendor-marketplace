@@ -107,8 +107,8 @@ export const VendorLogoutSchema = baseEventSchema.extend({
 });
 
 export const VendorPasswordSchema = baseEventSchema.extend({
-  vendorId: z.string(),
   email: z.string().email(),
+  password: z.string(),
 });
 
 export const VendorUpdatedSchema = baseEventSchema.extend({

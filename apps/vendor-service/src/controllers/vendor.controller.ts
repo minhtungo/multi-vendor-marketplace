@@ -16,6 +16,7 @@ class VendorController {
   public verifyPassword: RequestHandler = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const serviceResponse = await vendorService.verifyPassword(email, password);
+
     handleServiceResponse(serviceResponse, res);
   };
 }

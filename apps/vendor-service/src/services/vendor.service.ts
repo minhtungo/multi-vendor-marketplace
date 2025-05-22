@@ -39,6 +39,7 @@ export class VendorService {
 
   public async verifyPassword(email: string, password: string) {
     const vendor = await this.vendorRepository.getVendorByEmail(email);
+    console.log(vendor);
     if (!vendor) {
       return ServiceResponse.failure('Vendor not found', null, HTTP_STATUS_CODES.NOT_FOUND);
     }

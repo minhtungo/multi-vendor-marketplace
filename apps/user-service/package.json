@@ -22,6 +22,7 @@
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.0",
     "@repo/email": "workspace:*",
+    "@repo/messaging": "workspace:*",
     "@repo/redis": "workspace:*",
     "@repo/server": "workspace:*",
     "@repo/typescript-config": "workspace:*",

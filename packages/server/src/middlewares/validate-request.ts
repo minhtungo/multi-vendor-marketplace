@@ -9,6 +9,7 @@ export const validateRequest = (schema: ZodSchema) => async (req: Request, res: 
     await schema.parseAsync({ body: req.body, query: req.query, params: req.params });
     next();
   } catch (err) {
+    console.log(err);
     const zodError = err as ZodError;
     const missingFields = zodError.errors.map((e) => e.path.slice(1).join('.')).join(', ');
 

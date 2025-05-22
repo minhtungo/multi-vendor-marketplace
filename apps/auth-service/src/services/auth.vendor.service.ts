@@ -199,6 +199,11 @@ export class AuthVendorService {
       );
     }
   }
+
+  async getVendor(req: Request): Promise<ServiceResponse<Express.User | null>> {
+    const vendor = await vendorServiceClient.getVendorById(req.params.id);
+    return ServiceResponse.success('Vendor retrieved successfully', vendor, HTTP_STATUS_CODES.OK);
+  }
 }
 
 export const authVendorService = new AuthVendorService();

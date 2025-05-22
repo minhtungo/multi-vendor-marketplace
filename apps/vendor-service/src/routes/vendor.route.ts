@@ -70,11 +70,11 @@ vendorRegistry.registerPath({
 
 vendorRouter.post(
   '/verify-password',
-  validateRequest(
-    z.object({
-      email: z.string().email(),
-      password: z.string(),
-    })
-  ),
+  // validateRequest(
+  //   z.object({
+  //     email: z.string().email(),
+  //     password: z.string(),
+  //   })
+  // ),
   vendorController.verifyPassword
 );
