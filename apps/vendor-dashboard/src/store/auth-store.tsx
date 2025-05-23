@@ -39,11 +39,11 @@ export const authStore = createStore<AuthState & { actions: AuthActions }>((set)
         }
         const vendor = await getVendor();
         console.log('vendor', vendor);
-        queryClient.setQueryData(getVendorQueryOptions().queryKey, vendor.data);
+        queryClient.setQueryData(getVendorQueryOptions().queryKey, vendor);
         set({
           isAuthenticated: true,
           isLoaded: true,
-          vendorId: vendor.data.id,
+          vendorId: vendor.id,
         });
       } catch (error) {
         set({ isAuthenticated: false, isLoaded: true });

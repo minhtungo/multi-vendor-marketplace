@@ -1,4 +1,4 @@
-import { createProductSchema, useCreateProductMutation } from '@/features/product/api/create-product';
+import { createProductSchema, useCreateProduct } from '@/features/product/api/create-product';
 import { ProductCategoriesSelection } from '@/features/product/components/product-categories-selection';
 import { UploadProductImages } from '@/features/product/components/upload-product-images';
 import { normalizeServerError } from '@/utils/error';
@@ -31,9 +31,10 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
     defaultValues: defaultFormValues,
   });
 
-  const { mutate: createProduct, isPending, isSuccess, isError, error } = useCreateProductMutation();
+  const { mutate: createProduct, isPending, isSuccess, isError, error } = useCreateProduct();
 
   const onSubmit = (data: z.infer<typeof createProductSchema>) => {
+    console.log('data', data);
     createProduct(data, {
       onSuccess: () => {
         form.reset(defaultFormValues);

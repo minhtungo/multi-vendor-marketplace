@@ -8,15 +8,6 @@ function RouteComponent() {
   return (
     <div className="container flex w-full flex-col py-6">
       <Outlet />
-      <Outlet />
-      <Outlet />
-      <Outlet />
-      <Outlet />
-      <Outlet />
-      <Outlet />
-      <Outlet />
-      <Outlet />
-      <Outlet />
     </div>
   );
 }

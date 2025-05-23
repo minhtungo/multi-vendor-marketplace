@@ -68,7 +68,6 @@ app.use(
 app.use(
   `/${appConfig.apiVersion}/products`,
   validateToken,
-  requireVendorRole,
   proxy(env.PRODUCT_SERVICE_URL, {
     ...proxyOptions,
     proxyReqOptDecorator: forwardUserContext,

@@ -25,7 +25,7 @@ export async function createProduct(data: CreateProductInput): Promise<ApiRespon
   return privateApi.post(server.path.product.create, createProductData);
 }
 
-export function useCreateProductMutation() {
+export function useCreateProduct() {
   return useMutation({
     mutationFn: createProduct,
   });

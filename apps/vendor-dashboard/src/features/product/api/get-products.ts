@@ -1,6 +1,5 @@
 import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
-import type { ApiResponse } from '@/types/api';
 import type { Product } from '@/types/product';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
@@ -22,11 +21,12 @@ export type GetProductsResponse = {
   };
 };
 
-export async function getProducts(params: GetProductsInput): Promise<ApiResponse<GetProductsResponse>> {
-  return privateApi.get(server.path.product.root, { params });
+export async function getProducts(params: GetProductsInput): Promise<GetProductsResponse> {
+  const response = await privateApi.get(server.path.product.root, { params });
+  return response.data;
 }
 
-export function useGetProductsQuery(params: GetProductsInput) {
+export function useGetProducts(params: GetProductsInput) {
   return useQuery({
     queryKey: ['products', params],
     queryFn: () => getProducts(params),
