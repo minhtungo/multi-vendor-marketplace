@@ -1,4 +1,5 @@
 import { insertProductSchema } from '@/db/schemas/products';
+import { CreateProductRequestSchema } from '@/models/product.model';
 import { productService } from '@/services/product.service';
 import { handleServiceResponse } from '@repo/server/lib';
 import type { NextFunction, Request, Response } from 'express';
@@ -18,10 +19,8 @@ class ProductController {
   };
 
   public createProduct = async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
     const vendorId = req.user?.id;
-    console.log(vendorId);
-    const data = insertProductSchema.parse(req.body);
+    const data = CreateProductRequestSchema.parse(req.body);
     const serviceResponse = await productService.createProduct(data, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };

@@ -1,8 +1,8 @@
-import { InsertProduct, Product } from '@/db/schemas/products';
+import { CreateProductRequest, InsertProduct, Product } from '@/db/schemas/products';
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
-import { ServiceResponse } from '@repo/server/lib';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
+import { ServiceResponse } from '@repo/server/lib';
 
 class ProductService {
   constructor(private readonly productRepo = productRepository) {}
@@ -60,10 +60,12 @@ class ProductService {
     }
   }
 
-  public async createProduct(data: InsertProduct, vendorId: string): Promise<ServiceResponse<Product | null>> {
+  public async createProduct(data: CreateProductRequest, vendorId: string): Promise<ServiceResponse<Product | null>> {
     try {
       await this.productRepo.createProduct({
         ...data,
+        price: data.price.toString(),
+        compareAtPrice: data.compareAtPrice?.toString(),
         vendorId,
       });
 

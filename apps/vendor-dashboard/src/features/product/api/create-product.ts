@@ -7,15 +7,17 @@ import { z } from 'zod';
 
 export const createProductSchema = z.object({
   name: z.string().min(1),
+  slug: z.string().min(1),
   description: z.string().optional(),
-  price: z.number(),
   sku: z.string().min(1),
+  price: z.number(),
   compareAtPrice: z.number().optional(),
   quantity: z.number(),
-  images: z.array(z.string()).optional(),
-  categories: z.array(z.string()).optional(),
-  tags: z.array(z.string()).optional(),
-  metadata: z.record(z.any()).optional(),
+  status: z.enum(['draft', 'published']),
+  type: z.enum(['physical', 'digital']),
+  images: z.array(z.string()),
+  categories: z.array(z.string()),
+  tags: z.array(z.string()),
 });
 
 export type CreateProductInput = z.infer<typeof createProductSchema>;

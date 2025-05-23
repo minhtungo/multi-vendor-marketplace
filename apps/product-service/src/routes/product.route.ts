@@ -1,9 +1,15 @@
 import { productController } from '@/controllers/product.controller';
-import { insertProductSchema, productSchema } from '@/db/schemas/products';
+import { productSchema } from '@/db/schemas/products';
+import {
+  CreateProductRequestSchema,
+  UpdateProductRequestSchema,
+  ProductListResponseSchema,
+} from '@/models/product.model';
 import { createApiResponse } from '@repo/server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';
+import { validateRequest } from '@repo/server/middlewares';
 
 export const productRegistry = new OpenAPIRegistry();
 export const productRouter: Router = Router();
@@ -18,10 +24,18 @@ productRegistry.registerPath({
       id: z.string().uuid(),
     }),
   },
-  responses: createApiResponse(productSchema, 'Product retrieved successfully'),
+  responses: createApiResponse(z.array(productSchema), 'Product retrieved successfully'),
 });
 
-productRouter.get(`/:id`, productController.getProduct);
+productRouter.get(
+  `/:id`,
+  validateRequest(
+    z.object({
+      params: z.object({ id: z.string().uuid() }),
+    })
+  ),
+  productController.getProduct
+);
 
 // Get All Products Route with Pagination
 productRegistry.registerPath({
@@ -34,21 +48,23 @@ productRegistry.registerPath({
       limit: z.string().transform(Number).default('20'),
     }),
   },
-  responses: createApiResponse(
-    z.object({
-      products: z.array(productSchema),
-      pagination: z.object({
-        total: z.number(),
-        page: z.number(),
-        limit: z.number(),
-        totalPages: z.number(),
-      }),
-    }),
-    'Products retrieved successfully'
-  ),
+  responses: createApiResponse(ProductListResponseSchema, 'Products retrieved successfully'),
 });
 
-productRouter.get('/', productController.getAllProducts);
+productRouter.get(
+  '/',
+  validateRequest(
+    z.object({
+      query: z
+        .object({
+          page: z.coerce.number().int().positive().default(1),
+          limit: z.coerce.number().int().positive().max(100).default(20),
+        })
+        .optional(),
+    })
+  ),
+  productController.getAllProducts
+);
 
 // Create Product Route
 productRegistry.registerPath({
@@ -59,7 +75,7 @@ productRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: insertProductSchema,
+          schema: CreateProductRequestSchema,
         },
       },
     },
@@ -75,7 +91,11 @@ productRegistry.registerPath({
   ),
 });
 
-productRouter.post('/', productController.createProduct);
+productRouter.post(
+  '/',
+  validateRequest(z.object({ body: CreateProductRequestSchema })),
+  productController.createProduct
+);
 
 // Update Product Route
 productRegistry.registerPath({
@@ -89,7 +109,7 @@ productRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: insertProductSchema.partial(),
+          schema: UpdateProductRequestSchema,
         },
       },
     },
@@ -105,7 +125,16 @@ productRegistry.registerPath({
   ),
 });
 
-productRouter.put(`/:id`, productController.updateProduct);
+productRouter.put(
+  `/:id`,
+  validateRequest(
+    z.object({
+      params: z.object({ id: z.string().uuid() }),
+      body: UpdateProductRequestSchema,
+    })
+  ),
+  productController.updateProduct
+);
 
 // Delete All Products Route
 productRegistry.registerPath({

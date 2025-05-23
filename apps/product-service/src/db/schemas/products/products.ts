@@ -1,5 +1,5 @@
-import { vendorStatusSchema } from '@/db/schemas/constants';
-import { boolean, decimal, integer, jsonb, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { productTypeSchema, statusSchema } from '@/db/schemas/constants';
+import { decimal, integer, jsonb, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 
 export const products = pgTable('products', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -11,9 +11,8 @@ export const products = pgTable('products', {
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   compareAtPrice: decimal('compare_at_price', { precision: 10, scale: 2 }),
   quantity: integer('quantity').notNull(),
-  status: vendorStatusSchema('status').default('pending'),
-  isActive: boolean('is_active').default(true),
-  metadata: jsonb('metadata'),
+  status: statusSchema().default('draft'),
+  type: productTypeSchema('type').default('physical'),
   images: jsonb('images').$type<string[]>(),
   categories: jsonb('categories').$type<string[]>(),
   tags: jsonb('tags').$type<string[]>(),
