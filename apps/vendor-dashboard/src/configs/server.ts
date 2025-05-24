@@ -2,6 +2,7 @@ const basePath = '/v1';
 const authPath = `${basePath}/auth/vendor`;
 const paymentPath = `${basePath}/payment`;
 const productPath = `${basePath}/products`;
+const productCategoryPath = `${productPath}/categories`;
 
 export const server = {
   path: {
@@ -26,7 +27,8 @@ export const server = {
       create: `${productPath}`,
     },
     productCategory: {
-      root: `${productPath}/categories`,
+      root: `${productCategoryPath}`,
+      create: `${productCategoryPath}`,
     },
   },
 } as const;

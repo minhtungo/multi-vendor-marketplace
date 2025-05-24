@@ -1,8 +1,9 @@
 import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
+import { getProductCategoriesQueryOptions } from '@/features/product-categories/api/get-product-categories';
 import type { ApiResponse } from '@/types/api';
 import type { ProductCategory } from '@/types/product-category';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
 export const updateProductCategorySchema = z.object({
@@ -20,7 +21,11 @@ export async function updateProductCategory(data: UpdateProductCategoryInput): P
 }
 
 export function useUpdateProductCategoryMutation() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateProductCategory,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getProductCategoriesQueryOptions().queryKey });
+    },
   });
 }

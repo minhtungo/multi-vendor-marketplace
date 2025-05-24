@@ -78,6 +78,20 @@ app.use(
   })
 );
 
+// Product service
+app.use(
+  `/${appConfig.apiVersion}/product-categories`,
+  validateToken,
+  proxy(env.PRODUCT_SERVICE_URL, {
+    ...proxyOptions,
+    proxyReqOptDecorator: forwardUserContext,
+    userResDecorator: (proxyRes, proxyResData) => {
+      logger.info(`Response received from Product category service: ${proxyRes.statusCode}`);
+      return proxyResData;
+    },
+  })
+);
+
 // Payment service
 app.use(
   `/${appConfig.apiVersion}/payment`,

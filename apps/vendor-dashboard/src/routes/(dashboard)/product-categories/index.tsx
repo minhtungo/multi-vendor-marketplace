@@ -1,19 +1,16 @@
 import { DataTable } from '@/components/table/data-table';
-import { useGetProducts } from '@/features/product/api/get-products';
-import { productTableColumns } from '@/features/product/components/product-table/product-columns';
+import { useGetProductCategoriesQuery } from '@/features/product-categories/api/get-product-categories';
+import { categoriesColumns } from '@/features/product-categories/components/categories-table/categories-columns';
 import { Button } from '@repo/ui/components/button';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { Plus } from 'lucide-react';
 
-export const Route = createFileRoute('/(dashboard)/products/')({
+export const Route = createFileRoute('/(dashboard)/product-categories/')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { data, isLoading } = useGetProducts({
-    page: 1,
-    limit: 10,
-  });
+  const { data, isLoading } = useGetProductCategoriesQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -21,11 +18,11 @@ function RouteComponent() {
 
   return (
     <DataTable
-      columns={productTableColumns}
-      data={data?.products ?? []}
+      columns={categoriesColumns}
+      data={data ?? []}
       tableActions={
         <Button asChild>
-          <Link to="/products/new">
+          <Link to="/product-categories/new">
             <Plus />
             Create
           </Link>

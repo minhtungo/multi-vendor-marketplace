@@ -4,6 +4,8 @@ import { createApiResponse } from '@repo/server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';
+import { validateRequest } from '@repo/server/middlewares';
+import { CreateProductCategoryRequestSchema } from '@/models/product-categories.model';
 
 export const productCategoryRegistry = new OpenAPIRegistry();
 export const productCategoryRouter: Router = Router();
@@ -16,7 +18,7 @@ productCategoryRegistry.registerPath({
   responses: createApiResponse(z.array(productCategorySchema), 'Product categories retrieved successfully'),
 });
 
-productCategoryRouter.get('/product-categories', productCategoryController.getAllProductCategories);
+productCategoryRouter.get('/', productCategoryController.getAllProductCategories);
 
 // Get Single Product Category Route
 productCategoryRegistry.registerPath({
@@ -31,7 +33,7 @@ productCategoryRegistry.registerPath({
   responses: createApiResponse(productCategorySchema, 'Product category retrieved successfully'),
 });
 
-productCategoryRouter.get(`/product-categories/:id`, productCategoryController.getProductCategory);
+productCategoryRouter.get(`/:id`, productCategoryController.getProductCategory);
 
 // Create Product Category Route
 productCategoryRegistry.registerPath({
@@ -42,15 +44,19 @@ productCategoryRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: insertProductCategorySchema,
+          schema: CreateProductCategoryRequestSchema,
         },
       },
     },
   },
-  responses: createApiResponse(productCategorySchema, 'Product category created successfully'),
+  responses: createApiResponse(z.array(productCategorySchema), 'Product category created successfully'),
 });
 
-productCategoryRouter.post('/product-categories', productCategoryController.createProductCategory);
+productCategoryRouter.post(
+  '/',
+  validateRequest(z.object({ body: CreateProductCategoryRequestSchema })),
+  productCategoryController.createProductCategory
+);
 
 // Update Product Category Route
 productCategoryRegistry.registerPath({
@@ -72,7 +78,7 @@ productCategoryRegistry.registerPath({
   responses: createApiResponse(productCategorySchema, 'Product category updated successfully'),
 });
 
-productCategoryRouter.put(`/product-categories/:id`, productCategoryController.updateProductCategory);
+productCategoryRouter.put(`/:id`, productCategoryController.updateProductCategory);
 
 // Delete Product Category Route
 productCategoryRegistry.registerPath({
@@ -87,7 +93,7 @@ productCategoryRegistry.registerPath({
   responses: createApiResponse(productCategorySchema, 'Product category deleted successfully'),
 });
 
-productCategoryRouter.delete(`/product-categories/:id`, productCategoryController.deleteProductCategory);
+productCategoryRouter.delete(`/:id`, productCategoryController.deleteProductCategory);
 
 // Delete All Product Categories Route
 productCategoryRegistry.registerPath({
@@ -97,4 +103,4 @@ productCategoryRegistry.registerPath({
   responses: createApiResponse(productCategorySchema, 'All product categories deleted successfully'),
 });
 
-productCategoryRouter.delete('/product-categories/all', productCategoryController.deleteAllProductCategories);
+productCategoryRouter.delete('/all', productCategoryController.deleteAllProductCategories);

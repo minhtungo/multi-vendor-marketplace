@@ -11,8 +11,8 @@ import { MoreHorizontal } from 'lucide-react';
 
 export const productTableColumns: ColumnDef<Product>[] = [
   {
-    accessorKey: 'product',
-    header: 'Product',
+    accessorKey: 'name',
+    header: 'Name',
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-2">

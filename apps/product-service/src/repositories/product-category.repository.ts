@@ -7,7 +7,6 @@ export class ProductCategoryRepository {
 
   public async getAllCategories(trx: typeof db = this.dbInstance) {
     return this.dbInstance.query.productCategories.findMany({
-      where: (categories) => eq(categories.isActive, true),
       orderBy: (categories) => categories.name,
     });
   }

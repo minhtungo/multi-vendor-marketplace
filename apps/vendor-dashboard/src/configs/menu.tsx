@@ -33,6 +33,11 @@ export const menu = {
         icon: Tag,
       },
       {
+        title: 'Product Categories',
+        href: '/product-categories',
+        icon: Tag,
+      },
+      {
         title: 'Customers',
         href: '/customers',
         icon: Users,

@@ -15,12 +15,13 @@ import {
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
-interface ProductTableProps<TData, TValue> {
+type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-}
+  tableActions?: React.ReactElement;
+};
 
-export function ProductTable<TData, TValue>({ columns, data }: ProductTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, tableActions }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
@@ -44,12 +45,7 @@ export function ProductTable<TData, TValue>({ columns, data }: ProductTableProps
           onChange={(event) => table.getColumn('product')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
-        <Button asChild>
-          <Link to="/products/new">
-            <Plus />
-            Create
-          </Link>
-        </Button>
+        {tableActions}
       </div>
       <div className="rounded-md border">
         <Table>

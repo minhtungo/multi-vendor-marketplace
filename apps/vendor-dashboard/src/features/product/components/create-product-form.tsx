@@ -9,7 +9,7 @@ import { Input } from '@repo/ui/components/input';
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/ui/components/select';
 import { Textarea } from '@repo/ui/components/textarea';
-import { useNavigate } from '@tanstack/react-router';
+import { useRouter } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -29,7 +29,7 @@ const defaultFormValues: z.infer<typeof createProductSchema> = {
 };
 
 export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const form = useForm<z.infer<typeof createProductSchema>>({
     resolver: zodResolver(createProductSchema),
     defaultValues: defaultFormValues,
@@ -252,10 +252,10 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
           />
         )}
         <div className="flex items-center justify-end gap-2">
-          <Button onClick={() => navigate({ to: '/products' })} variant="outline">
+          <Button onClick={() => router.history.back()} variant="outline">
             Cancel
           </Button>
-          <LoaderButton isPending={isPending}>Create Product</LoaderButton>
+          <LoaderButton isPending={isPending}>Save</LoaderButton>
         </div>
       </form>
     </Form>

@@ -4,7 +4,7 @@ export interface ProductCategory {
   slug: string;
   description?: string;
   parentId?: string;
-  isActive: boolean;
+  status: 'active' | 'inactive';
   createdAt: string;
   updatedAt: string;
 }

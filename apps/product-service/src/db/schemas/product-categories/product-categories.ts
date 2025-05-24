@@ -1,5 +1,6 @@
 import { pgTable, text, timestamp, uuid, varchar, boolean } from 'drizzle-orm/pg-core';
 import { products } from '../products/products';
+import { productCategoryStatusSchema, statusSchema } from '@/db/schemas/constants';
 
 export const productCategories = pgTable('product_categories', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -7,9 +8,9 @@ export const productCategories = pgTable('product_categories', {
   slug: varchar('slug', { length: 255 }).notNull().unique(),
   description: text('description'),
   parentId: uuid('parent_id').references((): any => productCategories.id),
-  isActive: boolean('is_active').notNull().default(true),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  status: productCategoryStatusSchema().default('active'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
 });
 
 export const productCategoryRelations = pgTable('product_category_relations', {
