@@ -67,7 +67,7 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              {menu.dashboard.main.map((item) => (
+              {menu.userMenu.map((item) => (
                 <DropdownMenuItem key={item.title} asChild>
                   <Link to={item.href}>
                     <item.icon />

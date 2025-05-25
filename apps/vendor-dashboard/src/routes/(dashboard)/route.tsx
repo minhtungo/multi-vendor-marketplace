@@ -20,7 +20,9 @@ function RouteComponent() {
       <AppSidebar />
       <SidebarInset>
         <Header />
-        <Outlet />
+        <div className="container flex w-full flex-col py-4">
+          <Outlet />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

@@ -1,5 +1,6 @@
 import { DeleteProductDialog } from '@/features/product/components/product-table/delete-product-dialog';
 import type { Product } from '@/types/product';
+import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import {
   DropdownMenu,
@@ -37,7 +38,17 @@ export const productTableColumns: ColumnDef<Product>[] = [
       return <div>{row.original.description}</div>;
     },
   },
-
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => {
+      return (
+        <Badge variant={row.original.status === 'published' ? 'default' : 'outline'} className="capitalize">
+          {row.original.status}
+        </Badge>
+      );
+    },
+  },
   {
     accessorKey: 'price',
     header: 'Price',

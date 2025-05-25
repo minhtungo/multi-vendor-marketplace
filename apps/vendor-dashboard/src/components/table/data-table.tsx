@@ -1,8 +1,7 @@
 import { DataTablePagination } from '@/components/table/data-table-pagination';
-import { Button } from '@repo/ui/components/button';
 import { Input } from '@repo/ui/components/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@repo/ui/components/table';
-import { Link } from '@tanstack/react-router';
+import { cn } from '@repo/ui/lib/utils';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -12,16 +11,16 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   tableActions?: React.ReactElement;
+  onRowClick: (row: TData) => void;
 };
 
-export function DataTable<TData, TValue>({ columns, data, tableActions }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, tableActions, onRowClick }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
@@ -65,9 +64,18 @@ export function DataTable<TData, TValue>({ columns, data, tableActions }: DataTa
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    onRowClick(row.original);
+                  }}
+                >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell className={cn(cell.column.id === 'actions' && 'text-right')} key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))

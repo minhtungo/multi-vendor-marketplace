@@ -27,11 +27,14 @@ import { Route as dashboardSettingsIndexImport } from './routes/(dashboard)/sett
 import { Route as dashboardProductsIndexImport } from './routes/(dashboard)/products/index'
 import { Route as dashboardProductCategoriesIndexImport } from './routes/(dashboard)/product-categories/index'
 import { Route as dashboardOrdersIndexImport } from './routes/(dashboard)/orders/index'
+import { Route as dashboardDiscountsIndexImport } from './routes/(dashboard)/discounts/index'
 import { Route as dashboardCustomersIndexImport } from './routes/(dashboard)/customers/index'
 import { Route as PaymentConnectReturnImport } from './routes/payment/connect/return'
 import { Route as PaymentConnectRefreshImport } from './routes/payment/connect/refresh'
 import { Route as dashboardProductsNewImport } from './routes/(dashboard)/products/new'
+import { Route as dashboardProductsIdImport } from './routes/(dashboard)/products/$id'
 import { Route as dashboardProductCategoriesNewImport } from './routes/(dashboard)/product-categories/new'
+import { Route as dashboardProductCategoriesIdImport } from './routes/(dashboard)/product-categories/$id'
 
 // Create/Update Routes
 
@@ -131,6 +134,12 @@ const dashboardOrdersIndexRoute = dashboardOrdersIndexImport.update({
   getParentRoute: () => dashboardOrdersRouteRoute,
 } as any)
 
+const dashboardDiscountsIndexRoute = dashboardDiscountsIndexImport.update({
+  id: '/discounts/',
+  path: '/discounts/',
+  getParentRoute: () => dashboardRouteRoute,
+} as any)
+
 const dashboardCustomersIndexRoute = dashboardCustomersIndexImport.update({
   id: '/',
   path: '/',
@@ -155,10 +164,23 @@ const dashboardProductsNewRoute = dashboardProductsNewImport.update({
   getParentRoute: () => dashboardProductsRouteRoute,
 } as any)
 
+const dashboardProductsIdRoute = dashboardProductsIdImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => dashboardProductsRouteRoute,
+} as any)
+
 const dashboardProductCategoriesNewRoute =
   dashboardProductCategoriesNewImport.update({
     id: '/new',
     path: '/new',
+    getParentRoute: () => dashboardProductCategoriesRouteRoute,
+  } as any)
+
+const dashboardProductCategoriesIdRoute =
+  dashboardProductCategoriesIdImport.update({
+    id: '/$id',
+    path: '/$id',
     getParentRoute: () => dashboardProductCategoriesRouteRoute,
   } as any)
 
@@ -250,12 +272,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardIndexImport
       parentRoute: typeof dashboardRouteImport
     }
+    '/(dashboard)/product-categories/$id': {
+      id: '/(dashboard)/product-categories/$id'
+      path: '/$id'
+      fullPath: '/product-categories/$id'
+      preLoaderRoute: typeof dashboardProductCategoriesIdImport
+      parentRoute: typeof dashboardProductCategoriesRouteImport
+    }
     '/(dashboard)/product-categories/new': {
       id: '/(dashboard)/product-categories/new'
       path: '/new'
       fullPath: '/product-categories/new'
       preLoaderRoute: typeof dashboardProductCategoriesNewImport
       parentRoute: typeof dashboardProductCategoriesRouteImport
+    }
+    '/(dashboard)/products/$id': {
+      id: '/(dashboard)/products/$id'
+      path: '/$id'
+      fullPath: '/products/$id'
+      preLoaderRoute: typeof dashboardProductsIdImport
+      parentRoute: typeof dashboardProductsRouteImport
     }
     '/(dashboard)/products/new': {
       id: '/(dashboard)/products/new'
@@ -284,6 +320,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/customers/'
       preLoaderRoute: typeof dashboardCustomersIndexImport
       parentRoute: typeof dashboardCustomersRouteImport
+    }
+    '/(dashboard)/discounts/': {
+      id: '/(dashboard)/discounts/'
+      path: '/discounts'
+      fullPath: '/discounts'
+      preLoaderRoute: typeof dashboardDiscountsIndexImport
+      parentRoute: typeof dashboardRouteImport
     }
     '/(dashboard)/orders/': {
       id: '/(dashboard)/orders/'
@@ -362,12 +405,14 @@ const dashboardOrdersRouteRouteWithChildren =
   dashboardOrdersRouteRoute._addFileChildren(dashboardOrdersRouteRouteChildren)
 
 interface dashboardProductCategoriesRouteRouteChildren {
+  dashboardProductCategoriesIdRoute: typeof dashboardProductCategoriesIdRoute
   dashboardProductCategoriesNewRoute: typeof dashboardProductCategoriesNewRoute
   dashboardProductCategoriesIndexRoute: typeof dashboardProductCategoriesIndexRoute
 }
 
 const dashboardProductCategoriesRouteRouteChildren: dashboardProductCategoriesRouteRouteChildren =
   {
+    dashboardProductCategoriesIdRoute: dashboardProductCategoriesIdRoute,
     dashboardProductCategoriesNewRoute: dashboardProductCategoriesNewRoute,
     dashboardProductCategoriesIndexRoute: dashboardProductCategoriesIndexRoute,
   }
@@ -378,12 +423,14 @@ const dashboardProductCategoriesRouteRouteWithChildren =
   )
 
 interface dashboardProductsRouteRouteChildren {
+  dashboardProductsIdRoute: typeof dashboardProductsIdRoute
   dashboardProductsNewRoute: typeof dashboardProductsNewRoute
   dashboardProductsIndexRoute: typeof dashboardProductsIndexRoute
 }
 
 const dashboardProductsRouteRouteChildren: dashboardProductsRouteRouteChildren =
   {
+    dashboardProductsIdRoute: dashboardProductsIdRoute,
     dashboardProductsNewRoute: dashboardProductsNewRoute,
     dashboardProductsIndexRoute: dashboardProductsIndexRoute,
   }
@@ -414,6 +461,7 @@ interface dashboardRouteRouteChildren {
   dashboardProductsRouteRoute: typeof dashboardProductsRouteRouteWithChildren
   dashboardSettingsRouteRoute: typeof dashboardSettingsRouteRouteWithChildren
   dashboardIndexRoute: typeof dashboardIndexRoute
+  dashboardDiscountsIndexRoute: typeof dashboardDiscountsIndexRoute
 }
 
 const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
@@ -424,6 +472,7 @@ const dashboardRouteRouteChildren: dashboardRouteRouteChildren = {
   dashboardProductsRouteRoute: dashboardProductsRouteRouteWithChildren,
   dashboardSettingsRouteRoute: dashboardSettingsRouteRouteWithChildren,
   dashboardIndexRoute: dashboardIndexRoute,
+  dashboardDiscountsIndexRoute: dashboardDiscountsIndexRoute,
 }
 
 const dashboardRouteRouteWithChildren = dashboardRouteRoute._addFileChildren(
@@ -441,11 +490,14 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/product-categories/$id': typeof dashboardProductCategoriesIdRoute
   '/product-categories/new': typeof dashboardProductCategoriesNewRoute
+  '/products/$id': typeof dashboardProductsIdRoute
   '/products/new': typeof dashboardProductsNewRoute
   '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
   '/payment/connect/return': typeof PaymentConnectReturnRoute
   '/customers/': typeof dashboardCustomersIndexRoute
+  '/discounts': typeof dashboardDiscountsIndexRoute
   '/orders/': typeof dashboardOrdersIndexRoute
   '/product-categories/': typeof dashboardProductCategoriesIndexRoute
   '/products/': typeof dashboardProductsIndexRoute
@@ -458,11 +510,14 @@ export interface FileRoutesByTo {
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/product-categories/$id': typeof dashboardProductCategoriesIdRoute
   '/product-categories/new': typeof dashboardProductCategoriesNewRoute
+  '/products/$id': typeof dashboardProductsIdRoute
   '/products/new': typeof dashboardProductsNewRoute
   '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
   '/payment/connect/return': typeof PaymentConnectReturnRoute
   '/customers': typeof dashboardCustomersIndexRoute
+  '/discounts': typeof dashboardDiscountsIndexRoute
   '/orders': typeof dashboardOrdersIndexRoute
   '/product-categories': typeof dashboardProductCategoriesIndexRoute
   '/products': typeof dashboardProductsIndexRoute
@@ -483,11 +538,14 @@ export interface FileRoutesById {
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
   '/(dashboard)/': typeof dashboardIndexRoute
+  '/(dashboard)/product-categories/$id': typeof dashboardProductCategoriesIdRoute
   '/(dashboard)/product-categories/new': typeof dashboardProductCategoriesNewRoute
+  '/(dashboard)/products/$id': typeof dashboardProductsIdRoute
   '/(dashboard)/products/new': typeof dashboardProductsNewRoute
   '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
   '/payment/connect/return': typeof PaymentConnectReturnRoute
   '/(dashboard)/customers/': typeof dashboardCustomersIndexRoute
+  '/(dashboard)/discounts/': typeof dashboardDiscountsIndexRoute
   '/(dashboard)/orders/': typeof dashboardOrdersIndexRoute
   '/(dashboard)/product-categories/': typeof dashboardProductCategoriesIndexRoute
   '/(dashboard)/products/': typeof dashboardProductsIndexRoute
@@ -507,11 +565,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/product-categories/$id'
     | '/product-categories/new'
+    | '/products/$id'
     | '/products/new'
     | '/payment/connect/refresh'
     | '/payment/connect/return'
     | '/customers/'
+    | '/discounts'
     | '/orders/'
     | '/product-categories/'
     | '/products/'
@@ -523,11 +584,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/product-categories/$id'
     | '/product-categories/new'
+    | '/products/$id'
     | '/products/new'
     | '/payment/connect/refresh'
     | '/payment/connect/return'
     | '/customers'
+    | '/discounts'
     | '/orders'
     | '/product-categories'
     | '/products'
@@ -546,11 +610,14 @@ export interface FileRouteTypes {
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
     | '/(dashboard)/'
+    | '/(dashboard)/product-categories/$id'
     | '/(dashboard)/product-categories/new'
+    | '/(dashboard)/products/$id'
     | '/(dashboard)/products/new'
     | '/payment/connect/refresh'
     | '/payment/connect/return'
     | '/(dashboard)/customers/'
+    | '/(dashboard)/discounts/'
     | '/(dashboard)/orders/'
     | '/(dashboard)/product-categories/'
     | '/(dashboard)/products/'
@@ -605,7 +672,8 @@ export const routeTree = rootRoute
         "/(dashboard)/product-categories",
         "/(dashboard)/products",
         "/(dashboard)/settings",
-        "/(dashboard)/"
+        "/(dashboard)/",
+        "/(dashboard)/discounts/"
       ]
     },
     "/(dashboard)/customers": {
@@ -626,6 +694,7 @@ export const routeTree = rootRoute
       "filePath": "(dashboard)/product-categories/route.tsx",
       "parent": "/(dashboard)",
       "children": [
+        "/(dashboard)/product-categories/$id",
         "/(dashboard)/product-categories/new",
         "/(dashboard)/product-categories/"
       ]
@@ -634,6 +703,7 @@ export const routeTree = rootRoute
       "filePath": "(dashboard)/products/route.tsx",
       "parent": "/(dashboard)",
       "children": [
+        "/(dashboard)/products/$id",
         "/(dashboard)/products/new",
         "/(dashboard)/products/"
       ]
@@ -665,9 +735,17 @@ export const routeTree = rootRoute
       "filePath": "(dashboard)/index.tsx",
       "parent": "/(dashboard)"
     },
+    "/(dashboard)/product-categories/$id": {
+      "filePath": "(dashboard)/product-categories/$id.tsx",
+      "parent": "/(dashboard)/product-categories"
+    },
     "/(dashboard)/product-categories/new": {
       "filePath": "(dashboard)/product-categories/new.tsx",
       "parent": "/(dashboard)/product-categories"
+    },
+    "/(dashboard)/products/$id": {
+      "filePath": "(dashboard)/products/$id.tsx",
+      "parent": "/(dashboard)/products"
     },
     "/(dashboard)/products/new": {
       "filePath": "(dashboard)/products/new.tsx",
@@ -682,6 +760,10 @@ export const routeTree = rootRoute
     "/(dashboard)/customers/": {
       "filePath": "(dashboard)/customers/index.tsx",
       "parent": "/(dashboard)/customers"
+    },
+    "/(dashboard)/discounts/": {
+      "filePath": "(dashboard)/discounts/index.tsx",
+      "parent": "/(dashboard)"
     },
     "/(dashboard)/orders/": {
       "filePath": "(dashboard)/orders/index.tsx",

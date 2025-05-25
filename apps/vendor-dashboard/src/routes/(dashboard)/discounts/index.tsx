@@ -1,16 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/(dashboard)/orders/')({
+export const Route = createFileRoute('/(dashboard)/discounts/')({
   component: RouteComponent,
   head: () => ({
     meta: [
       {
-        title: 'Orders',
+        title: 'Discounts',
       },
     ],
   }),
 });
 
 function RouteComponent() {
-  return <div>Hello "/(dashboard)/orders/"!</div>;
+  return <div>Hello "/(dashboard)/discounts/"!</div>;
 }

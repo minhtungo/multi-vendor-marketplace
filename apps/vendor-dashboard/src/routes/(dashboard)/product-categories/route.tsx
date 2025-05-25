@@ -5,9 +5,5 @@ export const Route = createFileRoute('/(dashboard)/product-categories')({
 });
 
 function RouteComponent() {
-  return (
-    <div className="container flex w-full flex-col py-6">
-      <Outlet />
-    </div>
-  );
+  return <Outlet />;
 }
