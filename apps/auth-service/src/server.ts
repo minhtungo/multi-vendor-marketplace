@@ -2,7 +2,7 @@ import cors from 'cors';
 import express, { type Express } from 'express';
 
 import { env } from '@/configs/env';
-import { openAPIRouter } from '@/docs/openAPIRouter';
+import { openAPIRouter } from '@/docs/openAPI-router';
 import { authUserRouter } from '@/routes/auth.user.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import { errorHandler, createRequestLogger } from '@repo/server/middlewares';

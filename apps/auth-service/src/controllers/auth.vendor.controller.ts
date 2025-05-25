@@ -32,12 +32,6 @@ class AuthVendorController {
     const serviceResponse = await authVendorService.getVendor(vendorId!);
     handleServiceResponse(serviceResponse, res);
   };
-
-  public verifyPassword: RequestHandler = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    const serviceResponse = await authVendorService.verifyPassword(email, password);
-    handleServiceResponse(serviceResponse, res);
-  };
 }
 
 export const authVendorController = new AuthVendorController();

@@ -1,7 +1,7 @@
 import express, { RequestHandler, type Express } from 'express';
 
 import { env } from '@/configs/env';
-import { openAPIRouter } from '@/docs/openAPIRouter';
+import { openAPIRouter } from '@/docs/openAPI-router';
 import { createRequestLogger, errorHandler, extractUserContext } from '@repo/server/middlewares';
 import { uploadRouter } from '@/routes/upload.route';
 

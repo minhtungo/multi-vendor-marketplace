@@ -498,7 +498,7 @@ importers:
         version: 2.0.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       table:
         specifier: git+https://github.com/tanstack/react-table.git
-        version: git+https://github.com/tanstack/react-table.git#66fbe3a74b129e700e4667d1d5e1b29dd0a7b723
+        version: git+https://github.com/tanstack/react-table.git#0cc6992c7836489661a0954a2b56e620850ad4da
       zod:
         specifier: ^3.24.4
         version: 3.24.4
@@ -1107,6 +1107,9 @@ importers:
 
   packages/server:
     dependencies:
+      '@asteasolutions/zod-to-openapi':
+        specifier: 7.3.0
+        version: 7.3.0(zod@3.24.3)
       express:
         specifier: 5.1.0
         version: 5.1.0
@@ -7103,8 +7106,8 @@ packages:
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
-  table@git+https://github.com/tanstack/react-table.git#66fbe3a74b129e700e4667d1d5e1b29dd0a7b723:
-    resolution: {commit: 66fbe3a74b129e700e4667d1d5e1b29dd0a7b723, repo: https://github.com/tanstack/react-table.git, type: git}
+  table@git+https://github.com/tanstack/react-table.git#0cc6992c7836489661a0954a2b56e620850ad4da:
+    resolution: {commit: 0cc6992c7836489661a0954a2b56e620850ad4da, repo: https://github.com/tanstack/react-table.git, type: git}
     version: 0.0.0
 
   tailwind-merge@3.3.0:
@@ -14159,7 +14162,7 @@ snapshots:
 
   symbol-tree@3.2.4: {}
 
-  table@git+https://github.com/tanstack/react-table.git#66fbe3a74b129e700e4667d1d5e1b29dd0a7b723: {}
+  table@git+https://github.com/tanstack/react-table.git#0cc6992c7836489661a0954a2b56e620850ad4da: {}
 
   tailwind-merge@3.3.0: {}
 

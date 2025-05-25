@@ -1,7 +1,7 @@
 import express, { type Express } from 'express';
 
 import { env } from '@/configs/env';
-import { openAPIRouter } from '@/docs/openAPIRouter';
+import { openAPIRouter } from '@/docs/openAPI-router';
 import { userRouter } from '@/routes/user.route';
 import { healthCheckRouter } from '@/routes/health-check.route';
 import { createRequestLogger, errorHandler } from '@repo/server/middlewares';
