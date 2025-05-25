@@ -1,11 +1,19 @@
 import { pgTable, serial, varchar, timestamp, decimal, text, jsonb, uuid } from 'drizzle-orm/pg-core';
 import { discountCodes } from '../discount-codes/discount-codes';
+import {
+  ORDER_STATUS,
+  PAYMENT_METHOD,
+  PAYMENT_STATUS,
+  orderStatus,
+  paymentMethod,
+  paymentStatus,
+} from '@/db/schemas/constants';
 
 export const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
   orderNumber: varchar('order_number', { length: 50 }).notNull().unique(),
   customerId: uuid('customer_id').notNull(),
-  status: varchar('status', { length: 20 }).notNull().default('pending'),
+  status: orderStatus().notNull().default(ORDER_STATUS.PENDING),
   totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
   currency: varchar('currency', { length: 3 }).notNull().default('USD'),
   discountCodeId: serial('discount_code_id').references(() => discountCodes.id),
@@ -33,8 +41,8 @@ export const orders = pgTable('orders', {
   billingCountry: varchar('billing_country', { length: 100 }).notNull(),
   billingPhone: varchar('billing_phone', { length: 20 }),
 
-  paymentMethod: varchar('payment_method', { length: 50 }).notNull(),
-  paymentStatus: varchar('payment_status', { length: 20 }).notNull().default('pending'),
+  paymentMethod: paymentMethod().default(PAYMENT_METHOD.STRIPE),
+  paymentStatus: paymentStatus().notNull().default(PAYMENT_STATUS.PENDING),
   notes: text('notes'),
   metadata: jsonb('metadata'),
   createdAt: timestamp('created_at').notNull().defaultNow(),

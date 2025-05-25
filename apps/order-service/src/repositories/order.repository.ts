@@ -6,12 +6,18 @@ import type { InsertOrder, Order } from '@/db/schemas';
 export class OrderRepository {
   constructor(private readonly dbInstance = db) {}
 
-  public async getPaginatedOrders(page: number, limit: number, trx: typeof db = this.dbInstance) {
+  public async getPaginatedOrders(page: number, limit: number, vendorId: string, trx: typeof db = this.dbInstance) {
     const offset = (page - 1) * limit;
 
     const [{ value: total }] = await trx.select({ value: count() }).from(orders);
 
-    const items = await trx.select().from(orders).limit(limit).offset(offset).orderBy(orders.createdAt);
+    const items = await trx
+      .select()
+      .from(orders)
+      .where(eq(orders.vendorId, vendorId))
+      .limit(limit)
+      .offset(offset)
+      .orderBy(orders.createdAt);
 
     return {
       items,

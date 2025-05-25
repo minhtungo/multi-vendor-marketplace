@@ -7,7 +7,8 @@ class OrderController {
   public getAllOrders = async (req: Request, res: Response, next: NextFunction) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
-    const serviceResponse = await orderService.getAllOrders(page, limit);
+    const vendorId = req.query.vendorId as string;
+    const serviceResponse = await orderService.getAllOrders(page, limit, vendorId);
     handleServiceResponse(serviceResponse, res);
   };
 

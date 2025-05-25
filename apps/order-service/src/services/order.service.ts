@@ -9,7 +9,8 @@ class OrderService {
 
   public async getAllOrders(
     page: number,
-    limit: number
+    limit: number,
+    vendorId: string
   ): Promise<
     ServiceResponse<{
       orders: Order[];
@@ -22,7 +23,7 @@ class OrderService {
     } | null>
   > {
     try {
-      const result = await this.orderRepo.getPaginatedOrders(page, limit);
+      const result = await this.orderRepo.getPaginatedOrders(page, limit, vendorId);
 
       return ServiceResponse.success(
         'Orders retrieved successfully',

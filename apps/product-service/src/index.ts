@@ -1,4 +1,3 @@
-import { hello } from '@repo/server';
 import { env } from '@/configs/env';
 import { closeRedisConnection, getRedisClient } from '@repo/redis';
 import { app } from '@/server';
@@ -8,7 +7,6 @@ const server = app.listen(env.PORT, () => {
   const { NODE_ENV, HOST, PORT } = env;
   logger.info(`Server (${NODE_ENV}) running on port http://${HOST}:${PORT}`);
   // Initialize Redis connection
-  hello();
   getRedisClient();
 });
 
