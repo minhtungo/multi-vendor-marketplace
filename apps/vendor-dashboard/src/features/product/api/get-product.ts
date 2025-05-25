@@ -15,10 +15,16 @@ export async function getProduct({ id }: GetProductInput): Promise<ApiResponse<P
   return privateApi.get(`${server.path.product.root}/${id}`);
 }
 
-export function useGetProductQuery(id: string) {
-  return useQuery({
+export function getProductQueryOptions(id: string) {
+  return {
     queryKey: ['product', id],
     queryFn: () => getProduct({ id }),
     enabled: !!id,
+  };
+}
+
+export function useGetProductQuery(id: string) {
+  return useQuery({
+    ...getProductQueryOptions(id),
   });
 }

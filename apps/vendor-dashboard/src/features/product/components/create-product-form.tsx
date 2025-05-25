@@ -159,7 +159,7 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
                             .filter(Boolean),
                         )
                       }
-                      placeholder="Enter tags separated by commas..."
+                      placeholder="Separated by commas..."
                     />
                   </FormControl>
                   <FormMessage />

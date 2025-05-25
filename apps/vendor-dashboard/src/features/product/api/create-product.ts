@@ -1,8 +1,9 @@
 import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
+import { getProductsQueryOptions } from '@/features/product/api/get-products';
 import type { ApiResponse } from '@/types/api';
 import type { Product } from '@/types/product';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
 export const createProductSchema = z.object({
@@ -28,7 +29,11 @@ export async function createProduct(data: CreateProductInput): Promise<ApiRespon
 }
 
 export function useCreateProduct() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getProductsQueryOptions({ page: 1, limit: 20 }).queryKey });
+    },
   });
 }

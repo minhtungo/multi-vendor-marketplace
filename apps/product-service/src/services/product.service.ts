@@ -25,7 +25,8 @@ class ProductService {
 
   public async getAllProducts(
     page: number,
-    limit: number
+    limit: number,
+    vendorId: string
   ): Promise<
     ServiceResponse<{
       products: Product[];
@@ -38,7 +39,7 @@ class ProductService {
     } | null>
   > {
     try {
-      const result = await this.productRepo.getPaginatedProducts(page, limit);
+      const result = await this.productRepo.getPaginatedProducts(page, limit, vendorId);
 
       return ServiceResponse.success(
         'Products retrieved successfully',

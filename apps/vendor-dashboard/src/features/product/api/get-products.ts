@@ -26,9 +26,14 @@ export async function getProducts(params: GetProductsInput): Promise<GetProducts
   return response.data;
 }
 
-export function useGetProducts(params: GetProductsInput) {
-  return useQuery({
+export function getProductsQueryOptions(params: GetProductsInput) {
+  return {
     queryKey: ['products', params],
     queryFn: () => getProducts(params),
+  };
+}
+export function useGetProducts(params: GetProductsInput) {
+  return useQuery({
+    ...getProductsQueryOptions(params),
   });
 }
