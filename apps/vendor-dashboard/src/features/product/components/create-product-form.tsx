@@ -133,7 +133,10 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Categories</FormLabel>
-                  <ProductCategoriesSelection onValueChange={field.onChange} className="w-full" />
+                  <ProductCategoriesSelection
+                    onValueChange={(value) => field.onChange(value.split(',').map((v) => v.trim()))}
+                    className="w-full"
+                  />
                   <FormMessage />
                 </FormItem>
               )}

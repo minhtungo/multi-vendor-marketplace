@@ -14,7 +14,7 @@ export async function deleteProduct({ id }: DeleteProductInput): Promise<ApiResp
   return privateApi.delete(`${server.path.product.root}/${id}`);
 }
 
-export function useDeleteProductMutation() {
+export function useDeleteProduct() {
   return useMutation({
     mutationFn: deleteProduct,
   });

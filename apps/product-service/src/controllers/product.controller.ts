@@ -42,6 +42,7 @@ class ProductController {
   public deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
     const productId = req.params.id;
     const vendorId = req.user?.id;
+
     const serviceResponse = await productService.deleteProduct(productId, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };

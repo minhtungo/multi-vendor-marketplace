@@ -1,3 +1,4 @@
+import { DeleteProductDialog } from '@/features/product/components/product-table/delete-product-dialog';
 import type { Product } from '@/types/product';
 import { Button } from '@repo/ui/components/button';
 import {
@@ -8,6 +9,7 @@ import {
 } from '@repo/ui/components/dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
+import { useState } from 'react';
 
 export const productTableColumns: ColumnDef<Product>[] = [
   {
@@ -51,22 +53,24 @@ export const productTableColumns: ColumnDef<Product>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const product = row.original;
-
+      const [showDeleteDialog, setShowDeleteDialog] = useState(false);
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="size-8">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>View product</DropdownMenuItem>
-            <DropdownMenuItem>Edit product</DropdownMenuItem>
-            <DropdownMenuItem>Delete product</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="size-8">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>View product</DropdownMenuItem>
+              <DropdownMenuItem>Edit product</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>Delete product</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DeleteProductDialog productId={row.original.id} open={showDeleteDialog} onOpenChange={setShowDeleteDialog} />
+        </>
       );
     },
   },
