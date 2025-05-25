@@ -1,7 +1,7 @@
 import express, { type Request, type Response, type Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 
-import { healthCheckRegistry } from '@/routes/health-check.route';
+import { healthCheckRegistry } from '@repo/server/routes';
 import { authUserRegistry } from '@/routes/auth.user.route';
 import { generateOpenAPIDocument } from '@repo/server/docs';
 

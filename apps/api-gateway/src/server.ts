@@ -3,7 +3,7 @@ import { env } from '@/configs/env';
 import { proxyOptions, forwardUserContext } from '@/lib/proxy-options';
 import { validateToken, requireVendorRole } from '@/middlewares/auth';
 import rateLimiter from '@/middlewares/rate-limiter';
-import { healthCheckRouter } from '@/routes/health-check.route';
+import { healthCheckRouter } from '@repo/server/routes';
 import { logger } from '@/utils/logger';
 import { errorHandler } from '@repo/server/middlewares';
 import cors from 'cors';

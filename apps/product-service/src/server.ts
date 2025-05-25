@@ -5,6 +5,7 @@ import { openAPIRouter } from '@/docs/openAPI-router';
 import { productRouter } from '@/routes/product.route';
 import { productCategoryRouter } from '@/routes/product-category.route';
 import { extractUserContext, createRequestLogger, errorHandler } from '@repo/server/middlewares';
+import { healthCheckRouter } from '@repo/server/routes';
 
 const app: Express = express();
 
@@ -21,6 +22,7 @@ env.isProduction && app.use(createRequestLogger(env));
 app.use(extractUserContext as RequestHandler);
 
 // Routes
+app.use('/api/products/health-check', healthCheckRouter);
 app.use('/api/products/categories', productCategoryRouter);
 app.use('/api/products', productRouter);
 

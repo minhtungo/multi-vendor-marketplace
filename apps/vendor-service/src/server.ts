@@ -1,11 +1,11 @@
 import express, { type Express } from 'express';
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
-import { healthCheckRouter } from '@/routes/health-check.route';
 import { vendorRouter } from '@/routes/vendor.route';
 import { createRequestLogger, errorHandler } from '@repo/server/middlewares';
 import { vendorAuthConsumer } from '@/lib/auth.consumer';
 import { logger } from '@/utils/logger';
+import { healthCheckRouter } from '@repo/server/routes';
 
 const app: Express = express();
 
@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 env.isProduction && app.use(createRequestLogger(env));
 
 // Routes
-app.use('/api/health-check', healthCheckRouter);
+app.use('/api/vendors/health-check', healthCheckRouter);
 app.use('/api/vendors', vendorRouter);
 
 // Swagger UI

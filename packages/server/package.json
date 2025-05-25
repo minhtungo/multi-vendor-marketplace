@@ -2,10 +2,10 @@
   "name": "@repo/server",
   "version": "1.0.0",
   "exports": {
-    ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
-      "require": "./src/index.ts"
+    "./routes": {
+      "types": "./src/routes/index.ts",
+      "import": "./src/routes/index.ts",
+      "require": "./src/routes/index.ts"
     },
     "./lib": {
       "types": "./src/lib/index.ts",
