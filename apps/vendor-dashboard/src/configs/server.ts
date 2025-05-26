@@ -4,6 +4,7 @@ const paymentPath = `${basePath}/payment`;
 const productPath = `${basePath}/products`;
 const productCategoryPath = `${productPath}/categories`;
 const orderPath = `${basePath}/orders`;
+const uploadPath = `${basePath}/uploads`;
 
 export const server = {
   path: {
@@ -33,6 +34,11 @@ export const server = {
     },
     order: {
       root: `${orderPath}`,
+    },
+    upload: {
+      root: `${uploadPath}`,
+      confirmUpload: `${uploadPath}/confirm`,
+      presignedUrl: `${uploadPath}/presigned-url`,
     },
   },
 } as const;

@@ -6,7 +6,6 @@ import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/(dashboard)')({
   beforeLoad: async ({ context }) => {
-    console.log('context', context);
     if (!context.isAuthenticated) {
       throw redirect({ to: client.path.signIn });
     }

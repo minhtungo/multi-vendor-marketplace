@@ -32,7 +32,6 @@ export function CreateProductCategoriesForm({}: React.ComponentPropsWithoutRef<'
   const { mutate: createProductCategory, isPending, isSuccess, isError, error } = useCreateProductCategory();
 
   const onSubmit = (data: z.infer<typeof createProductCategorySchema>) => {
-    console.log('data', data);
     createProductCategory(data, {
       onSuccess: () => {
         form.reset(defaultFormValues);

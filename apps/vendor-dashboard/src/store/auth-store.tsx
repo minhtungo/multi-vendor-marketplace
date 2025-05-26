@@ -38,7 +38,6 @@ export const authStore = createStore<AuthState & { actions: AuthActions }>((set)
           set({ token: data.accessToken });
         }
         const vendor = await getVendor();
-        console.log('vendor', vendor);
         queryClient.setQueryData(getVendorQueryOptions().queryKey, vendor);
         set({
           isAuthenticated: true,

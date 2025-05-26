@@ -123,6 +123,7 @@ app.use(
 // Upload service
 app.use(
   `/${appConfig.apiVersion}/uploads`,
+  validateToken,
   proxy(env.UPLOAD_SERVICE_URL, {
     ...proxyOptions,
     proxyReqOptDecorator: forwardUserContext,

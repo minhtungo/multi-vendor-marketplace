@@ -1,14 +1,14 @@
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 
+import { appConfig } from '@/configs/app-config';
 import { env } from '@/configs/env';
+import { getFileUrl } from '@/lib/get-file-url';
 import { s3Client } from '@/lib/s3-client';
 import { UploadRepository } from '@/repositories/upload.repository';
 import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
 import { ServiceResponse } from '@repo/server/lib';
 import { v4 as uuidv4 } from 'uuid';
-import { appConfig } from '@/configs/app-config';
-import { getFileUrl } from '@/lib/get-file-url';
 
 export const DEFAULT_GET_USER_UPLOADS_OFFSET = 0;
 export const DEFAULT_GET_USER_UPLOADS_LIMIT = 30;
@@ -38,7 +38,8 @@ export class UploadService {
         Expires: appConfig.upload.presignedUrl.expiresIn,
       });
 
-      const finalUrl = env.USE_LOCAL_S3 ? `${env.AWS_S3_ENDPOINT}/${env.AWS_S3_BUCKET_NAME}/` : url;
+      // const finalUrl = env.USE_LOCAL_S3 ? `${env.AWS_S3_ENDPOINT}/${env.AWS_S3_BUCKET_NAME}/` : url;
+      const finalUrl = `${env.AWS_S3_ENDPOINT}/${env.AWS_S3_BUCKET_NAME}/`;
 
       return ServiceResponse.success('Presigned URL created successfully', {
         url: finalUrl,

@@ -1,3 +1,4 @@
+import { useUploadFile } from '@/features/upload/api/upload-file';
 import { formatBytes, useFileUpload } from '@/hooks/use-file-upload';
 import { Button } from '@repo/ui/components/button';
 import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from 'lucide-react';
@@ -6,9 +7,13 @@ const maxSizeMB = 5;
 const maxSize = maxSizeMB * 1024 * 1024;
 const maxFiles = 6;
 
-type UploadProductImagesProps = React.ComponentProps<'input'>;
+type UploadProductImagesProps = {
+  onImageAdded: (url: string) => void;
+} & React.ComponentProps<'input'>;
 
-export function UploadProductImages({ ...props }: UploadProductImagesProps) {
+//TODO: Add a way to remove images and handle multiple files
+export function UploadProductImages({ onImageAdded }: UploadProductImagesProps) {
+  const { mutate: uploadFile } = useUploadFile();
   const [
     { files, isDragging, errors },
     {
@@ -26,8 +31,19 @@ export function UploadProductImages({ ...props }: UploadProductImagesProps) {
     maxSize,
     multiple: true,
     maxFiles,
-    onFilesChange: (files) => {
-      console.log('uploading file to upload service', files);
+    onFilesAdded: (files) => {
+      files.forEach((file) => {
+        uploadFile(file.file as File, {
+          onSuccess: (uploadResponse) => {
+            if (uploadResponse.url) {
+              onImageAdded(uploadResponse.url);
+            }
+          },
+          onError: (error) => {
+            console.error('Upload failed:', error);
+          },
+        });
+      });
     },
   });
 
@@ -38,9 +54,10 @@ export function UploadProductImages({ ...props }: UploadProductImagesProps) {
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
+        onClick={openFileDialog}
         data-dragging={isDragging || undefined}
         data-files={files.length > 0 || undefined}
-        className="border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors not-data-[files]:justify-center has-[input:focus]:ring-[3px]"
+        className="border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 hover:border-primary relative flex min-h-52 cursor-pointer flex-col items-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors not-data-[files]:justify-center has-[input:focus]:ring-[3px]"
       >
         <input {...getInputProps()} className="sr-only" aria-label="Upload image file" />
         <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
@@ -52,10 +69,6 @@ export function UploadProductImages({ ...props }: UploadProductImagesProps) {
           </div>
           <p className="mb-1.5 text-sm font-medium">Drop your images here</p>
           <p className="text-muted-foreground text-xs">SVG, PNG, JPG or GIF (max. {maxSizeMB}MB)</p>
-          <Button variant="outline" className="mt-4" onClick={openFileDialog}>
-            <UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
-            Select images
-          </Button>
         </div>
       </div>
 

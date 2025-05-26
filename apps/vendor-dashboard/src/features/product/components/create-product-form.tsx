@@ -1,5 +1,6 @@
 import { createProductSchema, useCreateProduct } from '@/features/product/api/create-product';
 import { ProductCategoriesSelection } from '@/features/product/components/product-categories-selection';
+import { UploadProductImages } from '@/features/product/components/upload-product-images';
 import { normalizeServerError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@repo/ui/components/button';
@@ -38,13 +39,14 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
   const { mutate: createProduct, isPending, isSuccess, isError, error } = useCreateProduct();
 
   const onSubmit = (data: z.infer<typeof createProductSchema>) => {
-    console.log('data', data);
     createProduct(data, {
       onSuccess: () => {
         form.reset(defaultFormValues);
       },
     });
   };
+
+  console.log('images', form.watch('images'));
 
   return (
     <Form {...form}>
@@ -244,6 +246,19 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
             />
           </div>
         </div>
+        <FormField
+          control={form.control}
+          name="images"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Images</FormLabel>
+              <FormControl>
+                <UploadProductImages onImageAdded={(url) => field.onChange([...field.value, url])} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         {isSuccess && (
           <FormResponse title="Success" variant="success" description="Product has been created successfully." />
         )}

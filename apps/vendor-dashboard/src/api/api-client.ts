@@ -29,8 +29,7 @@ const processQueue = (error: any = null, token: string | null = null) => {
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   if (config.headers) {
     const accessToken = authStore.getState().token;
-    console.log('authStore', accessToken);
-    console.log('authRequestInterceptor accessToken', accessToken);
+
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }

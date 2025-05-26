@@ -4,6 +4,7 @@ import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
 import { createRequestLogger, errorHandler, extractUserContext } from '@repo/server/middlewares';
 import { uploadRouter } from '@/routes/upload.route';
+import { bucketPolicyRouter } from '@/routes/bucket-policy.route';
 import { healthCheckRouter } from '@repo/server/routes';
 
 const app: Express = express();
@@ -21,8 +22,9 @@ env.isProduction && app.use(createRequestLogger(env));
 app.use(extractUserContext as RequestHandler);
 
 // Routes
-app.use('/api/upload/health-check', healthCheckRouter);
-app.use('/api/upload', uploadRouter);
+app.use('/api/uploads/health-check', healthCheckRouter);
+app.use('/api/uploads', uploadRouter);
+app.use('/api/uploads/bucket-policy', bucketPolicyRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
