@@ -50,7 +50,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between">
         {enableSearch && (
           <Input
             placeholder={searchPlaceholder}

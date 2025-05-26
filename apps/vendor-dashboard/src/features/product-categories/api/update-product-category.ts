@@ -8,9 +8,10 @@ import { z } from 'zod';
 
 export const updateProductCategorySchema = z.object({
   id: z.string().uuid(),
-  name: z.string().min(1).optional(),
+  name: z.string().min(1, 'Product category name is required').max(255, 'Product category name too long').optional(),
+  slug: z.string().min(1, 'Product category slug is required').max(255, 'Product category slug too long').optional(),
   description: z.string().optional(),
-  parentId: z.string().uuid().optional(),
+  status: z.enum(['active', 'inactive']).optional(),
 });
 
 export type UpdateProductCategoryInput = z.infer<typeof updateProductCategorySchema>;
