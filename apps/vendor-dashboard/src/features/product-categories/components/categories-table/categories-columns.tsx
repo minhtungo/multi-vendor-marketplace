@@ -1,5 +1,5 @@
 import { DeleteCategoryDialog } from '@/features/product-categories/components/categories-table/delete-category-dialog';
-import type { ProductCategory } from '@/types/product-category';
+import type { ProductCategory } from '@repo/types/product-category';
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import {

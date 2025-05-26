@@ -1,8 +1,8 @@
 import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
 import { getProductCategoriesQueryOptions } from '@/features/product-categories/api/get-product-categories';
-import type { ApiResponse } from '@/types/api';
-import type { ProductCategory } from '@/types/product-category';
+import type { ApiResponse } from '@repo/types/api';
+import type { ProductCategory } from '@repo/types/product-category';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 

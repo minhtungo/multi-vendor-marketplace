@@ -1,7 +1,7 @@
 import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
-import type { ApiResponse } from '@/types/api';
-import type { Upload } from '@/types/upload';
+import type { ApiResponse } from '@repo/types/api';
+import type { Upload } from '@repo/types/upload';
 
 type ConfirmUploadInput = {
   key: string;

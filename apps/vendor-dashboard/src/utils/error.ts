@@ -1,4 +1,4 @@
-import type { ApiResponse } from '@/types/api';
+import type { ApiResponse } from '@repo/types/api';
 import type { AxiosError } from 'axios';
 
 export function normalizeServerError(error: unknown, defaultMessage = 'An error occurred'): string {

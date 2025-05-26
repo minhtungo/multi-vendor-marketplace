@@ -1,5 +1,5 @@
 import { DeleteProductDialog } from '@/features/product/components/product-table/delete-product-dialog';
-import type { Product } from '@repo/types/product';
+import type { ApiResponse } from '@repo/types/api';
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import {

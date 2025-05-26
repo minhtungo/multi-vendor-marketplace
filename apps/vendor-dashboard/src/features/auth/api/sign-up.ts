@@ -1,8 +1,8 @@
 import { publicApi } from '@/api/api-client';
 import { server } from '@/configs/server';
 import { commonValidations } from '@/lib/commonValidation';
-import type { ApiResponse } from '@/types/api';
-import type { Vendor } from '@/types/vendor';
+import type { ApiResponse } from '@repo/types/api';
+import type { Vendor } from '@repo/types/vendor';
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 

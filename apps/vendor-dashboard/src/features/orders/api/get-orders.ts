@@ -1,6 +1,6 @@
 import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
-import type { Order } from '@/types/order';
+import type { Order } from '@repo/types/order';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 

@@ -14,6 +14,6 @@ export type Vendor = {
   website?: string;
   status: VendorStatus;
   stripeId?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 };

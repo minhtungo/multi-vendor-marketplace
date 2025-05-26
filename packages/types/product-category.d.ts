@@ -1,4 +1,4 @@
-export interface ProductCategory {
+export type ProductCategory = {
   id: string;
   name: string;
   slug: string;
@@ -7,4 +7,4 @@ export interface ProductCategory {
   status: 'active' | 'inactive';
   createdAt: string;
   updatedAt: string;
-}
+};

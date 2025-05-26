@@ -1,7 +1,7 @@
 import { server } from '@/configs/server';
 import { api } from '@/lib/api-client';
 import { commonValidations } from '@/lib/validations';
-import type { ApiResponse } from '@/types/api';
+import { type ApiResponse } from '@repo/types/api';
 import { z } from 'zod';
 
 export const resetPasswordSchema = z.object({

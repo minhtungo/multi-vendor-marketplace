@@ -1,7 +1,7 @@
 import { publicApi } from '@/api/api-client';
 import { server } from '@/configs/server';
-import type { ApiResponse } from '@/types/api';
-import type { Shop } from '@/types/shop';
+import type { ApiResponse } from '@repo/types/api';
+import type { Shop } from '@repo/types/shop';
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 

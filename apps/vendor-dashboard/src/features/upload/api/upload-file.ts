@@ -1,6 +1,6 @@
 import { confirmUpload } from '@/features/upload/api/confirm-upload';
 import { getPresignedUrl } from '@/features/upload/api/presigned-url';
-import type { Upload } from '@/types/upload';
+import type { Upload } from '@repo/types/upload';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 

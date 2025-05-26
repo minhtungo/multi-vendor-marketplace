@@ -1,6 +1,6 @@
 import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
-import type { Vendor } from '@/types/vendor';
+import type { Vendor } from '@repo/types/vendor';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
 export async function getVendor(): Promise<Vendor> {

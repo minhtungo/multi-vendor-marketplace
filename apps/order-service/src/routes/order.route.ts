@@ -22,12 +22,7 @@ orderRegistry.registerPath({
   responses: createApiResponse(
     z.object({
       orders: z.array(orderSchema),
-      pagination: z.object({
-        total: z.number(),
-        page: z.number(),
-        limit: z.number(),
-        totalPages: z.number(),
-      }),
+      total: z.number(),
     }),
     'Orders retrieved successfully'
   ),
