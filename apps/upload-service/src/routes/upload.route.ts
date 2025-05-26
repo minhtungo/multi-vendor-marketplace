@@ -5,6 +5,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { validateRequest } from '@repo/server/middlewares';
 import { ConfirmUploadSchema, PresignedUrlSchema } from '@/models/upload.model';
+import { uploadSchema } from '@/db/schemas';
 
 export const uploadRegistry = new OpenAPIRegistry();
 export const uploadRouter: Router = Router();
@@ -45,7 +46,7 @@ uploadRegistry.registerPath({
       },
     },
   },
-  responses: createApiResponse(z.object({}), 'Success'),
+  responses: createApiResponse(uploadSchema, 'Success'),
 });
 
 uploadRouter.post('/confirm', uploadController.confirmUpload);

@@ -22,7 +22,7 @@ const envSchema = z.object({
   POSTGRES_DB: z.string().min(1),
   DATABASE_URL: z.string().min(1),
   // S3
-  USE_LOCAL_S3: z.boolean().default(true).optional(),
+  USE_LOCAL_S3: z.coerce.boolean().default(true).optional(),
   AWS_ACCESS_KEY_ID: z.string().min(1),
   AWS_SECRET_ACCESS_KEY: z.string().min(1),
   AWS_REGION: z.string().min(1),

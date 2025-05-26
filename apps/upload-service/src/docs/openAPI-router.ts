@@ -2,10 +2,9 @@ import express, { type Request, type Response, type Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { generateOpenAPIDocument } from '@repo/server/docs';
 import { uploadRegistry } from '@/routes/upload.route';
-import { bucketPolicyRegistry } from '@/routes/bucket-policy.route';
 
 export const openAPIRouter: Router = express.Router();
-const openAPIDocument = generateOpenAPIDocument([uploadRegistry, bucketPolicyRegistry], {
+const openAPIDocument = generateOpenAPIDocument([uploadRegistry], {
   title: 'Upload Service API',
   version: '1.0.0',
 });

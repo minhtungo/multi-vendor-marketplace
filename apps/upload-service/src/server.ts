@@ -2,7 +2,6 @@ import express, { RequestHandler, type Express } from 'express';
 
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
-import { bucketPolicyRouter } from '@/routes/bucket-policy.route';
 import { uploadRouter } from '@/routes/upload.route';
 import { createRequestLogger, errorHandler, requireUserContext } from '@repo/server/middlewares';
 import { healthCheckRouter } from '@repo/server/routes';
@@ -24,7 +23,6 @@ app.use(requireUserContext as RequestHandler);
 // Routes
 app.use('/api/uploads/health-check', healthCheckRouter);
 app.use('/api/uploads', uploadRouter);
-app.use('/api/uploads/bucket-policy', bucketPolicyRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
