@@ -1,7 +1,7 @@
 import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
 import type { Order } from '@/types/order';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
 export const getOrdersSchema = z.object({
@@ -33,7 +33,9 @@ export function getOrdersQueryOptions(params: GetOrdersInput) {
   };
 }
 export function useGetOrders(params: GetOrdersInput) {
-  return useQuery({
+  return useInfiniteQuery({
     ...getOrdersQueryOptions(params),
+    getNextPageParam: (lastPage) => lastPage.pagination.page + 1,
+    initialPageParam: 1,
   });
 }

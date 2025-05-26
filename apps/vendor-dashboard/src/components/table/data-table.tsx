@@ -18,9 +18,22 @@ type DataTableProps<TData, TValue> = {
   data: TData[];
   tableActions?: React.ReactElement;
   onRowClick: (row: TData) => void;
+  enablePagination?: boolean;
+  enableSearch?: boolean;
+  searchPlaceholder?: string;
+  noResultsText?: string;
 };
 
-export function DataTable<TData, TValue>({ columns, data, tableActions, onRowClick }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  tableActions,
+  onRowClick,
+  enablePagination = true,
+  enableSearch = true,
+  searchPlaceholder = 'Search...',
+  noResultsText = 'No results.',
+}: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
@@ -38,12 +51,14 @@ export function DataTable<TData, TValue>({ columns, data, tableActions, onRowCli
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between py-4">
-        <Input
-          placeholder="Search product..."
-          value={(table.getColumn('product')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('product')?.setFilterValue(event.target.value)}
-          className="max-w-sm"
-        />
+        {enableSearch && (
+          <Input
+            placeholder={searchPlaceholder}
+            value={(table.getColumn('product')?.getFilterValue() as string) ?? ''}
+            onChange={(event) => table.getColumn('product')?.setFilterValue(event.target.value)}
+            className="max-w-sm"
+          />
+        )}
         {tableActions}
       </div>
       <div className="rounded-md border">
@@ -82,14 +97,14 @@ export function DataTable<TData, TValue>({ columns, data, tableActions, onRowCli
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  {noResultsText}
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      {enablePagination && <DataTablePagination table={table} />}
     </div>
   );
 }

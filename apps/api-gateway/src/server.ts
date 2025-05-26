@@ -110,6 +110,7 @@ app.use(
 // Order service
 app.use(
   `/${appConfig.apiVersion}/orders`,
+  validateToken,
   proxy(env.ORDER_SERVICE_URL, {
     ...proxyOptions,
     proxyReqOptDecorator: forwardUserContext,

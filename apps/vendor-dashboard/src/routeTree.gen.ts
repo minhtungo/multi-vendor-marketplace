@@ -35,6 +35,7 @@ import { Route as dashboardProductsNewImport } from './routes/(dashboard)/produc
 import { Route as dashboardProductsIdImport } from './routes/(dashboard)/products/$id'
 import { Route as dashboardProductCategoriesNewImport } from './routes/(dashboard)/product-categories/new'
 import { Route as dashboardProductCategoriesIdImport } from './routes/(dashboard)/product-categories/$id'
+import { Route as dashboardOrdersIdImport } from './routes/(dashboard)/orders/$id'
 
 // Create/Update Routes
 
@@ -184,6 +185,12 @@ const dashboardProductCategoriesIdRoute =
     getParentRoute: () => dashboardProductCategoriesRouteRoute,
   } as any)
 
+const dashboardOrdersIdRoute = dashboardOrdersIdImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => dashboardOrdersRouteRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -271,6 +278,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof dashboardIndexImport
       parentRoute: typeof dashboardRouteImport
+    }
+    '/(dashboard)/orders/$id': {
+      id: '/(dashboard)/orders/$id'
+      path: '/$id'
+      fullPath: '/orders/$id'
+      preLoaderRoute: typeof dashboardOrdersIdImport
+      parentRoute: typeof dashboardOrdersRouteImport
     }
     '/(dashboard)/product-categories/$id': {
       id: '/(dashboard)/product-categories/$id'
@@ -394,10 +408,12 @@ const dashboardCustomersRouteRouteWithChildren =
   )
 
 interface dashboardOrdersRouteRouteChildren {
+  dashboardOrdersIdRoute: typeof dashboardOrdersIdRoute
   dashboardOrdersIndexRoute: typeof dashboardOrdersIndexRoute
 }
 
 const dashboardOrdersRouteRouteChildren: dashboardOrdersRouteRouteChildren = {
+  dashboardOrdersIdRoute: dashboardOrdersIdRoute,
   dashboardOrdersIndexRoute: dashboardOrdersIndexRoute,
 }
 
@@ -490,6 +506,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/orders/$id': typeof dashboardOrdersIdRoute
   '/product-categories/$id': typeof dashboardProductCategoriesIdRoute
   '/product-categories/new': typeof dashboardProductCategoriesNewRoute
   '/products/$id': typeof dashboardProductsIdRoute
@@ -510,6 +527,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/orders/$id': typeof dashboardOrdersIdRoute
   '/product-categories/$id': typeof dashboardProductCategoriesIdRoute
   '/product-categories/new': typeof dashboardProductCategoriesNewRoute
   '/products/$id': typeof dashboardProductsIdRoute
@@ -538,6 +556,7 @@ export interface FileRoutesById {
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
   '/(dashboard)/': typeof dashboardIndexRoute
+  '/(dashboard)/orders/$id': typeof dashboardOrdersIdRoute
   '/(dashboard)/product-categories/$id': typeof dashboardProductCategoriesIdRoute
   '/(dashboard)/product-categories/new': typeof dashboardProductCategoriesNewRoute
   '/(dashboard)/products/$id': typeof dashboardProductsIdRoute
@@ -565,6 +584,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/orders/$id'
     | '/product-categories/$id'
     | '/product-categories/new'
     | '/products/$id'
@@ -584,6 +604,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/orders/$id'
     | '/product-categories/$id'
     | '/product-categories/new'
     | '/products/$id'
@@ -610,6 +631,7 @@ export interface FileRouteTypes {
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
     | '/(dashboard)/'
+    | '/(dashboard)/orders/$id'
     | '/(dashboard)/product-categories/$id'
     | '/(dashboard)/product-categories/new'
     | '/(dashboard)/products/$id'
@@ -687,6 +709,7 @@ export const routeTree = rootRoute
       "filePath": "(dashboard)/orders/route.tsx",
       "parent": "/(dashboard)",
       "children": [
+        "/(dashboard)/orders/$id",
         "/(dashboard)/orders/"
       ]
     },
@@ -734,6 +757,10 @@ export const routeTree = rootRoute
     "/(dashboard)/": {
       "filePath": "(dashboard)/index.tsx",
       "parent": "/(dashboard)"
+    },
+    "/(dashboard)/orders/$id": {
+      "filePath": "(dashboard)/orders/$id.tsx",
+      "parent": "/(dashboard)/orders"
     },
     "/(dashboard)/product-categories/$id": {
       "filePath": "(dashboard)/product-categories/$id.tsx",
