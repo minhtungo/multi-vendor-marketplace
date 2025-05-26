@@ -7,8 +7,8 @@ import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui/components/card';
 import { Label } from '@repo/ui/components/label';
+import { Pen } from '@repo/ui/icons';
 import { createFileRoute } from '@tanstack/react-router';
-import { Pen } from 'lucide-react';
 
 export const Route = createFileRoute('/(dashboard)/product-categories/$id')({
   component: RouteComponent,

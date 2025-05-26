@@ -1,7 +1,7 @@
 import { useUploadFile } from '@/features/upload/api/upload-file';
 import { formatBytes, useFileUpload } from '@/hooks/use-file-upload';
 import { Button } from '@repo/ui/components/button';
-import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from 'lucide-react';
+import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from '@repo/ui/icons';
 
 const maxSizeMB = 5;
 const maxSize = maxSizeMB * 1024 * 1024;

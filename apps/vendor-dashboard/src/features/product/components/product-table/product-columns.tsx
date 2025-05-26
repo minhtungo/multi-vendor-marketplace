@@ -8,8 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@repo/ui/components/dropdown-menu';
+import { MoreHorizontal } from '@repo/ui/icons';
 import type { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
 
 export const productTableColumns: ColumnDef<Product>[] = [

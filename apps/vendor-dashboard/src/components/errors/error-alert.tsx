@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from '@repo/ui/components/alert';
 import { Button } from '@repo/ui/components/button';
-import { Terminal } from 'lucide-react';
+import { Terminal } from '@repo/ui/icons';
 
 type ErrorAlertProps = React.ComponentProps<'div'> & {
   message: string;

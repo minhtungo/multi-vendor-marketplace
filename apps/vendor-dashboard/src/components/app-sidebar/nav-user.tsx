@@ -13,8 +13,8 @@ import {
   DropdownMenuTrigger,
 } from '@repo/ui/components/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@repo/ui/components/sidebar';
+import { LogOut, MoreVerticalIcon } from '@repo/ui/icons';
 import { Link } from '@tanstack/react-router';
-import { LogOut, MoreVerticalIcon } from 'lucide-react';
 
 export function NavUser() {
   const { data: vendor } = useVendor();

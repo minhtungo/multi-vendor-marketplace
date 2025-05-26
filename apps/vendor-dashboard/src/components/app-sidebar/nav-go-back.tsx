@@ -1,6 +1,6 @@
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@repo/ui/components/sidebar';
+import { ArrowLeftIcon } from '@repo/ui/icons';
 import { useRouter } from '@tanstack/react-router';
-import { ArrowLeftIcon } from 'lucide-react';
 
 type NavGoBackProps = React.ComponentProps<'div'>;
 

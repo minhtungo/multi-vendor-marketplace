@@ -1,12 +1,10 @@
-import { AuthButtons } from '@/components/auth-buttons';
 import { Logo } from '@/components/common/logo';
 import { MobileMenu } from '@/components/header/mobile-menu';
 import { SearchBar } from '@/components/header/search-bar';
 import { client } from '@/configs/client';
-import { menu } from '@/configs/menu';
-import { Button, buttonVariants } from '@repo/ui/components/button';
+import { Button } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/utils';
-import { Heart, ShoppingBag, User } from 'lucide-react';
+import { Heart, ShoppingBag, User } from '@repo/ui/icons';
 import Link from 'next/link';
 
 type HeaderProps = React.ComponentProps<'div'>;

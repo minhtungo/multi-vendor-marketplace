@@ -1,4 +1,4 @@
-import { Home, Percent, Settings, ShoppingBag, Tag, User, Users } from 'lucide-react';
+import { Home, Percent, Settings, ShoppingBag, Tag, User, Users } from '@repo/ui/icons';
 
 export const menu = {
   main: [
