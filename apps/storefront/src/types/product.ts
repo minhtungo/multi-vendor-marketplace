@@ -1,6 +1,1 @@
-export type Product = {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-};
+export type SortOptions = 'price_asc' | 'price_desc' | 'created_at';

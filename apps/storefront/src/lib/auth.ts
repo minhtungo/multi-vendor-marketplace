@@ -1,6 +1,5 @@
 import { env } from '@/configs/env';
 import { server } from '@/configs/server';
-import { tokenManager } from './token';
 
 let isRefreshing = false;
 let refreshPromise: Promise<void> | null = null;
@@ -27,7 +26,7 @@ export async function refreshToken(): Promise<void> {
 
       const data = await response.json();
       if (data.accessToken) {
-        await tokenManager.setToken(data.accessToken);
+        // TODO: Implement access token
       }
     } catch (error) {
       console.error('Token refresh failed:', error);

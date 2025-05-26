@@ -1,7 +1,6 @@
 import { env } from '@/configs/env';
 import { ApiResponse } from '@/types/api';
 import { refreshToken } from './auth';
-import { tokenManager } from './token';
 import { ApiError } from '@/lib/core/http/error';
 
 type RequestOptions = {
@@ -54,12 +53,11 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
     cookieHeader = await getServerCookies();
   }
 
-  const fullUrl = buildUrlWithParams(`${env.NEXT_PUBLIC_SERVER_URL}${url}`, params);
+  const fullUrl = buildUrlWithParams(`${env.NEXT_PUBLIC_SERVER_URL}/v1${url}`, params);
 
   try {
-    // Get the access token
-    const accessToken = await tokenManager.getToken();
-
+    // TODO: Implement access token
+    const accessToken = '';
     const response = await fetch(fullUrl, {
       method,
       headers: {
