@@ -10,9 +10,9 @@ export type Product = {
   quantity: number;
   status: 'draft' | 'published';
   type: 'physical' | 'digital';
-  images: string[] | null;
-  categories: string[] | null;
-  tags: string[] | null;
+  images: string[];
+  categories: string[];
+  tags: string[];
   createdAt: string;
   updatedAt: string;
 };

@@ -1,4 +1,5 @@
 import { DeleteProductDialog } from '@/features/product/components/product-table/delete-product-dialog';
+import { formatPrice } from '@/utils/price';
 import type { Order } from '@repo/types/order';
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
@@ -43,11 +44,7 @@ export const orderTableColumns: ColumnDef<Order>[] = [
     header: 'Total',
     cell: ({ row }) => {
       const amount = parseFloat(row.original.totalAmount.toString());
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount);
-      return <div className="font-medium">{formatted}</div>;
+      return <div className="font-medium">{formatPrice(amount)}</div>;
     },
   },
   {
