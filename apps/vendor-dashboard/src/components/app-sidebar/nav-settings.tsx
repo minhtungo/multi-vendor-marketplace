@@ -2,13 +2,11 @@ import { menu } from '@/configs/menu';
 import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@repo/ui/components/sidebar';
 import { Link } from '@tanstack/react-router';
 
-type NavMainProps = React.ComponentProps<'div'>;
-
-export function NavMain({}: NavMainProps) {
+export function NavSettings() {
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {menu.main.map((item) => (
+        {menu.settings.map((item) => (
           <SidebarMenuItem key={`${item.title}-nav-item`}>
             <SidebarMenuButton tooltip={item.title} asChild>
               <Link

@@ -1,7 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/(dashboard)/settings/')({
-  component: RouteComponent,
   head: () => ({
     meta: [
       {
@@ -9,8 +8,7 @@ export const Route = createFileRoute('/(dashboard)/settings/')({
       },
     ],
   }),
+  beforeLoad: async () => {
+    throw redirect({ to: '/settings/profile' });
+  },
 });
-
-function RouteComponent() {
-  return <div>Hello "/(dashboard)/settings/"!</div>;
-}

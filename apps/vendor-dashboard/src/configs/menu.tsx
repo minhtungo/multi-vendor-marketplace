@@ -3,52 +3,43 @@ import { Home, Percent, Settings, ShoppingBag, Tag, User, Users } from 'lucide-r
 export const menu = {
   main: [
     {
-      title: 'Shop',
-      href: '/shop',
+      title: 'Home',
+      href: '/',
+      icon: Home,
     },
     {
-      title: 'Offers',
-      href: '/offers',
+      title: 'Orders',
+      href: '/orders',
+      icon: ShoppingBag,
     },
     {
-      title: 'Become a seller',
-      href: '/become-a-seller',
+      title: 'Products',
+      href: '/products',
+      icon: Tag,
+    },
+    {
+      title: 'Product Categories',
+      href: '/product-categories',
+      icon: Tag,
+    },
+    {
+      title: 'Customers',
+      href: '/customers',
+      icon: Users,
+    },
+    {
+      title: 'Discounts',
+      href: '/discounts',
+      icon: Percent,
     },
   ],
-  dashboard: {
-    main: [
-      {
-        title: 'Home',
-        href: '/',
-        icon: Home,
-      },
-      {
-        title: 'Orders',
-        href: '/orders',
-        icon: ShoppingBag,
-      },
-      {
-        title: 'Products',
-        href: '/products',
-        icon: Tag,
-      },
-      {
-        title: 'Product Categories',
-        href: '/product-categories',
-        icon: Tag,
-      },
-      {
-        title: 'Customers',
-        href: '/customers',
-        icon: Users,
-      },
-      {
-        title: 'Discounts',
-        href: '/discounts',
-        icon: Percent,
-      },
-    ],
-  },
+  settings: [
+    {
+      title: 'Profile',
+      href: '/settings/profile',
+      icon: User,
+    },
+  ],
   userMenu: [
     {
       title: 'Profile',
@@ -59,20 +50,6 @@ export const menu = {
       title: 'Settings',
       href: '/settings',
       icon: Settings,
-    },
-  ],
-  footer: [
-    {
-      title: 'About',
-      href: '/about',
-    },
-    {
-      title: 'Features',
-      href: '/features',
-    },
-    {
-      title: 'Pricing',
-      href: '/pricing',
     },
   ],
 };
