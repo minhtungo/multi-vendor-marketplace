@@ -42,7 +42,7 @@ export class ProductRepository {
     return deletedProduct;
   }
 
-  public async getPaginatedProducts(page: number, limit: number, vendorId: string, trx: typeof db = this.dbInstance) {
+  public async getPaginatedProducts(page: number, limit: number, vendorId?: string, trx: typeof db = this.dbInstance) {
     const offset = (page - 1) * limit;
 
     const [{ value: total }] = await trx.select({ value: count() }).from(products);
@@ -50,7 +50,7 @@ export class ProductRepository {
     const items = await trx
       .select()
       .from(products)
-      .where(eq(products.vendorId, vendorId))
+      .where(vendorId ? eq(products.vendorId, vendorId) : undefined)
       .limit(limit)
       .offset(offset)
       .orderBy(products.createdAt);

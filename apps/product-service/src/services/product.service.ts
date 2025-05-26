@@ -26,7 +26,7 @@ class ProductService {
   public async getAllProducts(
     page: number,
     limit: number,
-    vendorId: string
+    vendorId?: string
   ): Promise<
     ServiceResponse<{
       products: Product[];

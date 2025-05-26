@@ -11,11 +11,11 @@ class ProductController {
     handleServiceResponse(serviceResponse, res);
   };
 
-  public getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
+  public getProducts = async (req: Request, res: Response, next: NextFunction) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
     const vendorId = req.user?.id;
-    const serviceResponse = await productService.getAllProducts(page, limit, vendorId!);
+    const serviceResponse = await productService.getAllProducts(page, limit, vendorId);
     handleServiceResponse(serviceResponse, res);
   };
 
@@ -29,7 +29,7 @@ class ProductController {
   public updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     const vendorId = req.user?.id;
     const productId = req.params.id;
-    const data = insertProductSchema.partial().parse(req.body);
+    const data = insertProductSchema.parse(req.body);
     const serviceResponse = await productService.updateProduct(productId, data, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };

@@ -1,7 +1,7 @@
 import { appConfig } from '@/configs/app';
 import { env } from '@/configs/env';
 import { proxyOptions, forwardUserContext } from '@/lib/proxy-options';
-import { validateToken, requireVendorRole } from '@/middlewares/auth';
+import { optionalAuth, requireAuth, requireVendorRole } from '@/middlewares/auth';
 import rateLimiter from '@/middlewares/rate-limiter';
 import { healthCheckRouter } from '@repo/server/routes';
 import { logger } from '@/utils/logger';
@@ -67,7 +67,7 @@ app.use(
 // Product service
 app.use(
   `/${appConfig.apiVersion}/products`,
-  validateToken,
+  optionalAuth,
   proxy(env.PRODUCT_SERVICE_URL, {
     ...proxyOptions,
     proxyReqOptDecorator: forwardUserContext,
@@ -81,7 +81,7 @@ app.use(
 // Product service
 app.use(
   `/${appConfig.apiVersion}/product-categories`,
-  validateToken,
+  optionalAuth,
   proxy(env.PRODUCT_SERVICE_URL, {
     ...proxyOptions,
     proxyReqOptDecorator: forwardUserContext,
@@ -95,7 +95,7 @@ app.use(
 // Payment service
 app.use(
   `/${appConfig.apiVersion}/payment`,
-  validateToken,
+  requireAuth,
   requireVendorRole,
   proxy(env.PAYMENT_SERVICE_URL, {
     ...proxyOptions,
@@ -110,7 +110,7 @@ app.use(
 // Order service
 app.use(
   `/${appConfig.apiVersion}/orders`,
-  validateToken,
+  requireAuth,
   proxy(env.ORDER_SERVICE_URL, {
     ...proxyOptions,
     proxyReqOptDecorator: forwardUserContext,
@@ -124,7 +124,7 @@ app.use(
 // Upload service
 app.use(
   `/${appConfig.apiVersion}/uploads`,
-  validateToken,
+  requireAuth,
   proxy(env.UPLOAD_SERVICE_URL, {
     ...proxyOptions,
     proxyReqOptDecorator: forwardUserContext,

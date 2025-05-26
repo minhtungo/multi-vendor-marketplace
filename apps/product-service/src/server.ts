@@ -4,7 +4,7 @@ import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
 import { productRouter } from '@/routes/product.route';
 import { productCategoryRouter } from '@/routes/product-category.route';
-import { extractUserContext, createRequestLogger, errorHandler } from '@repo/server/middlewares';
+import { createRequestLogger, errorHandler, optionalUserContext } from '@repo/server/middlewares';
 import { healthCheckRouter } from '@repo/server/routes';
 
 const app: Express = express();
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 // Request logging only in production
 env.isProduction && app.use(createRequestLogger(env));
 
-app.use(extractUserContext as RequestHandler);
+app.use(optionalUserContext as RequestHandler);
 
 // Routes
 app.use('/api/products/health-check', healthCheckRouter);

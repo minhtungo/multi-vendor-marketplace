@@ -2,9 +2,9 @@ import express, { RequestHandler, type Express } from 'express';
 
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
-import { createRequestLogger, errorHandler, extractUserContext } from '@repo/server/middlewares';
-import { uploadRouter } from '@/routes/upload.route';
 import { bucketPolicyRouter } from '@/routes/bucket-policy.route';
+import { uploadRouter } from '@/routes/upload.route';
+import { createRequestLogger, errorHandler, requireUserContext } from '@repo/server/middlewares';
 import { healthCheckRouter } from '@repo/server/routes';
 
 const app: Express = express();
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 // Request logging only in production
 env.isProduction && app.use(createRequestLogger(env));
 
-app.use(extractUserContext as RequestHandler);
+app.use(requireUserContext as RequestHandler);
 
 // Routes
 app.use('/api/uploads/health-check', healthCheckRouter);

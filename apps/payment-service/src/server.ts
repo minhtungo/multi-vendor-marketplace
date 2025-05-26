@@ -2,7 +2,7 @@ import express, { RequestHandler, type Express } from 'express';
 
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
-import { createRequestLogger, errorHandler, extractUserContext } from '@repo/server/middlewares';
+import { createRequestLogger, errorHandler, optionalUserContext } from '@repo/server/middlewares';
 import { paymentRouter } from '@/routes/payment.route';
 import { healthCheckRouter } from '@repo/server/routes';
 
@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 // Request logging only in production
 env.isProduction && app.use(createRequestLogger(env));
 
-app.use(extractUserContext as RequestHandler);
+app.use(optionalUserContext as RequestHandler);
 
 // Routes
 app.use('/api/payment/health-check', healthCheckRouter);

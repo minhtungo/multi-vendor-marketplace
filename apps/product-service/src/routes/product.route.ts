@@ -24,7 +24,7 @@ productRegistry.registerPath({
       id: z.string().uuid(),
     }),
   },
-  responses: createApiResponse(z.array(productSchema), 'Product retrieved successfully'),
+  responses: createApiResponse(productSchema, 'Product retrieved successfully'),
 });
 
 productRouter.get(
@@ -63,7 +63,7 @@ productRouter.get(
         .optional(),
     })
   ),
-  productController.getAllProducts
+  productController.getProducts
 );
 
 // Create Product Route

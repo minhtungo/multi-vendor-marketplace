@@ -1,18 +1,17 @@
-import { env } from '@/configs/env';
+import { extractAndVerifyToken } from '@/lib/token';
 import { logger } from '@/utils/logger';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { verify } from 'jsonwebtoken';
 
-const validateToken = ((req: Request, res: Response, next: NextFunction) => {
+const requireAuth = ((req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'No token provided', success: false });
   }
 
-  const token = authHeader.split(' ')[1];
+  const user = extractAndVerifyToken(authHeader);
 
-  if (!token) {
+  if (!user) {
     logger.warn('Access attempt without valid token!');
     return res.status(401).json({
       message: 'Authentication required',
@@ -20,24 +19,19 @@ const validateToken = ((req: Request, res: Response, next: NextFunction) => {
     });
   }
 
-  try {
-    const decoded = verify(token, env.JWT_SECRET) as {
-      sub: string;
-      email: string;
-      userId: string;
-      role: 'user' | 'vendor';
-    };
+  req.user = user;
+  next();
+}) as RequestHandler;
 
-    req.user = {
-      id: decoded.userId,
-      email: decoded.email,
-      role: decoded.role,
-    };
+const optionalAuth = ((req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  const user = extractAndVerifyToken(authHeader);
 
-    next();
-  } catch (error) {
-    return res.status(401).json({ message: 'Invalid token' });
+  if (user) {
+    req.user = user;
   }
+
+  next();
 }) as RequestHandler;
 
 const requireVendorRole = ((req: Request, res: Response, next: NextFunction) => {
@@ -50,4 +44,4 @@ const requireVendorRole = ((req: Request, res: Response, next: NextFunction) => 
   next();
 }) as RequestHandler;
 
-export { requireVendorRole, validateToken };
+export { optionalAuth, requireVendorRole, requireAuth };
