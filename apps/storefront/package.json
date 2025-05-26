@@ -19,12 +19,11 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.3",
     "sonner": "^2.0.3",
-    "zod": "^3.24.4",
-    "zustand": "^5.0.4"
+    "zod": "^3.24.4"
   },
   "devDependencies": {
-    "@repo/types": "workspace:*",
     "@eslint/eslintrc": "^3",
+    "@repo/types": "workspace:*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

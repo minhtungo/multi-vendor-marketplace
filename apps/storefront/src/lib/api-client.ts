@@ -1,9 +1,11 @@
 import { env } from '@/configs/env';
 import { ApiResponse } from '@/types/api';
-import { refreshToken } from './auth';
+import { renewToken } from '../api/auth/renew-token';
 import { ApiError } from '@/lib/core/http/error';
+import { buildUrlWithParams } from '@/utils/url';
+import { getServerCookies } from '@/utils/cookies';
 
-type RequestOptions = {
+export type RequestOptions = {
   method?: string;
   headers?: Record<string, string>;
   body?: any;
@@ -13,35 +15,6 @@ type RequestOptions = {
   next?: NextFetchRequestConfig;
   skipAuth?: boolean;
 };
-
-function buildUrlWithParams(url: string, params?: RequestOptions['params']): string {
-  if (!params) return url;
-  const filteredParams = Object.fromEntries(
-    Object.entries(params).filter(([, value]) => value !== undefined && value !== null)
-  );
-  if (Object.keys(filteredParams).length === 0) return url;
-  const queryString = new URLSearchParams(filteredParams as Record<string, string>).toString();
-  return `${url}?${queryString}`;
-}
-
-// Create a separate function for getting server-side cookies that can be imported where needed
-export function getServerCookies() {
-  if (typeof window !== 'undefined') return '';
-
-  // Dynamic import next/headers only on server-side
-  return import('next/headers').then(async ({ cookies }) => {
-    try {
-      const cookieStore = await cookies();
-      return cookieStore
-        .getAll()
-        .map((c) => `${c.name}=${c.value}`)
-        .join('; ');
-    } catch (error) {
-      console.error('Failed to access cookies:', error);
-      return '';
-    }
-  });
-}
 
 async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T> {
   const { method = 'GET', headers = {}, body, cookie, params, cache = 'no-store', next, skipAuth = false } = options;
@@ -53,7 +26,7 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
     cookieHeader = await getServerCookies();
   }
 
-  const fullUrl = buildUrlWithParams(`${env.NEXT_PUBLIC_SERVER_URL}/v1${url}`, params);
+  const fullUrl = buildUrlWithParams(`${env.SERVER_URL}/v1${url}`, params);
 
   try {
     // TODO: Implement access token
@@ -81,7 +54,7 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
       if (response.status === 401 && !skipAuth) {
         try {
           // Try to refresh the token
-          await refreshToken();
+          await renewToken();
 
           // Retry the original request
           return fetchApi<T>(url, { ...options, skipAuth: true });

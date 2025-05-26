@@ -4,7 +4,7 @@ import { server } from '@/configs/server';
 let isRefreshing = false;
 let refreshPromise: Promise<void> | null = null;
 
-export async function refreshToken(): Promise<void> {
+export async function renewToken(): Promise<void> {
   if (isRefreshing) {
     return refreshPromise!;
   }
@@ -12,7 +12,7 @@ export async function refreshToken(): Promise<void> {
   isRefreshing = true;
   refreshPromise = (async () => {
     try {
-      const response = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}${server.path.auth.renewToken}`, {
+      const response = await fetch(`${env.SERVER_URL}${server.path.auth.renewToken}`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -38,8 +38,4 @@ export async function refreshToken(): Promise<void> {
   })();
 
   return refreshPromise;
-}
-
-export function isAuthError(error: unknown): boolean {
-  return error instanceof Error && 'isAuthError' in error && (error as any).isAuthError === true;
 }
