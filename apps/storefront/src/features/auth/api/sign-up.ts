@@ -3,7 +3,6 @@ import { api } from '@/lib/api-client';
 import { commonValidations } from '@/lib/validations';
 import type { ApiResponse } from '@/types/api';
 import type { User } from '@/types/user';
-import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
 export const signUpSchema = z.object({
@@ -22,11 +21,5 @@ export async function signUpWithEmailAndPassWord(data: SignUpInput): Promise<
   const parsedData = signUpSchema.parse(data);
   return api.post(server.path.auth.signUp, parsedData, {
     skipAuth: true,
-  });
-}
-
-export function useSignUpMutation() {
-  return useMutation({
-    mutationFn: signUpWithEmailAndPassWord,
   });
 }

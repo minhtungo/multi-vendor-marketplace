@@ -2,7 +2,6 @@ import { server } from '@/configs/server';
 import { api } from '@/lib/api-client';
 import { commonValidations } from '@/lib/validations';
 import type { ApiResponse } from '@/types/api';
-import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
 export const resetPasswordSchema = z.object({
@@ -27,27 +26,7 @@ export async function verifyResetPasswordToken(token: string): Promise<
     isValid: boolean;
   }>
 > {
-  // return api.get(server.path.auth.resetPassword + '/verify/' + token, {
-  //   skipAuth: true,
-  // });
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-  return {
-    success: true,
-    status: 200,
-    message: 'Token is valid',
-    errors: [],
-    data: {
-      isValid: true,
-    },
-  };
-}
-
-export function useResetPasswordMutation() {
-  return useMutation({
-    mutationFn: resetPassword,
-    onSuccess: () => {},
-    onError: (error: Error) => {
-      console.error(error);
-    },
+  return api.get(server.path.auth.resetPassword + '/verify/' + token, {
+    skipAuth: true,
   });
 }

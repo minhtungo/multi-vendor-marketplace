@@ -1,6 +1,6 @@
 import { createProductSchema, useCreateProduct } from '@/features/product/api/create-product';
-import { ProductCategoriesSelection } from '@/features/product/components/product-categories-selection';
-import { UploadProductImages } from '@/features/product/components/upload-product-images';
+import { ProductCategoriesSelection } from '@/features/product/components/create-product-form/product-categories-selection';
+import { UploadProductImages } from '@/features/product/components/create-product-form/upload-product-images';
 import { normalizeServerError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@repo/ui/components/button';

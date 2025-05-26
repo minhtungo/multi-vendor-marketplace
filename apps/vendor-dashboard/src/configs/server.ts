@@ -27,6 +27,7 @@ export const server = {
     product: {
       root: `${productPath}`,
       create: `${productPath}`,
+      getAll: `${productPath}`,
     },
     productCategory: {
       root: `${productCategoryPath}`,

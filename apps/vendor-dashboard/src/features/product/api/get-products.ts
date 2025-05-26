@@ -22,7 +22,7 @@ export type GetProductsResponse = {
 };
 
 export async function getProducts(params: GetProductsInput): Promise<GetProductsResponse> {
-  const response = await privateApi.get(server.path.product.root, { params });
+  const response = await privateApi.get(server.path.product.getAll, { params });
   return response.data;
 }
 

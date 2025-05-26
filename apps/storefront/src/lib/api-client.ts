@@ -2,6 +2,7 @@ import { env } from '@/configs/env';
 import { ApiResponse } from '@/types/api';
 import { refreshToken } from './auth';
 import { tokenManager } from './token';
+import { ApiError } from '@/lib/core/http/error';
 
 type RequestOptions = {
   method?: string;
@@ -22,17 +23,6 @@ function buildUrlWithParams(url: string, params?: RequestOptions['params']): str
   if (Object.keys(filteredParams).length === 0) return url;
   const queryString = new URLSearchParams(filteredParams as Record<string, string>).toString();
   return `${url}?${queryString}`;
-}
-
-class ApiError extends Error {
-  constructor(
-    public status: number,
-    message: string,
-    public isAuthError: boolean = false
-  ) {
-    super(message);
-    this.name = 'ApiError';
-  }
 }
 
 // Create a separate function for getting server-side cookies that can be imported where needed

@@ -10,18 +10,15 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
-    "@radix-ui/react-slot": "^1.2.2",
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.4",
-    "@tanstack/react-query": "^5.75.5",
     "lucide-react": "^0.475.0",
     "next": "15.3.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.3",
     "sonner": "^2.0.3",
-    "table": "git+https://github.com/tanstack/react-table.git",
     "zod": "^3.24.4",
     "zustand": "^5.0.4"
   },
