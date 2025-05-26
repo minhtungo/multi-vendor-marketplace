@@ -1,7 +1,6 @@
 import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
-import type { ApiResponse } from '@/types/api';
-import type { Product } from '@/types/product';
+import type { Product } from '@repo/types/product';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
@@ -11,8 +10,9 @@ export const getProductSchema = z.object({
 
 export type GetProductInput = z.infer<typeof getProductSchema>;
 
-export async function getProduct({ id }: GetProductInput): Promise<ApiResponse<Product>> {
-  return privateApi.get(`${server.path.product.root}/${id}`);
+export async function getProduct({ id }: GetProductInput): Promise<Product> {
+  const response = await privateApi.get(`${server.path.product.root}/${id}`);
+  return response.data;
 }
 
 export function getProductQueryOptions(id: string) {
@@ -23,7 +23,7 @@ export function getProductQueryOptions(id: string) {
   };
 }
 
-export function useGetProductQuery(id: string) {
+export function useGetProduct(id: string) {
   return useQuery({
     ...getProductQueryOptions(id),
   });

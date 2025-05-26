@@ -2,7 +2,7 @@ import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
 import { getProductsQueryOptions } from '@/features/product/api/get-products';
 import type { ApiResponse } from '@/types/api';
-import type { Product } from '@/types/product';
+import type { Product } from '@repo/types/product';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 

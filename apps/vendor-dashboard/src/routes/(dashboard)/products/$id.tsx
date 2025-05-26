@@ -1,4 +1,5 @@
-import { getProductQueryOptions } from '@/features/product/api/get-product';
+import { getProductQueryOptions, useGetProduct } from '@/features/product/api/get-product';
+import { Card } from '@repo/ui/components/card';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/(dashboard)/products/$id')({
@@ -10,12 +11,14 @@ export const Route = createFileRoute('/(dashboard)/products/$id')({
   head: ({ loaderData }) => ({
     meta: [
       {
-        title: loaderData?.data.name,
+        title: loaderData?.name,
       },
     ],
   }),
 });
 
 function RouteComponent() {
-  return <div>Hello "/(dashboard)/products/$id"!</div>;
+  const { id } = Route.useParams();
+  const { data: product } = useGetProduct(id);
+  return <Card>{product?.name}</Card>;
 }
