@@ -31,8 +31,6 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
   try {
     const accessToken = await getAuthToken();
 
-    console.log('accessToken', accessToken);
-
     const response = await fetch(fullUrl, {
       method,
       headers: {

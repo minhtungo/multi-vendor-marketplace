@@ -4,5 +4,4 @@ export type User = {
   emailVerified: boolean;
   name: string;
   image: string;
-  plan: 'free' | 'pro';
 };
