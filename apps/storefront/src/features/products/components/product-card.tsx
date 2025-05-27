@@ -1,4 +1,4 @@
-import { type Product } from '@/types/product';
+import { type Product } from '@repo/types/product';
 
 type ProductCardProps = {
   product: Product;
@@ -8,8 +8,8 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <div className='group relative'>
       <img
-        alt={product.image}
-        src={product.image}
+        alt={product.images[0]}
+        src={product.images[0]}
         className='aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80'
       />
       <div className='mt-4 flex justify-between'>

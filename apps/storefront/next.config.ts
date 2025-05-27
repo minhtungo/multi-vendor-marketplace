@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    remotePatterns: [new URL('http://localhost:9000/**')],
+  },
 };
 
 export default nextConfig;
