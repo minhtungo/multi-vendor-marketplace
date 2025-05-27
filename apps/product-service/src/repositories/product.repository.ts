@@ -1,6 +1,6 @@
 import { db } from '@/db';
 import { type InsertProduct, products } from '@/db/schemas/products';
-import { eq, sql, count, desc } from 'drizzle-orm';
+import { eq, sql, count, desc, and } from 'drizzle-orm';
 
 export class ProductRepository {
   constructor(private readonly dbInstance = db) {}
@@ -71,10 +71,12 @@ export class ProductRepository {
         break;
     }
 
+    const whereConditions = [vendorId ? eq(products.vendorId, vendorId) : eq(products.status, 'published')];
+
     const items = await trx
       .select()
       .from(products)
-      .where(vendorId ? eq(products.vendorId, vendorId) : undefined)
+      .where(and(...whereConditions))
       .limit(limit)
       .offset(offset)
       .orderBy(orderBy);

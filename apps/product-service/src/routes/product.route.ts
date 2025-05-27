@@ -38,6 +38,7 @@ productRouter.get(
   productController.getProduct
 );
 
+//TODO: separate get products for vendor and public
 // Get All Products Route with Pagination
 productRegistry.registerPath({
   method: 'get',
