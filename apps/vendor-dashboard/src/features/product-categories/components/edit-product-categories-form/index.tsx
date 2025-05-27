@@ -1,7 +1,7 @@
 import {
-  updateProductCategorySchema,
-  useUpdateProductCategoryMutation,
-} from '@/features/product-categories/api/update-product-category';
+  editProductCategorySchema,
+  useEditProductCategory,
+} from '@/features/product-categories/api/edit-product-category';
 import { normalizeServerError } from '@/utils/error';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { ProductCategory } from '@repo/types/product-category';
@@ -22,8 +22,8 @@ type EditProductCategoriesFormProps = {
 
 export function EditProductCategoriesForm({ productCategory }: EditProductCategoriesFormProps) {
   const router = useRouter();
-  const form = useForm<z.infer<typeof updateProductCategorySchema>>({
-    resolver: zodResolver(updateProductCategorySchema),
+  const form = useForm<z.infer<typeof editProductCategorySchema>>({
+    resolver: zodResolver(editProductCategorySchema),
     defaultValues: {
       name: productCategory.name,
       slug: productCategory.slug,
@@ -32,12 +32,26 @@ export function EditProductCategoriesForm({ productCategory }: EditProductCatego
     },
   });
 
-  const { mutate: updateProductCategory, isPending, isSuccess, isError, error } = useUpdateProductCategoryMutation();
+  const {
+    mutate: updateProductCategory,
+    isPending,
+    isSuccess,
+    isError,
+    error,
+  } = useEditProductCategory(productCategory.id);
 
-  const onSubmit = (data: z.infer<typeof updateProductCategorySchema>) => {
-    updateProductCategory(data, {
-      onSuccess: () => {},
-    });
+  const onSubmit = (data: z.infer<typeof editProductCategorySchema>) => {
+    updateProductCategory(
+      {
+        id: productCategory.id,
+        data,
+      },
+      {
+        onSuccess: () => {
+          form.reset();
+        },
+      },
+    );
   };
 
   return (

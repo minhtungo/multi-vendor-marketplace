@@ -1,4 +1,5 @@
 import { CreateProductRequest, InsertProduct, Product } from '@/db/schemas/products';
+import { UpdateProductRequest } from '@/models/product.model';
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
@@ -80,7 +81,7 @@ class ProductService {
 
   public async updateProduct(
     productId: string,
-    data: Partial<InsertProduct>,
+    data: UpdateProductRequest,
     vendorId: string
   ): Promise<ServiceResponse<Product | null>> {
     try {
@@ -96,6 +97,8 @@ class ProductService {
 
       await this.productRepo.updateProduct(productId, {
         ...data,
+        price: data.price?.toString(),
+        compareAtPrice: data.compareAtPrice?.toString(),
         updatedAt: new Date(),
       });
 

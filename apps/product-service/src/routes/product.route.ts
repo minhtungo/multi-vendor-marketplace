@@ -114,15 +114,7 @@ productRegistry.registerPath({
       },
     },
   },
-  responses: createApiResponse(
-    z.object({
-      id: z.string().uuid(),
-      name: z.string(),
-      slug: z.string(),
-      price: z.number(),
-    }),
-    'Product updated successfully'
-  ),
+  responses: createApiResponse(z.null(), 'Product updated successfully'),
 });
 
 productRouter.put(

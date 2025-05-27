@@ -1,4 +1,4 @@
-import { type UpdateProductInput, useUpdateProductMutation } from '@/features/product/api/update-product';
+import { type EditProductInput, useEditProduct } from '@/features/product/api/edit-product';
 import { ProductCategoriesSelection } from '@/features/product/components/create-product-form/product-categories-selection';
 import { UploadProductImages } from '@/features/product/components/create-product-form/upload-product-images';
 import { normalizeServerError } from '@/utils/error';
@@ -19,8 +19,9 @@ type EditProductFormProps = {
 
 export function EditProductForm({ product, ...props }: EditProductFormProps) {
   const router = useRouter();
+  const { mutate: editProduct, isPending, isSuccess, isError, error } = useEditProduct(product.id);
 
-  const form = useForm<UpdateProductInput>({
+  const form = useForm<EditProductInput>({
     defaultValues: {
       ...product,
       description: product.description || '',
@@ -28,10 +29,8 @@ export function EditProductForm({ product, ...props }: EditProductFormProps) {
     },
   });
 
-  const { mutate: updateProduct, isPending, isSuccess, isError, error } = useUpdateProductMutation();
-
-  const onSubmit = (data: UpdateProductInput) => {
-    updateProduct(
+  const onSubmit = (data: EditProductInput) => {
+    editProduct(
       { id: product.id, data },
       {
         onSuccess: () => {},

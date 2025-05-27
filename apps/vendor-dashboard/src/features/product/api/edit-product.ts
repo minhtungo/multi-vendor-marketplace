@@ -1,10 +1,12 @@
 import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
+import { getProductQueryOptions } from '@/features/product/api/get-product';
+import { getProductsQueryOptions } from '@/features/product/api/get-products';
 import type { Product } from '@repo/types/product';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
-export const updateProductSchema = z.object({
+export const editProductSchema = z.object({
   name: z.string().min(1, 'Product name is required').max(255, 'Product name too long'),
   slug: z.string().min(1, 'Product slug is required').max(255, 'Product slug too long'),
   description: z.string().optional(),
@@ -19,16 +21,26 @@ export const updateProductSchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
-export type UpdateProductInput = z.infer<typeof updateProductSchema>;
+export type EditProductInput = z.infer<typeof editProductSchema>;
 
-export async function updateProduct(id: string, data: UpdateProductInput): Promise<Product> {
-  const parsedData = updateProductSchema.parse(data);
+export async function editProduct(id: string, data: EditProductInput): Promise<Product> {
+  const parsedData = editProductSchema.parse(data);
   const response = await privateApi.put(`${server.path.product.root}/${id}`, parsedData);
   return response.data;
 }
 
-export function useUpdateProductMutation() {
+export function useEditProduct(id: string) {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateProductInput }) => updateProduct(id, data),
+    mutationFn: ({ id, data }: { id: string; data: EditProductInput }) => editProduct(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getProductQueryOptions(id).queryKey });
+      queryClient.invalidateQueries({
+        queryKey: getProductsQueryOptions({
+          page: 1,
+          limit: 20,
+        }).queryKey,
+      });
+    },
   });
 }

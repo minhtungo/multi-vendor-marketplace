@@ -1,5 +1,6 @@
+import { EditProductSheet } from '@/features/product/components/edit-product-form/edit-product-sheet';
 import { DeleteProductDialog } from '@/features/product/components/product-table/delete-product-dialog';
-import type { ApiResponse } from '@repo/types/api';
+import type { Product } from '@repo/types/product';
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import {
@@ -65,6 +66,8 @@ export const productTableColumns: ColumnDef<Product>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+      const [showEditDialog, setShowEditDialog] = useState(false);
+
       return (
         <>
           <DropdownMenu>
@@ -77,7 +80,17 @@ export const productTableColumns: ColumnDef<Product>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuItem>View product</DropdownMenuItem>
               <DropdownMenuItem>Edit product</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>Delete product</DropdownMenuItem>
+              <EditProductSheet
+                triggerButton={<DropdownMenuItem>Edit product</DropdownMenuItem>}
+                product={row.original}
+              />
+              <DropdownMenuItem
+                onClick={() => {
+                  setShowDeleteDialog(true);
+                }}
+              >
+                Delete product
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <DeleteProductDialog productId={row.original.id} open={showDeleteDialog} onOpenChange={setShowDeleteDialog} />
