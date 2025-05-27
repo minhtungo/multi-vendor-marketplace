@@ -1,5 +1,5 @@
 import { env } from '@/configs/env';
-import { ApiResponse } from '@/types/api';
+import { ApiResponse } from '@repo/types/api';
 import { renewToken } from '../api/auth/renew-token';
 import { ApiError } from '@/lib/core/http/error';
 import { buildUrlWithParams } from '@/utils/url';

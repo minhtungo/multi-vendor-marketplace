@@ -2,7 +2,7 @@ import { menu } from '@/configs/menu';
 import { buttonVariants } from '@repo/ui/components/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@repo/ui/components/popover';
 import { cn } from '@repo/ui/lib/utils';
-import { Menu } from 'lucide-react';
+import { Menu } from '@repo/ui/icons';
 import Link from 'next/link';
 
 type MobileMenuProps = React.ComponentProps<'div'>;

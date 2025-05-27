@@ -31,6 +31,12 @@ export const ProductListResponseSchema = z.object({
   }),
 });
 
+export const GetProductsQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(20),
+  sort: z.enum(['price_asc', 'price_desc', 'latest_desc', 'latest_asc']).optional(),
+});
+
 // Type exports
 export type CreateProductRequest = z.infer<typeof CreateProductRequestSchema>;
 export type UpdateProductRequest = z.infer<typeof UpdateProductRequestSchema>;

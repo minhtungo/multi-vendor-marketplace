@@ -56,3 +56,28 @@ export const HERO_RIGHT_BANNERS = [
     buttonLink: '/top-deals',
   },
 ];
+
+export const sortOptions = ['price_asc', 'price_desc', 'latest_asc', 'latest_desc'] as const;
+export type SortOptions = 'price_asc' | 'price_desc' | 'latest_asc' | 'latest_desc';
+
+// export type SortFilterItem = {
+//   title: string;
+//   slug: string;
+//   sortKey: 'RELEVANCE' | 'BEST_SELLING' | 'CREATED_AT' | 'PRICE';
+//   reverse: boolean;
+// };
+
+// export const defaultSort: SortFilterItem = {
+//   title: 'Relevance',
+//   slug: 'latest-desc',
+//   sortKey: 'RELEVANCE',
+//   reverse: false,
+// };
+
+// export const sorting: SortFilterItem[] = [
+//   defaultSort,
+//   { title: 'Trending', slug: 'trending-desc', sortKey: 'BEST_SELLING', reverse: false }, // asc
+//   { title: 'Latest arrivals', slug: 'latest-desc', sortKey: 'CREATED_AT', reverse: true },
+//   { title: 'Price: Low to high', slug: 'price-asc', sortKey: 'PRICE', reverse: false }, // asc
+//   { title: 'Price: High to low', slug: 'price-desc', sortKey: 'PRICE', reverse: true },
+// ];

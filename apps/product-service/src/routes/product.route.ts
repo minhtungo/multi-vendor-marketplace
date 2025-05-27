@@ -4,6 +4,7 @@ import {
   CreateProductRequestSchema,
   UpdateProductRequestSchema,
   ProductListResponseSchema,
+  GetProductsQuerySchema,
 } from '@/models/product.model';
 import { createApiResponse } from '@repo/server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
@@ -43,10 +44,7 @@ productRegistry.registerPath({
   path: '/products',
   tags: ['Products'],
   request: {
-    query: z.object({
-      page: z.string().transform(Number).default('1'),
-      limit: z.string().transform(Number).default('20'),
-    }),
+    query: GetProductsQuerySchema,
   },
   responses: createApiResponse(ProductListResponseSchema, 'Products retrieved successfully'),
 });
@@ -55,12 +53,7 @@ productRouter.get(
   '/',
   validateRequest(
     z.object({
-      query: z
-        .object({
-          page: z.coerce.number().int().positive().default(1),
-          limit: z.coerce.number().int().positive().max(100).default(20),
-        })
-        .optional(),
+      query: GetProductsQuerySchema.optional(),
     })
   ),
   productController.getProducts
@@ -80,15 +73,7 @@ productRegistry.registerPath({
       },
     },
   },
-  responses: createApiResponse(
-    z.object({
-      id: z.string().uuid(),
-      name: z.string(),
-      slug: z.string(),
-      price: z.number(),
-    }),
-    'Product created successfully'
-  ),
+  responses: createApiResponse(z.null(), 'Product created successfully'),
 });
 
 productRouter.post(

@@ -14,8 +14,9 @@ class ProductController {
   public getProducts = async (req: Request, res: Response, next: NextFunction) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
+    const sort = req.query.sort as 'price_asc' | 'price_desc' | 'latest_desc' | 'latest_asc' | undefined;
     const vendorId = req.user?.id;
-    const serviceResponse = await productService.getAllProducts(page, limit, vendorId);
+    const serviceResponse = await productService.getAllProducts(page, limit, vendorId, sort);
     handleServiceResponse(serviceResponse, res);
   };
 

@@ -2,7 +2,7 @@
 
 import { Input } from '@repo/ui/components/input';
 import { cn } from '@repo/ui/lib/utils';
-import { LoaderCircleIcon, SearchIcon } from 'lucide-react';
+import { LoaderCircleIcon, SearchIcon } from '@repo/ui/icons';
 import { useEffect, useState } from 'react';
 
 type SearchBarProps = React.ComponentProps<'div'> & {

@@ -1,6 +1,8 @@
-import { ShopLayout } from '@/features/shop/components/shop-layout';
-import { SortOptions } from '@/types/product';
+import { SkeletonProductGrid } from '@/components/skeletons/skeleton-propduct-grid';
+import { PaginatedProducts } from '@/features/products/components/paginated-products';
+import { SortOptions } from '@/lib/constants';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Shop',
@@ -17,6 +19,12 @@ type Params = {
 export default async function ShopPage(props: Params) {
   const searchParams = props.searchParams;
   const { sortBy, page } = await searchParams;
+  const sort = sortBy || 'latest_desc';
+  const pageNumber = page ? parseInt(page) : 1;
 
-  return <ShopLayout sortBy={sortBy} page={page} />;
+  return (
+    <Suspense fallback={<SkeletonProductGrid />}>
+      <PaginatedProducts sort={sort} page={pageNumber} />
+    </Suspense>
+  );
 }

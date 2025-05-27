@@ -27,31 +27,22 @@ class ProductService {
   public async getAllProducts(
     page: number,
     limit: number,
-    vendorId?: string
+    vendorId?: string,
+    sort?: 'price_asc' | 'price_desc' | 'latest_desc' | 'latest_asc'
   ): Promise<
     ServiceResponse<{
       products: Product[];
-      pagination: {
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-      };
+      count: number;
     } | null>
   > {
     try {
-      const result = await this.productRepo.getPaginatedProducts(page, limit, vendorId);
+      const result = await this.productRepo.getPaginatedProducts(page, limit, vendorId, sort);
 
       return ServiceResponse.success(
         'Products retrieved successfully',
         {
           products: result.items,
-          pagination: {
-            total: result.total,
-            page: result.page,
-            limit: result.limit,
-            totalPages: result.totalPages,
-          },
+          count: result.total,
         },
         HTTP_STATUS_CODES.OK
       );
