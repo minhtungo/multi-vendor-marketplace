@@ -1,4 +1,4 @@
-import { Home, Percent, Settings, ShoppingBag, Tag, User, Users } from '@repo/ui/icons';
+import { Home, Percent, ShoppingBag, Tag, User, Users } from '@repo/ui/icons';
 
 export const menu = {
   main: [
@@ -43,13 +43,8 @@ export const menu = {
   userMenu: [
     {
       title: 'Profile',
-      href: '/profile',
+      href: '/settings/profile',
       icon: User,
-    },
-    {
-      title: 'Settings',
-      href: '/settings',
-      icon: Settings,
     },
   ],
 };
