@@ -1,5 +1,6 @@
 import { env } from '@/configs/env';
 import { server } from '@/configs/server';
+import { setAuthToken } from '@/lib/cookies';
 
 let isRefreshing = false;
 let refreshPromise: Promise<void> | null = null;
@@ -12,7 +13,7 @@ export async function renewToken(): Promise<void> {
   isRefreshing = true;
   refreshPromise = (async () => {
     try {
-      const response = await fetch(`${env.SERVER_URL}${server.path.auth.renewToken}`, {
+      const response = await fetch(`${env.SERVER_URL}/v1${server.path.auth.renewToken}`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -20,17 +21,14 @@ export async function renewToken(): Promise<void> {
         },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to refresh token');
-      }
-
-      const data = await response.json();
-      if (data.accessToken) {
-        // TODO: Implement access token
+      if (response.ok) {
+        const data = await response.json();
+        if (data.accessToken) {
+          await setAuthToken(data.accessToken);
+        }
       }
     } catch (error) {
       console.error('Token refresh failed:', error);
-      throw error;
     } finally {
       isRefreshing = false;
       refreshPromise = null;

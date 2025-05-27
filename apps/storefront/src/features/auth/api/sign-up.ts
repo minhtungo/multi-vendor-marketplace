@@ -1,25 +1,48 @@
+'use server';
+
 import { server } from '@/configs/server';
 import { api } from '@/lib/api-client';
-import { commonValidations } from '@/lib/validations';
-import { type ApiResponse } from '@repo/types/api';
 import { type User } from '@repo/types/user';
-import { z } from 'zod';
+import { ApiError } from 'next/dist/server/api-utils';
 
-export const signUpSchema = z.object({
-  email: commonValidations.email,
-  password: commonValidations.password,
-});
+export async function signUp(_prevState: unknown, formData: FormData) {
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  const confirmPassword = formData.get('confirm_password') as string;
 
-export type SignUpInput = z.infer<typeof signUpSchema>;
+  // Validate password confirmation
+  if (password !== confirmPassword) {
+    return {
+      data: null,
+      success: false,
+      message: 'Passwords do not match',
+    };
+  }
 
-export async function signUpWithEmailAndPassWord(data: SignUpInput): Promise<
-  ApiResponse<{
-    accessToken: string;
-    user: User;
-  }>
-> {
-  const parsedData = signUpSchema.parse(data);
-  return api.post(server.path.auth.signUp, parsedData, {
-    skipAuth: true,
-  });
+  try {
+    const response = await api.post<{
+      accessToken: string;
+      user: User;
+    }>(
+      server.path.auth.signUp,
+      { email, password },
+      {
+        skipAuth: true,
+      }
+    );
+
+    return {
+      data: response.data,
+      success: true,
+      message: response.message,
+    };
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return {
+        data: null,
+        success: false,
+        message: error.message,
+      };
+    }
+  }
 }

@@ -1,24 +1,41 @@
+'use server';
+
+import { client } from '@/configs/client';
 import { server } from '@/configs/server';
 import { api } from '@/lib/api-client';
-import { commonValidations } from '@/lib/validations';
-import { type ApiResponse } from '@repo/types/api';
+import { setAuthToken } from '@/lib/cookies';
 import { type User } from '@repo/types/user';
-import { z } from 'zod';
+import { ApiError } from 'next/dist/server/api-utils';
+import { redirect } from 'next/navigation';
 
-export const signInSchema = z.object({
-  email: commonValidations.email,
-  password: commonValidations.password,
-});
+export async function signIn(_prevState: unknown, formData: FormData) {
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-export type SignInInput = z.infer<typeof signInSchema>;
+  try {
+    const response = await api.post<{
+      accessToken: string;
+      user: User;
+    }>(
+      server.path.auth.signIn,
+      { email, password },
+      {
+        skipAuth: true,
+      }
+    );
 
-export async function signInWithEmailAndPassWord(data: SignInInput): Promise<
-  ApiResponse<{
-    accessToken: string;
-    user: User;
-  }>
-> {
-  return api.post(server.path.auth.signIn, data, {
-    skipAuth: true,
-  });
+    if (response.data && response.data.accessToken) {
+      await setAuthToken(response.data.accessToken);
+    }
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return {
+        data: null,
+        success: false,
+        message: error.message,
+      };
+    }
+  }
+
+  redirect(client.path.home);
 }

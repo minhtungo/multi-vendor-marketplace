@@ -1,9 +1,9 @@
 import { env } from '@/configs/env';
-import { ApiResponse } from '@repo/types/api';
-import { renewToken } from '../api/auth/renew-token';
+import { getAuthToken } from '@/lib/cookies';
 import { ApiError } from '@/lib/core/http/error';
-import { buildUrlWithParams } from '@/utils/url';
 import { getServerCookies } from '@/utils/cookies';
+import { buildUrlWithParams } from '@/utils/url';
+import { ApiResponse } from '@repo/types/api';
 
 export type RequestOptions = {
   method?: string;
@@ -29,8 +29,10 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
   const fullUrl = buildUrlWithParams(`${env.SERVER_URL}/v1${url}`, params);
 
   try {
-    // TODO: Implement access token
-    const accessToken = '';
+    const accessToken = await getAuthToken();
+
+    console.log('accessToken', accessToken);
+
     const response = await fetch(fullUrl, {
       method,
       headers: {
@@ -46,28 +48,15 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
       next,
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      const message = errorData.message || response.statusText;
+    //TODO: Handle 401 error
+    // if (!response.ok) {
+    //   if (response.status === 401 && !skipAuth) {
+    //     await renewToken();
+    //     return fetchApi<T>(url, { ...options, skipAuth: true });
+    //   }
+    // }
 
-      // Check if it's an authentication error (401) and not already trying to refresh
-      if (response.status === 401 && !skipAuth) {
-        try {
-          // Try to refresh the token
-          await renewToken();
-
-          // Retry the original request
-          return fetchApi<T>(url, { ...options, skipAuth: true });
-        } catch (refreshError) {
-          // If refresh fails, throw the original error
-          throw new ApiError(response.status, message, true);
-        }
-      }
-
-      throw new ApiError(response.status, message, response.status === 401);
-    }
-
-    return response.json();
+    return await response.json();
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;

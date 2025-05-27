@@ -1,5 +1,4 @@
-const basePath = '/v1';
-const authPath = `${basePath}/auth/user`;
+const authPath = `/auth/user`;
 
 export const server = {
   path: {
@@ -13,7 +12,7 @@ export const server = {
       me: `${authPath}/me`,
     },
     user: {
-      me: `${basePath}/user/me`,
+      me: `${authPath}/me`,
     },
   },
 };

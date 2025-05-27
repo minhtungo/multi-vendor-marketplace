@@ -1,5 +1,5 @@
 import { Button } from '@repo/ui/components/button';
-import { Google } from '@repo/ui/components/icons/google';
+import { Google } from '@repo/ui/icons';
 import { cn } from '@repo/ui/lib/utils';
 import type { ComponentProps } from 'react';
 
