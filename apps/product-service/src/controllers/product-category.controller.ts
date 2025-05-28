@@ -1,4 +1,4 @@
-import { insertProductCategorySchema } from '@/db/schemas/product-categories';
+import { insertProductCategorySchema } from '@/db/schemas/categories';
 import { productCategoryService } from '@/services/product-category.service';
 import { handleServiceResponse } from '@repo/server/lib';
 import type { NextFunction, Request, Response } from 'express';

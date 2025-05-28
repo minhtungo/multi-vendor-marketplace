@@ -1,5 +1,5 @@
 import { productCategoryController } from '@/controllers/product-category.controller';
-import { insertProductCategorySchema, productCategorySchema } from '@/db/schemas/product-categories';
+import { insertProductCategorySchema, productCategorySchema } from '@/db/schemas/categories';
 import { createApiResponse } from '@repo/server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';

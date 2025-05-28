@@ -1,5 +1,5 @@
 import { db } from '@/db';
-import { productCategories, type InsertProductCategory } from '@/db/schemas/product-categories';
+import { categories, type InsertProductCategory } from '@/db/schemas/categories';
 import { eq } from 'drizzle-orm';
 
 export class ProductCategoryRepository {
@@ -13,7 +13,7 @@ export class ProductCategoryRepository {
 
   public async createCategory(category: InsertProductCategory, trx: typeof db = this.dbInstance) {
     const [newCategory] = await trx
-      .insert(productCategories)
+      .insert(categories)
       .values({ ...category })
       .returning();
 
@@ -22,7 +22,7 @@ export class ProductCategoryRepository {
 
   public async getCategoryById(categoryId: string, trx: typeof db = this.dbInstance) {
     return this.dbInstance.query.productCategories.findFirst({
-      where: eq(productCategories.id, categoryId),
+      where: eq(categories.id, categoryId),
     });
   }
 
@@ -32,25 +32,22 @@ export class ProductCategoryRepository {
     trx: typeof db = this.dbInstance
   ) {
     const [updatedCategory] = await trx
-      .update(productCategories)
+      .update(categories)
       .set({ ...category, updatedAt: new Date() })
-      .where(eq(productCategories.id, categoryId))
+      .where(eq(categories.id, categoryId))
       .returning();
 
     return updatedCategory;
   }
 
   public async deleteCategory(categoryId: string, trx: typeof db = this.dbInstance) {
-    const [deletedCategory] = await trx
-      .delete(productCategories)
-      .where(eq(productCategories.id, categoryId))
-      .returning();
+    const [deletedCategory] = await trx.delete(categories).where(eq(categories.id, categoryId)).returning();
 
     return deletedCategory;
   }
 
   public async deleteAllCategories(trx: typeof db = this.dbInstance) {
-    const deletedCategories = await trx.delete(productCategories).returning();
+    const deletedCategories = await trx.delete(categories).returning();
 
     return deletedCategories;
   }
