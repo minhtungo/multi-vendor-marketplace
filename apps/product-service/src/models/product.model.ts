@@ -6,12 +6,12 @@ extendZodWithOpenApi(z);
 
 export const createProductRequestSchema = z.object({
   name: z.string().min(1, 'Product name is required').max(255, 'Product name too long'),
-  slug: z.string().min(1, 'Product slug is required').max(255, 'Product slug too long'),
+  handle: z.string().min(1, 'Product handle is required').max(255, 'Product handle too long'),
   description: z.string().optional(),
   sku: z.string().min(1, 'SKU is required').max(100, 'SKU too long'),
   price: z.coerce.number().positive('Price must be positive'),
   compareAtPrice: z.coerce.number().positive('Compare at price must be positive').optional(),
-  quantity: z.coerce.number().int().min(0, 'Quantity must be non-negative'),
+  stock: z.coerce.number().int().min(0, 'Stock must be non-negative'),
   status: z.enum(['published', 'draft']).default('draft'),
   type: z.enum(['physical', 'digital']).default('physical'),
   images: z.array(z.string().url('Invalid image URL')).optional(),
@@ -47,7 +47,7 @@ export const getProductQuerySchema = z
   });
 
 // Type exports
-export type CreateProductRequest = z.infer<typeof createProductRequestSchema>;
-export type UpdateProductRequest = z.infer<typeof updateProductRequestSchema>;
+export type CreateProduct = z.infer<typeof createProductRequestSchema>;
+export type UpdateProduct = z.infer<typeof updateProductRequestSchema>;
 export type ProductListResponse = z.infer<typeof productListResponseSchema>;
 export type GetProductQuery = z.infer<typeof getProductQuerySchema>;

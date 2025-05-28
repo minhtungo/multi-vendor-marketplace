@@ -4,8 +4,8 @@ import { clientPaths } from '@/configs/paths';
 import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
 import { setAuthToken } from '@/lib/cookies';
+import { ApiError } from '@/lib/core/http/error';
 import { type User } from '@repo/types/user';
-import { ApiError } from 'next/dist/server/api-utils';
 import { redirect } from 'next/navigation';
 
 export async function signIn(_prevState: unknown, formData: FormData) {

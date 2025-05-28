@@ -1,5 +1,5 @@
-import { AuthContainer } from '@/features/auth/components/common/auth-container';
-import { SignInForm } from '@/features/auth/components/sign-in-form';
+import { AuthContainer } from '@/modules/auth/components/common/auth-container';
+import { SignInForm } from '@/modules/auth/components/sign-in-form';
 import { clientPaths } from '@/configs/paths';
 
 const SignIn = () => {

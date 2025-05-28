@@ -14,7 +14,7 @@ export const productCategories = pgTable('product_categories', {
 });
 
 export const productCategoryRelations = pgTable('product_category_relations', {
-  productId: uuid('product_id')
+  productId: text('product_id')
     .notNull()
     .references(() => products.id, { onDelete: 'cascade' }),
   categoryId: uuid('category_id')

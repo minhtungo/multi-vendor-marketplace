@@ -1,6 +1,6 @@
-import { verifyResetPasswordToken } from '@/features/auth/api/reset-password';
-import { AuthContainer } from '@/features/auth/components/common/auth-container';
-import { ResetPasswordContainer } from '@/features/auth/components/reset-password-form';
+import { verifyResetPasswordToken } from '@/server/auth/reset-password';
+import { AuthContainer } from '@/modules/auth/components/common/auth-container';
+import { ResetPasswordContainer } from '@/modules/auth/components/reset-password-form';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { Suspense } from 'react';
 

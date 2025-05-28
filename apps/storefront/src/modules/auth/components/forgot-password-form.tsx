@@ -2,7 +2,7 @@
 
 import { SubmitButton } from '@/components/common/submit-button';
 import { clientPaths } from '@/configs/paths';
-import { forgotPassword } from '@/features/auth/api/forgot-password';
+import { forgotPassword } from '@/server/auth/forgot-password';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { Input } from '@repo/ui/components/input';
 import { Label } from '@repo/ui/components/label';

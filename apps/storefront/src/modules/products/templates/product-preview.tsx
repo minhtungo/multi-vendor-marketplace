@@ -1,15 +1,19 @@
 import { Product } from '@repo/types/product';
-import { Card, CardContent, CardHeader } from '@repo/ui/components/card';
-import { Breadcrumb } from '@repo/ui/components/breadcrumb';
-import { Heart, Minus, Plus, RotateCcw, Share2, Shield, ShoppingCart, Star, Truck } from '@repo/ui/icons';
-import Image from 'next/image';
 import { Button } from '@repo/ui/components/button';
+import { Heart, Minus, Plus, RotateCcw, Share2, Shield, ShoppingCart, Truck } from '@repo/ui/icons';
+import Image from 'next/image';
 
 type ProductPreviewProps = {
   product: Product;
 };
 
 export function ProductPreview({ product }: ProductPreviewProps) {
+  console.log(product);
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+
   return (
     <div className='container mx-auto px-4 py-8'>
       {/* <Breadcrumb
@@ -19,7 +23,6 @@ export function ProductPreview({ product }: ProductPreviewProps) {
           { label: product.name },
         ]}
       /> */}
-
       <div className='grid lg:grid-cols-2 gap-12 mt-8'>
         {/* Product Images */}
         <div className='space-y-4'>
@@ -93,7 +96,6 @@ export function ProductPreview({ product }: ProductPreviewProps) {
           </div>
         </div>
       </div>
-
       {/* <div className='mt-16'>
         <RelatedProducts currentProductId={product.id} category={product.category} />
       </div> */}

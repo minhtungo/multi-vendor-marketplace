@@ -1,15 +1,15 @@
-import { CreateProductRequest, InsertProduct, Product } from '@/db/schemas/products';
-import { GetProductQuery, getProductQuerySchema, UpdateProductRequest } from '@/models/product.model';
+import { Product } from '@/db/schemas/products';
+import { CreateProduct, GetProductQuery, UpdateProduct } from '@/models/product.model';
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
 import { ServiceResponse } from '@repo/server/lib';
-import z from 'zod';
 
 class ProductService {
   constructor(private readonly productRepo = productRepository) {}
 
   public async getProduct(data: GetProductQuery): Promise<ServiceResponse<Product | null>> {
+    console.log(data);
     try {
       const product = data.id
         ? await this.productRepo.getProductById(data.id)
@@ -56,7 +56,7 @@ class ProductService {
     }
   }
 
-  public async createProduct(data: CreateProductRequest, vendorId: string): Promise<ServiceResponse<Product | null>> {
+  public async createProduct(data: CreateProduct, vendorId: string): Promise<ServiceResponse<Product | null>> {
     try {
       await this.productRepo.createProduct({
         ...data,
@@ -75,7 +75,7 @@ class ProductService {
 
   public async updateProduct(
     productId: string,
-    data: UpdateProductRequest,
+    data: UpdateProduct,
     vendorId: string
   ): Promise<ServiceResponse<Product | null>> {
     try {

@@ -8,11 +8,11 @@ import { Label } from '@repo/ui/components/label';
 import { Package, Pen } from '@repo/ui/icons';
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/(dashboard)/products/$id')({
+export const Route = createFileRoute('/(dashboard)/products/$handle')({
   component: RouteComponent,
   loader: async ({ context, params }) => {
-    const { id } = params;
-    return context.queryClient.ensureQueryData(getProductQueryOptions(id));
+    const { handle } = params;
+    return context.queryClient.ensureQueryData(getProductQueryOptions(handle));
   },
   head: ({ loaderData }) => ({
     meta: [
@@ -24,8 +24,12 @@ export const Route = createFileRoute('/(dashboard)/products/$id')({
 });
 
 function RouteComponent() {
-  const { id } = Route.useParams();
-  const { data: product } = useGetProduct(id);
+  const { handle } = Route.useParams();
+  const { data: product } = useGetProduct(handle);
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -61,7 +65,7 @@ function RouteComponent() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="slug">URL Slug</Label>
-            <p className="text-muted-foreground text-sm">{product.slug}</p>
+            <p className="text-muted-foreground text-sm">{product.handle}</p>
           </div>
 
           <div className="space-y-2">
@@ -94,7 +98,7 @@ function RouteComponent() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="quantity">Quantity</Label>
-              <p className="text-muted-foreground text-sm">{product.quantity} in stock</p>
+              <p className="text-muted-foreground text-sm">{product.stock} in stock</p>
             </div>
           </div>
         </CardContent>

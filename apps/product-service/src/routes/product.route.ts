@@ -30,7 +30,7 @@ productRegistry.registerPath({
   responses: createApiResponse(productSchema, 'Product retrieved successfully'),
 });
 
-productRouter.get(`/:id`, validateRequest(getProductQuerySchema), productController.getProduct);
+productRouter.get(`/list`, validateRequest(z.object({ query: getProductQuerySchema })), productController.getProduct);
 
 //TODO: separate get products for vendor and public
 // Get All Products Route with Pagination

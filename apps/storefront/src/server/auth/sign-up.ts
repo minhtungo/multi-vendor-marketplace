@@ -2,8 +2,8 @@
 
 import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
+import { ApiError } from '@/lib/core/http/error';
 import { type User } from '@repo/types/user';
-import { ApiError } from 'next/dist/server/api-utils';
 
 export async function signUp(_prevState: unknown, formData: FormData) {
   const email = formData.get('email') as string;

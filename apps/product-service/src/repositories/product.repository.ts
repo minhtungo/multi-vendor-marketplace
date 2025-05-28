@@ -13,7 +13,7 @@ export class ProductRepository {
 
   public async getProductByHandle(handle: string, trx: typeof db = this.dbInstance) {
     return this.dbInstance.query.products.findFirst({
-      where: eq(products.handle, handle),
+      where: eq(products.handle, handle.trim()),
     });
   }
 

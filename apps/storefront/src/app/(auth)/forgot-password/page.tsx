@@ -1,5 +1,5 @@
-import { AuthContainer } from '@/features/auth/components/common/auth-container';
-import { ForgotPasswordForm } from '@/features/auth/components/forgot-password-form';
+import { AuthContainer } from '@/modules/auth/components/common/auth-container';
+import { ForgotPasswordForm } from '@/modules/auth/components/forgot-password-form';
 
 const ForgotPassword = () => {
   return (

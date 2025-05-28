@@ -1,17 +1,16 @@
-import { insertProductSchema } from '@/db/schemas/products';
 import { createProductRequestSchema, getProductQuerySchema, updateProductRequestSchema } from '@/models/product.model';
 import { productService } from '@/services/product.service';
 import { handleServiceResponse } from '@repo/server/lib';
-import type { NextFunction, Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 class ProductController {
-  public getProduct = async (req: Request, res: Response, next: NextFunction) => {
+  public getProduct = async (req: Request, res: Response) => {
     const data = getProductQuerySchema.parse(req.query);
     const serviceResponse = await productService.getProduct(data);
     handleServiceResponse(serviceResponse, res);
   };
 
-  public getProducts = async (req: Request, res: Response, next: NextFunction) => {
+  public getProducts = async (req: Request, res: Response) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
     const sort = req.query.sort as 'price_asc' | 'price_desc' | 'latest_desc' | 'latest_asc' | undefined;
@@ -20,14 +19,14 @@ class ProductController {
     handleServiceResponse(serviceResponse, res);
   };
 
-  public createProduct = async (req: Request, res: Response, next: NextFunction) => {
+  public createProduct = async (req: Request, res: Response) => {
     const vendorId = req.user?.id;
     const data = createProductRequestSchema.parse(req.body);
     const serviceResponse = await productService.createProduct(data, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };
 
-  public updateProduct = async (req: Request, res: Response, next: NextFunction) => {
+  public updateProduct = async (req: Request, res: Response) => {
     const vendorId = req.user?.id;
     const productId = req.params.id;
     const data = updateProductRequestSchema.parse(req.body);
@@ -35,13 +34,13 @@ class ProductController {
     handleServiceResponse(serviceResponse, res);
   };
 
-  public deleteAllProducts = async (req: Request, res: Response, next: NextFunction) => {
+  public deleteAllProducts = async (req: Request, res: Response) => {
     const vendorId = req.user?.id;
     const serviceResponse = await productService.deleteAllProducts(vendorId!);
     handleServiceResponse(serviceResponse, res);
   };
 
-  public deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+  public deleteProduct = async (req: Request, res: Response) => {
     const productId = req.params.id;
     const vendorId = req.user?.id;
 

@@ -8,12 +8,12 @@ import { z } from 'zod';
 
 export const createProductSchema = z.object({
   name: z.string().min(1),
-  slug: z.string().min(1),
+  handle: z.string().min(1),
   description: z.string().optional(),
   sku: z.string().min(1),
   price: z.number(),
   compareAtPrice: z.number().optional(),
-  quantity: z.number(),
+  stock: z.number(),
   status: z.enum(['draft', 'published']),
   type: z.enum(['physical', 'digital']),
   images: z.array(z.string()),

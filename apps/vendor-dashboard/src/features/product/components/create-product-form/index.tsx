@@ -22,10 +22,10 @@ const defaultFormValues: z.infer<typeof createProductSchema> = {
   images: [],
   categories: [],
   tags: [],
-  quantity: 0,
+  stock: 0,
   status: 'draft',
   type: 'physical',
-  slug: '',
+  handle: '',
   compareAtPrice: 0,
 };
 
@@ -67,12 +67,12 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
           />
           <FormField
             control={form.control}
-            name="slug"
+            name="handle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Slug</FormLabel>
+                <FormLabel>Handle</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="product-slug" />
+                  <Input {...field} placeholder="product-handle" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -212,10 +212,10 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
           <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="quantity"
+              name="stock"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Quantity</FormLabel>
+                  <FormLabel>Stock</FormLabel>
                   <FormControl>
                     <Input type="number" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
                   </FormControl>

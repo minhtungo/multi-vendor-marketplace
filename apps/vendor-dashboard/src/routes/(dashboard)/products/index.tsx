@@ -31,7 +31,7 @@ function RouteComponent() {
     <DataTable
       columns={productTableColumns}
       onRowClick={(row) => {
-        navigate({ to: `/products/${row.id}` });
+        navigate({ to: `/products/${row.handle}` });
       }}
       data={data?.products ?? []}
       tableActions={

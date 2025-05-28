@@ -33,7 +33,7 @@ import { Route as PaymentConnectReturnImport } from './routes/payment/connect/re
 import { Route as PaymentConnectRefreshImport } from './routes/payment/connect/refresh'
 import { Route as dashboardSettingsProfileImport } from './routes/(dashboard)/settings/profile'
 import { Route as dashboardProductsNewImport } from './routes/(dashboard)/products/new'
-import { Route as dashboardProductsIdImport } from './routes/(dashboard)/products/$id'
+import { Route as dashboardProductsHandleImport } from './routes/(dashboard)/products/$handle'
 import { Route as dashboardProductCategoriesNewImport } from './routes/(dashboard)/product-categories/new'
 import { Route as dashboardProductCategoriesIdImport } from './routes/(dashboard)/product-categories/$id'
 import { Route as dashboardOrdersIdImport } from './routes/(dashboard)/orders/$id'
@@ -172,9 +172,9 @@ const dashboardProductsNewRoute = dashboardProductsNewImport.update({
   getParentRoute: () => dashboardProductsRouteRoute,
 } as any)
 
-const dashboardProductsIdRoute = dashboardProductsIdImport.update({
-  id: '/$id',
-  path: '/$id',
+const dashboardProductsHandleRoute = dashboardProductsHandleImport.update({
+  id: '/$handle',
+  path: '/$handle',
   getParentRoute: () => dashboardProductsRouteRoute,
 } as any)
 
@@ -307,11 +307,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardProductCategoriesNewImport
       parentRoute: typeof dashboardProductCategoriesRouteImport
     }
-    '/(dashboard)/products/$id': {
-      id: '/(dashboard)/products/$id'
-      path: '/$id'
-      fullPath: '/products/$id'
-      preLoaderRoute: typeof dashboardProductsIdImport
+    '/(dashboard)/products/$handle': {
+      id: '/(dashboard)/products/$handle'
+      path: '/$handle'
+      fullPath: '/products/$handle'
+      preLoaderRoute: typeof dashboardProductsHandleImport
       parentRoute: typeof dashboardProductsRouteImport
     }
     '/(dashboard)/products/new': {
@@ -453,14 +453,14 @@ const dashboardProductCategoriesRouteRouteWithChildren =
   )
 
 interface dashboardProductsRouteRouteChildren {
-  dashboardProductsIdRoute: typeof dashboardProductsIdRoute
+  dashboardProductsHandleRoute: typeof dashboardProductsHandleRoute
   dashboardProductsNewRoute: typeof dashboardProductsNewRoute
   dashboardProductsIndexRoute: typeof dashboardProductsIndexRoute
 }
 
 const dashboardProductsRouteRouteChildren: dashboardProductsRouteRouteChildren =
   {
-    dashboardProductsIdRoute: dashboardProductsIdRoute,
+    dashboardProductsHandleRoute: dashboardProductsHandleRoute,
     dashboardProductsNewRoute: dashboardProductsNewRoute,
     dashboardProductsIndexRoute: dashboardProductsIndexRoute,
   }
@@ -525,7 +525,7 @@ export interface FileRoutesByFullPath {
   '/orders/$id': typeof dashboardOrdersIdRoute
   '/product-categories/$id': typeof dashboardProductCategoriesIdRoute
   '/product-categories/new': typeof dashboardProductCategoriesNewRoute
-  '/products/$id': typeof dashboardProductsIdRoute
+  '/products/$handle': typeof dashboardProductsHandleRoute
   '/products/new': typeof dashboardProductsNewRoute
   '/settings/profile': typeof dashboardSettingsProfileRoute
   '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
@@ -547,7 +547,7 @@ export interface FileRoutesByTo {
   '/orders/$id': typeof dashboardOrdersIdRoute
   '/product-categories/$id': typeof dashboardProductCategoriesIdRoute
   '/product-categories/new': typeof dashboardProductCategoriesNewRoute
-  '/products/$id': typeof dashboardProductsIdRoute
+  '/products/$handle': typeof dashboardProductsHandleRoute
   '/products/new': typeof dashboardProductsNewRoute
   '/settings/profile': typeof dashboardSettingsProfileRoute
   '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
@@ -577,7 +577,7 @@ export interface FileRoutesById {
   '/(dashboard)/orders/$id': typeof dashboardOrdersIdRoute
   '/(dashboard)/product-categories/$id': typeof dashboardProductCategoriesIdRoute
   '/(dashboard)/product-categories/new': typeof dashboardProductCategoriesNewRoute
-  '/(dashboard)/products/$id': typeof dashboardProductsIdRoute
+  '/(dashboard)/products/$handle': typeof dashboardProductsHandleRoute
   '/(dashboard)/products/new': typeof dashboardProductsNewRoute
   '/(dashboard)/settings/profile': typeof dashboardSettingsProfileRoute
   '/payment/connect/refresh': typeof PaymentConnectRefreshRoute
@@ -606,7 +606,7 @@ export interface FileRouteTypes {
     | '/orders/$id'
     | '/product-categories/$id'
     | '/product-categories/new'
-    | '/products/$id'
+    | '/products/$handle'
     | '/products/new'
     | '/settings/profile'
     | '/payment/connect/refresh'
@@ -627,7 +627,7 @@ export interface FileRouteTypes {
     | '/orders/$id'
     | '/product-categories/$id'
     | '/product-categories/new'
-    | '/products/$id'
+    | '/products/$handle'
     | '/products/new'
     | '/settings/profile'
     | '/payment/connect/refresh'
@@ -655,7 +655,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/orders/$id'
     | '/(dashboard)/product-categories/$id'
     | '/(dashboard)/product-categories/new'
-    | '/(dashboard)/products/$id'
+    | '/(dashboard)/products/$handle'
     | '/(dashboard)/products/new'
     | '/(dashboard)/settings/profile'
     | '/payment/connect/refresh'
@@ -748,7 +748,7 @@ export const routeTree = rootRoute
       "filePath": "(dashboard)/products/route.tsx",
       "parent": "/(dashboard)",
       "children": [
-        "/(dashboard)/products/$id",
+        "/(dashboard)/products/$handle",
         "/(dashboard)/products/new",
         "/(dashboard)/products/"
       ]
@@ -793,8 +793,8 @@ export const routeTree = rootRoute
       "filePath": "(dashboard)/product-categories/new.tsx",
       "parent": "/(dashboard)/product-categories"
     },
-    "/(dashboard)/products/$id": {
-      "filePath": "(dashboard)/products/$id.tsx",
+    "/(dashboard)/products/$handle": {
+      "filePath": "(dashboard)/products/$handle.tsx",
       "parent": "/(dashboard)/products"
     },
     "/(dashboard)/products/new": {

@@ -2,12 +2,12 @@ export type Product = {
   id: string;
   vendorId: string;
   name: string;
-  slug: string;
+  handle: string;
   description: string | null;
   sku: string;
   price: number;
   compareAtPrice: number | null;
-  quantity: number;
+  stock: number;
   status: 'draft' | 'published';
   type: 'physical' | 'digital';
   images: string[];

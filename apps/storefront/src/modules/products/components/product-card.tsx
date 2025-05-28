@@ -15,7 +15,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className='mt-4 flex justify-between'>
         <div>
           <h3 className='text-sm text-foreground/80'>
-            <a href={`/products/${product.id}`}>
+            <a href={`/products/${product.handle}`}>
               <span aria-hidden='true' className='absolute inset-0' />
               {product.name}
             </a>

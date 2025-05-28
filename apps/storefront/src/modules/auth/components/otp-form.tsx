@@ -1,7 +1,7 @@
 'use client';
 
 import { SubmitButton } from '@/components/common/submit-button';
-import { verifyUser } from '@/features/auth/api/verify-user';
+import { verifyUser } from '@/server/auth/verify-user';
 import { Button } from '@repo/ui/components/button';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@repo/ui/components/input-otp';

@@ -2,8 +2,8 @@
 
 import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
+import { ApiError } from '@/lib/core/http/error';
 import { type ApiResponse } from '@repo/types/api';
-import { ApiError } from 'next/dist/server/api-utils';
 
 export async function resetPassword(_prevState: unknown, formData: FormData) {
   const password = formData.get('password') as string;

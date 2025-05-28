@@ -2,7 +2,9 @@ import { productTypeSchema, statusSchema } from '@/db/schemas/constants';
 import { decimal, integer, jsonb, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 
 export const products = pgTable('products', {
-  id: uuid('id').primaryKey().defaultRandom(),
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   vendorId: uuid('vendor_id').notNull(),
   name: varchar('name', { length: 255 }).notNull(),
   handle: varchar({ length: 255 }).notNull().unique(),

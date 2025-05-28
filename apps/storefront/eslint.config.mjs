@@ -22,31 +22,6 @@ export default {
       extends: ['plugin:import/errors', 'plugin:import/warnings', 'plugin:import/typescript'],
       rules: {
         '@next/next/no-img-element': 'off',
-        'import/no-restricted-paths': [
-          'error',
-          {
-            zones: [
-              // disables cross-feature imports:
-              // eg. src/features/discussions should not import from src/features/comments, etc.
-              {
-                target: './src/features/auth',
-                from: './src/features',
-                except: ['./auth'],
-              },
-              // enforce unidirectional codebase:
-              // e.g. src/app can import from src/features but not the other way around
-              {
-                target: './src/features',
-                from: './src/app',
-              },
-              // e.g src/features and src/app can import from these shared modules but not the other way around
-              {
-                target: ['./src/components', './src/hooks', './src/lib', './src/types', './src/utils'],
-                from: ['./src/features', './src/app'],
-              },
-            ],
-          },
-        ],
         'import/no-cycle': 'error',
         'linebreak-style': ['error', 'unix'],
         'react/prop-types': 'off',

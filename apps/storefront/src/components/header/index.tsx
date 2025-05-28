@@ -3,15 +3,13 @@ import { MobileMenu } from '@/components/header/mobile-menu';
 import { SearchBar } from '@/components/header/search-bar';
 import { clientPaths } from '@/configs/paths';
 import { Button } from '@repo/ui/components/button';
+import { ShoppingBag, User } from '@repo/ui/icons';
 import { cn } from '@repo/ui/lib/utils';
-import { Heart, ShoppingBag, User } from '@repo/ui/icons';
 import Link from 'next/link';
-import { getCustomer } from '@/server/customer/get-customer';
 
 type HeaderProps = React.ComponentProps<'div'>;
 
 export function Header({ className }: HeaderProps) {
-  const customer = getCustomer();
   return (
     <header
       className={cn(
@@ -43,11 +41,6 @@ export function Header({ className }: HeaderProps) {
             <Button size='icon' variant='ghost' asChild>
               <Link href={clientPaths.auth.signIn}>
                 <User className='size-5' />
-              </Link>
-            </Button>
-            <Button size='icon' variant='ghost' asChild>
-              <Link href={clientPaths.account.wishlist}>
-                <Heart className='size-5' />
               </Link>
             </Button>
             <Button size='icon' variant='ghost' asChild>

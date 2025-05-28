@@ -2,7 +2,7 @@
 
 import { SubmitButton } from '@/components/common/submit-button';
 import { clientPaths } from '@/configs/paths';
-import { resetPassword } from '@/features/auth/api/reset-password';
+import { resetPassword } from '@/server/auth/reset-password';
 import { type ApiResponse } from '@repo/types/api';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { Label } from '@repo/ui/components/label';

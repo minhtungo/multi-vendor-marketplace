@@ -1,6 +1,6 @@
 import { SkeletonProductGrid } from '@/components/skeletons/skeleton-propduct-grid';
-import { PaginatedProducts } from '@/features/products/components/paginated-products';
 import { SortOptions } from '@/lib/constants';
+import { PaginatedProducts } from '@/modules/products/components/paginated-products';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 

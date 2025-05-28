@@ -2,7 +2,7 @@
 
 import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
-import { ApiError } from 'next/dist/server/api-utils';
+import { ApiError } from '@/lib/core/http/error';
 
 export async function verifyUser(_prevState: unknown, formData: FormData) {
   const email = formData.get('email') as string;

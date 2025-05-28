@@ -5,26 +5,30 @@ import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
 export const getProductSchema = z.object({
-  id: z.string().uuid(),
+  handle: z.string().trim(),
 });
 
 export type GetProductInput = z.infer<typeof getProductSchema>;
 
-export async function getProduct({ id }: GetProductInput): Promise<Product> {
-  const response = await privateApi.get(`${server.path.product.root}/${id}`);
+export async function getProduct({ handle }: GetProductInput): Promise<Product> {
+  const response = await privateApi.get(`${server.path.product.root}/list`, {
+    params: {
+      handle,
+    },
+  });
   return response.data;
 }
 
-export function getProductQueryOptions(id: string) {
+export function getProductQueryOptions(handle: string) {
   return {
-    queryKey: ['product', id],
-    queryFn: () => getProduct({ id }),
-    enabled: !!id,
+    queryKey: ['product', handle],
+    queryFn: () => getProduct({ handle }),
+    enabled: !!handle,
   };
 }
 
-export function useGetProduct(id: string) {
+export function useGetProduct(handle: string) {
   return useQuery({
-    ...getProductQueryOptions(id),
+    ...getProductQueryOptions(handle),
   });
 }
