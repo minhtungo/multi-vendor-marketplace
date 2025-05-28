@@ -5,6 +5,7 @@ export const env = createEnv({
   server: {
     SERVER_URL: z.string().min(1),
     ACCESS_TOKEN_COOKIE_NAME: z.string().min(1),
+    CART_ID_COOKIE_NAME: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_BASE_URL: z.string().min(1),
