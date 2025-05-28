@@ -1,4 +1,9 @@
 import { type Product } from '@repo/types/product';
+import { formatPrice } from '@repo/shared/utils';
+import Image from 'next/image';
+import { ProductQuickView } from '@/modules/products/components/product-quick-view';
+import { Button } from '@repo/ui/components/button';
+import { Eye } from '@repo/ui/icons';
 
 type ProductCardProps = {
   product: Product;
@@ -7,11 +12,23 @@ type ProductCardProps = {
 export function ProductCard({ product }: ProductCardProps) {
   return (
     <div className='group relative'>
-      <img
+      <Image
         alt={product.images[0]}
         src={product.images[0]}
+        width={400}
+        height={400}
         className='aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80'
       />
+      <div className='flex flex-col gap-2 opacity-0 group-hover:opacity-100 absolute top-2 right-2 z-10'>
+        <ProductQuickView
+          triggerButton={
+            <Button variant='outline' size='icon' className='rounded-full'>
+              <Eye />
+            </Button>
+          }
+          productId={product.id}
+        />
+      </div>
       <div className='mt-4 flex justify-between'>
         <div>
           <h3 className='text-sm text-foreground/80'>
@@ -21,7 +38,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </a>
           </h3>
         </div>
-        <p className='text-sm font-medium text-foreground'>{product.price}</p>
+        <p className='text-sm font-medium text-foreground'>{formatPrice(product.price)}</p>
       </div>
     </div>
   );

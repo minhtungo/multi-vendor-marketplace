@@ -8,7 +8,7 @@ export const HERO_SLIDER_ITEMS = [
     textColor: 'text-white',
     image: '/placeholder.svg?height=400&width=400',
     buttonText: 'Shop Now',
-    buttonLink: '/sale',
+    buttonLink: '/shop',
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ export const HERO_SLIDER_ITEMS = [
     textColor: 'text-white',
     image: '/placeholder.svg?height=400&width=400',
     buttonText: 'Explore',
-    buttonLink: '/new-arrivals',
+    buttonLink: '/shop',
   },
   {
     id: 3,

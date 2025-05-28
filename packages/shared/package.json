@@ -1,0 +1,13 @@
+{
+  "name": "@repo/shared",
+  "version": "1.0.0",
+  "exports": {
+    "./utils": {
+      "types": "./src/utils/index.ts",
+      "import": "./src/utils/index.ts",
+      "require": "./src/utils/index.ts"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

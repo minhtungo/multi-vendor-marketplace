@@ -10,7 +10,8 @@
     "baseUrl": "src",
     "paths": {
       "@/*": ["./*"],
-      "@repo/ui/*": ["../../packages/ui/src/*"]
+      "@repo/ui/*": ["../../packages/ui/src/*"],
+      "@repo/shared/*": ["../../packages/shared/src/*"]
     }
   },
   "include": ["src", "next.config.ts", "next-env.d.ts", ".next/types/**/*.ts"],

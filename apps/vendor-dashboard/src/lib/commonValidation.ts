@@ -1,6 +1,5 @@
+import { passwordRegex } from '@repo/shared/utils';
 import { z } from 'zod';
-
-import { passwordRegex } from '../utils/regex';
 
 export const commonValidations = {
   id: z
