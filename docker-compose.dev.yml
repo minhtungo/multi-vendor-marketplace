@@ -1,0 +1,87 @@
+services:
+  # Redis service
+  redis:
+    image: redis:alpine
+    container_name: multivendor-redis
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    volumes:
+      - ./docker-data/redis:/data
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - multivendor-network
+
+  # MailHog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: multivendor-mailhog
+    restart: always
+    ports:
+      - '1025:1025' # SMTP server
+      - '8025:8025' # Web UI
+    volumes:
+      - ./docker-data/mailhog:/var/lib/mailhog
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', 'http://localhost:8025/api/v2/messages']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - multivendor-network
+
+  # RabbitMQ service
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: multivendor-rabbitmq
+    restart: always
+    ports:
+      - '${RABBITMQ_PORT:-5672}:5672'
+      - '${RABBITMQ_MANAGEMENT_PORT:-15672}:15672'
+    volumes:
+      - ./docker-data/rabbitmq:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER:-admin}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS:-password}
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - multivendor-network
+
+  # MinIO for file storage
+  minio:
+    image: minio/minio
+    container_name: multivendor-minio
+    ports:
+      - '${AWS_S3_PORT:-9000}:9000'
+      - '9001:9001'
+    volumes:
+      - ./docker-data/minio:/data
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minioadmin}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-minioadmin}
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - multivendor-network
+
+networks:
+  multivendor-network:
+    driver: bridge
+    name: multivendor-network
+
+volumes:
+  redis-data:
+  mailhog-data:
+  minio-data:
