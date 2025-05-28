@@ -1,5 +1,5 @@
 import { Product } from '@/db/schemas/products';
-import { CreateProduct, GetProductQuery, UpdateProduct } from '@/models/product.model';
+import { CreateProduct, GetProductQuery, ProductResponse, UpdateProduct } from '@/models/product.model';
 import { productCategoryRepository } from '@/repositories/product-category.repository';
 import { productToCategoryRepository } from '@/repositories/product-to-category.repository';
 import { productRepository } from '@/repositories/product.repository';
@@ -13,7 +13,7 @@ class ProductService {
     private readonly productToCategoryRepo = productToCategoryRepository
   ) {}
 
-  public async getProduct(data: GetProductQuery): Promise<ServiceResponse<Product | null>> {
+  public async getProduct(data: GetProductQuery): Promise<ServiceResponse<ProductResponse | null>> {
     try {
       const product = data.id
         ? await this.productRepo.getProductById(data.id)

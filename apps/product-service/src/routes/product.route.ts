@@ -1,17 +1,17 @@
 import { productController } from '@/controllers/product.controller';
-import { productSchema } from '@/db/schemas/products';
 import {
   createProductRequestSchema,
-  updateProductRequestSchema,
-  productListResponseSchema,
-  getProductsQuerySchema,
   getProductQuerySchema,
+  getProductsQuerySchema,
+  productListResponseSchema,
+  productResponseSchema,
+  updateProductRequestSchema,
 } from '@/models/product.model';
-import { createApiResponse } from '@repo/server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
+import { createApiResponse } from '@repo/server/docs';
+import { validateRequest } from '@repo/server/middlewares';
 import { Router } from 'express';
 import { z } from 'zod';
-import { validateRequest } from '@repo/server/middlewares';
 
 export const productRegistry = new OpenAPIRegistry();
 export const productRouter: Router = Router();
@@ -22,12 +22,9 @@ productRegistry.registerPath({
   path: `/products`,
   tags: ['Products'],
   request: {
-    params: z.object({
-      id: z.string().uuid(),
-    }),
     query: getProductQuerySchema,
   },
-  responses: createApiResponse(productSchema, 'Product retrieved successfully'),
+  responses: createApiResponse(productResponseSchema, 'Product retrieved successfully'),
 });
 
 productRouter.get(`/list`, validateRequest(z.object({ query: getProductQuerySchema })), productController.getProduct);
@@ -41,7 +38,7 @@ productRegistry.registerPath({
   request: {
     query: getProductsQuerySchema,
   },
-  responses: createApiResponse(productListResponseSchema, 'Products retrieved successfully'),
+  responses: createApiResponse(z.array(productResponseSchema), 'Products retrieved successfully'),
 });
 
 productRouter.get(

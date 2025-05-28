@@ -1,14 +1,37 @@
 import { db } from '@/db';
 import { type InsertProduct, products } from '@/db/schemas/products';
+import { ProductResponse } from '@/models/product.model';
 import { and, count, desc, eq } from 'drizzle-orm';
 
 export class ProductRepository {
   constructor(private readonly dbInstance = db) {}
 
-  public async getProductById(productId: string, trx: typeof db = this.dbInstance) {
-    return this.dbInstance.query.products.findFirst({
+  public async getProductById(
+    productId: string,
+    trx: typeof db = this.dbInstance
+  ): Promise<ProductResponse | undefined> {
+    const product = await this.dbInstance.query.products.findFirst({
       where: eq(products.id, productId),
+      with: {
+        categories: {
+          columns: {},
+          with: {
+            category: {
+              columns: {
+                id: true,
+                name: true,
+                handle: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    return {
+      ...product,
+      categories: product?.categories.map((category) => category.category) || [],
+    } as ProductResponse | undefined;
   }
 
   public async getProductByHandle(handle: string, trx: typeof db = this.dbInstance) {
@@ -33,7 +56,7 @@ export class ProductRepository {
     return {
       ...product,
       categories: product?.categories.map((category) => category.category),
-    };
+    } as ProductResponse | undefined;
   }
 
   public async createProduct(product: InsertProduct, trx: typeof db = this.dbInstance) {
