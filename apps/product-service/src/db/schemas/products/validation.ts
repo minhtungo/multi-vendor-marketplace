@@ -4,7 +4,7 @@ import { products } from './products';
 
 export const insertProductSchema = createInsertSchema(products, {
   // Handle string to number coercion for quantity
-  quantity: z.union([z.number(), z.string().transform(Number)]).pipe(z.number()),
+  stock: z.union([z.number(), z.string().transform(Number)]).pipe(z.number()),
   // Handle string to number coercion for price
   price: z.union([z.number(), z.string().transform(Number)]).pipe(z.number()),
   // Handle optional compareAtPrice with coercion

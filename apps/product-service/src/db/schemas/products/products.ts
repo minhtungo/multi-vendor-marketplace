@@ -1,5 +1,7 @@
 import { productTypeSchema, statusSchema } from '@/db/schemas/constants';
-import { decimal, integer, jsonb, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { productCategoriesToProducts } from '@/db/schemas/product-categories';
+import { relations } from 'drizzle-orm';
+import { decimal, integer, jsonb, pgTable, text, timestamp, uuid, varchar, serial } from 'drizzle-orm/pg-core';
 
 export const products = pgTable('products', {
   id: text()
@@ -16,8 +18,11 @@ export const products = pgTable('products', {
   status: statusSchema().default('draft'),
   type: productTypeSchema('type').default('physical'),
   images: jsonb('images').$type<string[]>(),
-  categories: jsonb('categories').$type<string[]>(),
   tags: jsonb('tags').$type<string[]>(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
+
+export const productsRelations = relations(products, ({ many }) => ({
+  productCategoriesToProducts: many(productCategoriesToProducts),
+}));
