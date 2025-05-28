@@ -1,11 +1,11 @@
-import { getUser } from '@/api/auth/get-user';
+import { getCustomer } from '@/server/customer/get-customer';
 import HeroSection from '@/components/home/hero-section';
 
 export default async function Home() {
-  const user = await getUser();
+  const customer = await getCustomer();
   return (
     <>
-      {user && <div>{user.email}</div>}
+      {customer && <div>{customer.email}</div>}
       <HeroSection />
     </>
   );

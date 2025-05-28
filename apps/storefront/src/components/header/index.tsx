@@ -6,12 +6,12 @@ import { Button } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/utils';
 import { Heart, ShoppingBag, User } from '@repo/ui/icons';
 import Link from 'next/link';
-import { getUser } from '@/api/auth/get-user';
+import { getCustomer } from '@/server/customer/get-customer';
 
 type HeaderProps = React.ComponentProps<'div'>;
 
 export function Header({ className }: HeaderProps) {
-  const user = getUser();
+  const customer = getCustomer();
   return (
     <header
       className={cn(

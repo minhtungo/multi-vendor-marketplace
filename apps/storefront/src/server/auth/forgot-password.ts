@@ -1,6 +1,6 @@
 'use server';
 
-import { server } from '@/configs/server';
+import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
 import { ApiError } from '@/lib/core/http/error';
 
@@ -11,7 +11,7 @@ export async function forgotPassword(_prevState: unknown, formData: FormData) {
     const response = await api.post<{
       message: string;
     }>(
-      server.path.auth.forgotPassword,
+      serverPaths.auth.forgotPassword,
       { email },
       {
         skipAuth: true,

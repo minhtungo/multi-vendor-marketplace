@@ -1,14 +1,14 @@
 'use server';
 
-import { server } from '@/configs/server';
+import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
-import { type ApiResponse } from '@repo/types/api';
+import { type User } from '@repo/types/user';
 import { ApiError } from 'next/dist/server/api-utils';
 
-export async function resetPassword(_prevState: unknown, formData: FormData) {
+export async function signUp(_prevState: unknown, formData: FormData) {
+  const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirm_password') as string;
-  const token = formData.get('token') as string;
 
   // Validate password confirmation
   if (password !== confirmPassword) {
@@ -21,10 +21,11 @@ export async function resetPassword(_prevState: unknown, formData: FormData) {
 
   try {
     const response = await api.post<{
-      message: string;
+      accessToken: string;
+      user: User;
     }>(
-      server.path.auth.resetPassword + '/' + token,
-      { password },
+      serverPaths.auth.signUp,
+      { email, password },
       {
         skipAuth: true,
       }
@@ -44,14 +45,4 @@ export async function resetPassword(_prevState: unknown, formData: FormData) {
       };
     }
   }
-}
-
-export async function verifyResetPasswordToken(token: string): Promise<
-  ApiResponse<{
-    isValid: boolean;
-  }>
-> {
-  return api.get(server.path.auth.resetPassword + '/verify/' + token, {
-    skipAuth: true,
-  });
 }

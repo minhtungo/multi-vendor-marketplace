@@ -1,5 +1,5 @@
 import { env } from '@/configs/env';
-import { server } from '@/configs/server';
+import { serverPaths } from '@/configs/paths';
 import { setAuthToken } from '@/lib/cookies';
 
 let isRefreshing = false;
@@ -13,7 +13,7 @@ export async function renewToken(): Promise<void> {
   isRefreshing = true;
   refreshPromise = (async () => {
     try {
-      const response = await fetch(`${env.SERVER_URL}/v1${server.path.auth.renewToken}`, {
+      const response = await fetch(`${env.SERVER_URL}/v1${serverPaths.auth.renewToken}`, {
         method: 'PUT',
         credentials: 'include',
         headers: {

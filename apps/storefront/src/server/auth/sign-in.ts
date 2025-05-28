@@ -1,41 +1,32 @@
 'use server';
 
-import { server } from '@/configs/server';
+import { clientPaths } from '@/configs/paths';
+import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
+import { setAuthToken } from '@/lib/cookies';
 import { type User } from '@repo/types/user';
 import { ApiError } from 'next/dist/server/api-utils';
+import { redirect } from 'next/navigation';
 
-export async function signUp(_prevState: unknown, formData: FormData) {
+export async function signIn(_prevState: unknown, formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
-  const confirmPassword = formData.get('confirm_password') as string;
-
-  // Validate password confirmation
-  if (password !== confirmPassword) {
-    return {
-      data: null,
-      success: false,
-      message: 'Passwords do not match',
-    };
-  }
 
   try {
     const response = await api.post<{
       accessToken: string;
       user: User;
     }>(
-      server.path.auth.signUp,
+      serverPaths.auth.signIn,
       { email, password },
       {
         skipAuth: true,
       }
     );
 
-    return {
-      data: response.data,
-      success: true,
-      message: response.message,
-    };
+    if (response.data && response.data.accessToken) {
+      await setAuthToken(response.data.accessToken);
+    }
   } catch (error) {
     if (error instanceof ApiError) {
       return {
@@ -45,4 +36,6 @@ export async function signUp(_prevState: unknown, formData: FormData) {
       };
     }
   }
+
+  redirect(clientPaths.home);
 }

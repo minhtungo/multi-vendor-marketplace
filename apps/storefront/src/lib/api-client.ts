@@ -1,7 +1,6 @@
 import { env } from '@/configs/env';
 import { getAuthToken } from '@/lib/cookies';
 import { ApiError } from '@/lib/core/http/error';
-import { getServerCookies } from '@/utils/cookies';
 import { buildUrlWithParams } from '@/utils/url';
 import { ApiResponse } from '@repo/types/api';
 
@@ -15,6 +14,24 @@ export type RequestOptions = {
   next?: NextFetchRequestConfig;
   skipAuth?: boolean;
 };
+
+function getServerCookies() {
+  if (typeof window !== 'undefined') return '';
+
+  // Dynamic import next/headers only on server-side
+  return import('next/headers').then(async ({ cookies }) => {
+    try {
+      const cookieStore = await cookies();
+      return cookieStore
+        .getAll()
+        .map((c) => `${c.name}=${c.value}`)
+        .join('; ');
+    } catch (error) {
+      console.error('Failed to access cookies:', error);
+      return '';
+    }
+  });
+}
 
 async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T> {
   const { method = 'GET', headers = {}, body, cookie, params, cache = 'no-store', next, skipAuth = false } = options;

@@ -1,18 +1,8 @@
 'use server';
 
-import { server } from '@/configs/server';
+import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
-import { commonValidations } from '@/lib/validations';
 import { ApiError } from 'next/dist/server/api-utils';
-import { z } from 'zod';
-
-export const verifyUserSchema = z.object({
-  email: commonValidations.email,
-  password: commonValidations.password,
-  otp: z.string().length(6, 'OTP must be 6 digits'),
-});
-
-export type VerifyUserInput = z.infer<typeof verifyUserSchema>;
 
 export async function verifyUser(_prevState: unknown, formData: FormData) {
   const email = formData.get('email') as string;
@@ -21,7 +11,7 @@ export async function verifyUser(_prevState: unknown, formData: FormData) {
 
   try {
     const response = await api.put<null>(
-      server.path.auth.verifyUser,
+      serverPaths.auth.verifyUser,
       { email, password, otp },
       {
         skipAuth: true,
