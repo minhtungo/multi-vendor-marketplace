@@ -1,15 +1,17 @@
 import { Logo } from '@/components/common/logo';
 import { MobileMenu } from '@/components/header/mobile-menu';
 import { SearchBar } from '@/components/header/search-bar';
-import { client } from '@/configs/client';
+import { clientPaths } from '@/configs/paths';
 import { Button } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/utils';
 import { Heart, ShoppingBag, User } from '@repo/ui/icons';
 import Link from 'next/link';
+import { getUser } from '@/api/auth/get-user';
 
 type HeaderProps = React.ComponentProps<'div'>;
 
 export function Header({ className }: HeaderProps) {
+  const user = getUser();
   return (
     <header
       className={cn(
@@ -39,17 +41,17 @@ export function Header({ className }: HeaderProps) {
           </nav> */}
           <div className='flex items-center gap-2'>
             <Button size='icon' variant='ghost' asChild>
-              <Link href={client.path.signIn}>
+              <Link href={clientPaths.auth.signIn}>
                 <User className='size-5' />
               </Link>
             </Button>
             <Button size='icon' variant='ghost' asChild>
-              <Link href={client.path.wishlist}>
+              <Link href={clientPaths.account.wishlist}>
                 <Heart className='size-5' />
               </Link>
             </Button>
             <Button size='icon' variant='ghost' asChild>
-              <Link href={client.path.cart} className='relative'>
+              <Link href={clientPaths.shop.root} className='relative'>
                 <ShoppingBag className='size-5' />
                 <span className='absolute right-0 top-0 rounded-full bg-primary text-xs text-primary-foreground w-4 h-4 flex items-center justify-center'>
                   0

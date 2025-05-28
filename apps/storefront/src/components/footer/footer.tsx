@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className='container py-12'>
+    <footer className='container py-6'>
       <div className='flex flex-wrap justify-between gap-6'>
         <span className='text-muted-foreground order-last block text-center text-sm md:order-first'>
           © {new Date().getFullYear()} {siteConfig.name}, All rights reserved

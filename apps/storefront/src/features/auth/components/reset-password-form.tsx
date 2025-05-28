@@ -1,17 +1,17 @@
 'use client';
 
+import { clientPaths } from '@/configs/paths';
 import { resetPasswordSchema, useResetPasswordMutation } from '@/features/auth/api/reset-password';
-import { client } from '@/configs/client';
+import { ApiResponse } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/components/form';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { PasswordInput } from '@repo/ui/components/password-input';
 import Link from 'next/link';
+import { use } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { use, useState } from 'react';
-import { ApiResponse } from '@/types/api';
 
 const resetPasswordInputSchema = resetPasswordSchema
   .extend({
@@ -82,7 +82,7 @@ export function ResetPasswordForm({ className }: React.ComponentPropsWithoutRef<
         </LoaderButton>
         <div className='text-muted-foreground text-sm'>
           Already have an account?{' '}
-          <Link href={client.path.signIn} className='underline underline-offset-4'>
+          <Link href={clientPaths.path.signIn} className='underline underline-offset-4'>
             Sign In
           </Link>
         </div>

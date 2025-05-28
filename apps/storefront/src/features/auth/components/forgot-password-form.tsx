@@ -2,7 +2,7 @@
 
 import { forgotPasswordSchema, useForgotPasswordMutation } from '@/features/auth/api/forgot-password';
 import { OAuthActions } from '@/features/auth/components/common/oauth-actions';
-import { client } from '@/configs/client';
+import { clientPaths } from '@/configs/paths';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/components/form';
 import { FormResponse } from '@repo/ui/components/form-response';
@@ -74,7 +74,7 @@ export function ForgotPasswordForm({ className }: React.ComponentPropsWithoutRef
         </LoaderButton>
         <div className='text-muted-foreground text-sm'>
           Already have an account?{' '}
-          <Link href={client.path.signIn} className='underline underline-offset-4'>
+          <Link href={clientPaths.path.signIn} className='underline underline-offset-4'>
             Sign In
           </Link>
         </div>

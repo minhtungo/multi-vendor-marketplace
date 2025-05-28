@@ -1,6 +1,6 @@
 'use client';
 
-import { client } from '@/configs/client';
+import { clientPaths } from '@/configs/paths';
 import { signUpSchema } from '@/features/auth/api/sign-up';
 import { useVerifyUserMutation } from '@/features/auth/api/verify-user';
 import { Button } from '@repo/ui/components/button';
@@ -31,7 +31,7 @@ export function OTPForm({ userInput }: OTPFormProps) {
       },
       {
         onSuccess: () => {
-          router.push(client.path.signUp);
+          router.push(clientPaths.path.signUp);
         },
       }
     );

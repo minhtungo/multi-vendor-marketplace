@@ -1,6 +1,6 @@
 'use server';
 
-import { client } from '@/configs/client';
+import { clientPaths } from '@/configs/paths';
 import { server } from '@/configs/server';
 import { api } from '@/lib/api-client';
 import { setAuthToken } from '@/lib/cookies';
@@ -37,5 +37,5 @@ export async function signIn(_prevState: unknown, formData: FormData) {
     }
   }
 
-  redirect(client.path.home);
+  redirect(clientPaths.home);
 }
