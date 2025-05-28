@@ -1,9 +1,9 @@
+import 'server-only';
+
 import { env } from '@/configs/env';
 import { cookiesConfig } from '@/configs/cookies';
 
 export const getAuthToken = async () => {
-  if (typeof window !== 'undefined') return '';
-
   return import('next/headers').then(async ({ cookies }) => {
     try {
       const cookieStore = await cookies();
@@ -16,8 +16,6 @@ export const getAuthToken = async () => {
 };
 
 export const setAuthToken = async (token: string) => {
-  if (typeof window !== 'undefined') return;
-
   return import('next/headers').then(async ({ cookies }) => {
     try {
       const cookieStore = await cookies();
@@ -32,8 +30,6 @@ export const setAuthToken = async (token: string) => {
 };
 
 export const removeAuthToken = async () => {
-  if (typeof window !== 'undefined') return;
-
   return import('next/headers').then(async ({ cookies }) => {
     try {
       const cookieStore = await cookies();
