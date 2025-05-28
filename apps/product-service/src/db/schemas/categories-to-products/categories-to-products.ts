@@ -7,15 +7,13 @@ export const categoriesToProducts = pgTable(
   'categories_to_products',
   {
     productId: text('product_id')
-      .references(() => products.id, { onDelete: 'cascade' })
-      .notNull(),
+      .notNull()
+      .references(() => products.id, { onDelete: 'cascade' }),
     categoryId: text('category_id')
-      .references(() => categories.id, { onDelete: 'cascade' })
-      .notNull(),
+      .notNull()
+      .references(() => categories.id, { onDelete: 'cascade' }),
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.productId, t.categoryId] }),
-  })
+  (t) => [primaryKey({ columns: [t.productId, t.categoryId] })]
 );
 
 export const categoriesToProductsRelations = relations(categoriesToProducts, ({ one }) => ({

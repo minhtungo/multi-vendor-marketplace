@@ -27,7 +27,7 @@ services:
     volumes:
       - ./docker-data/mailhog:/var/lib/mailhog
     healthcheck:
-      test: ['CMD', 'wget', '--spider', 'http://localhost:8025/api/v2/messages']
+      test: ['CMD', 'wget', '--spider', 'http://localhost:8025/api/v1/messages']
       interval: 5s
       timeout: 5s
       retries: 5

@@ -12,16 +12,28 @@ export class ProductRepository {
   }
 
   public async getProductByHandle(handle: string, trx: typeof db = this.dbInstance) {
-    return this.dbInstance.query.products.findFirst({
+    const product = await this.dbInstance.query.products.findFirst({
       where: eq(products.handle, handle.trim()),
       with: {
-        productCategoriesToProducts: {
+        categories: {
+          columns: {},
           with: {
-            category: true,
+            category: {
+              columns: {
+                id: true,
+                name: true,
+                handle: true,
+              },
+            },
           },
         },
       },
     });
+
+    return {
+      ...product,
+      categories: product?.categories.map((category) => category.category),
+    };
   }
 
   public async createProduct(product: InsertProduct, trx: typeof db = this.dbInstance) {

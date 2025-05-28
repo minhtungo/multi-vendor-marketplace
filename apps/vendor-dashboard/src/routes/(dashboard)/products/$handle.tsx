@@ -1,6 +1,6 @@
 import { getProductQueryOptions, useGetProduct } from '@/features/product/api/get-product';
 import { EditProductSheet } from '@/features/product/components/edit-product-form/edit-product-sheet';
-import { formatPrice } from '@/utils/price';
+import { formatPrice } from '@repo/shared/utils';
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui/components/card';

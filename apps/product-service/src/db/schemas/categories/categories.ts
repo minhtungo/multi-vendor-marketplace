@@ -7,15 +7,15 @@ export const categories = pgTable('categories', {
   id: text()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: varchar('name', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 255 }).notNull().unique(),
-  description: text('description'),
+  name: varchar({ length: 255 }).notNull(),
+  handle: varchar({ length: 255 }).notNull().unique(),
+  description: text(),
   parentId: text('parent_id').references((): any => categories.id),
   status: productCategoryStatusSchema().default('active'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
 
-export const categoriesRelations = relations(categories, ({ one, many }) => ({
+export const categoriesRelations = relations(categories, ({ many }) => ({
   products: many(categoriesToProducts),
 }));

@@ -1,15 +1,19 @@
 import { Product } from '@/db/schemas/products';
 import { CreateProduct, GetProductQuery, UpdateProduct } from '@/models/product.model';
+import { productCategoryRepository } from '@/repositories/product-category.repository';
+import { productToCategoryRepository } from '@/repositories/product-to-category.repository';
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
 import { ServiceResponse } from '@repo/server/lib';
 
 class ProductService {
-  constructor(private readonly productRepo = productRepository) {}
+  constructor(
+    private readonly productRepo = productRepository,
+    private readonly productToCategoryRepo = productToCategoryRepository
+  ) {}
 
   public async getProduct(data: GetProductQuery): Promise<ServiceResponse<Product | null>> {
-    console.log(data);
     try {
       const product = data.id
         ? await this.productRepo.getProductById(data.id)
@@ -58,12 +62,21 @@ class ProductService {
 
   public async createProduct(data: CreateProduct, vendorId: string): Promise<ServiceResponse<Product | null>> {
     try {
-      await this.productRepo.createProduct({
-        ...data,
-        price: data.price.toString(),
-        compareAtPrice: data.compareAtPrice?.toString(),
+      const { categories, ...productData } = data;
+
+      const product = await this.productRepo.createProduct({
+        ...productData,
+        price: productData.price.toString(),
+        compareAtPrice: productData.compareAtPrice?.toString(),
         vendorId,
       });
+
+      if (categories) {
+        const promises = categories.map((category) =>
+          this.productToCategoryRepo.createProductToCategory(product.id, category)
+        );
+        await Promise.all(promises);
+      }
 
       return ServiceResponse.success('Product created successfully', null, HTTP_STATUS_CODES.CREATED);
     } catch (error) {
@@ -89,12 +102,19 @@ class ProductService {
         return ServiceResponse.failure('Unauthorized to update this product', null, HTTP_STATUS_CODES.FORBIDDEN);
       }
 
-      await this.productRepo.updateProduct(productId, {
+      const updatedProduct = await this.productRepo.updateProduct(productId, {
         ...data,
         price: data.price?.toString(),
         compareAtPrice: data.compareAtPrice?.toString(),
         updatedAt: new Date(),
       });
+
+      if (data.categories) {
+        const promises = data.categories.map((category) =>
+          this.productToCategoryRepo.createProductToCategory(productId, category)
+        );
+        await Promise.all(promises);
+      }
 
       return ServiceResponse.success('Product updated successfully', null, HTTP_STATUS_CODES.OK);
     } catch (error) {

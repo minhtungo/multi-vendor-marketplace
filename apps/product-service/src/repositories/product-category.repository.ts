@@ -6,7 +6,7 @@ export class ProductCategoryRepository {
   constructor(private readonly dbInstance = db) {}
 
   public async getAllCategories(trx: typeof db = this.dbInstance) {
-    return this.dbInstance.query.productCategories.findMany({
+    return this.dbInstance.query.categories.findMany({
       orderBy: (categories) => categories.name,
     });
   }
@@ -21,7 +21,7 @@ export class ProductCategoryRepository {
   }
 
   public async getCategoryById(categoryId: string, trx: typeof db = this.dbInstance) {
-    return this.dbInstance.query.productCategories.findFirst({
+    return this.dbInstance.query.categories.findFirst({
       where: eq(categories.id, categoryId),
     });
   }

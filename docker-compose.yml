@@ -1,0 +1,186 @@
+services:
+  # Auth service database
+  auth-db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - apps/auth-service/.env
+    volumes:
+      - ./docker-data/auth-db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${AUTH_DB_USER} -d ${AUTH_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    networks:
+      - backend-network
+
+  # Product service database
+  product-db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - apps/product-service/.env
+    volumes:
+      - ./docker-data/product-db:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${PRODUCT_DB_USER} -d ${PRODUCT_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    networks:
+      - backend-network
+
+  # Payment service database
+  payment-db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - apps/payment-service/.env
+    volumes:
+      - ./docker-data/payment-db:/var/lib/postgresql/data
+    ports:
+      - 5434:5432
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${PAYMENT_DB_USER} -d ${PAYMENT_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    networks:
+      - backend-network
+  upload-db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - apps/upload-service/.env
+    volumes:
+      - ./docker-data/upload-db:/var/lib/postgresql/data
+    ports:
+      - 5435:5432
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${UPLOAD_DB_USER} -d ${UPLOAD_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    networks:
+      - backend-network
+  user-db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - apps/user-service/.env
+    volumes:
+      - ./docker-data/user-db:/var/lib/postgresql/data
+    ports:
+      - 5436:5432
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${USER_DB_USER} -d ${USER_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    networks:
+      - backend-network
+  vendor-db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - apps/vendor-service/.env
+    volumes:
+      - ./docker-data/vendor-db:/var/lib/postgresql/data
+    ports:
+      - 5437:5432
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -U ${VENDOR_DB_USER} -d ${VENDOR_DB_DB}']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    networks:
+      - backend-network
+  # Redis service
+  redis:
+    image: redis:alpine
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - ./docker-data/redis:/data
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    # healthcheck:
+    #   test: ['CMD', 'redis-cli', 'ping']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    networks:
+      - backend-network
+  # MailHog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - '1025:1025' # SMTP server
+      - '8025:8025' # Web UI
+    volumes:
+      - ./docker-data/mailhog:/var/lib/mailhog
+    # healthcheck:
+    #   test: ['CMD', 'wget', '--spider', 'http://localhost:8025/api/v2/messages']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    networks:
+      - backend-network
+
+  # RabbitMQ service
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - '${RABBITMQ_PORT}:5672'
+      - '${RABBITMQ_MANAGEMENT_PORT}:15672'
+    volumes:
+      - ./docker-data/rabbitmq:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - backend-network
+  minio:
+    image: minio/minio
+    env_file:
+      - apps/upload-service/.env
+    ports:
+      - ${AWS_S3_PORT}:9000
+      - '9001:9001'
+    volumes:
+      - ./docker-data/minio:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
+
+volumes:
+  auth-db-data:
+  product-db-data:
+  payment-db-data:
+  upload-db-data:
+  order-db-data:
+  user-db-data:
+  vendor-db-data:
+  redis-data:
+  mailhog-data:
+  minio-data:
