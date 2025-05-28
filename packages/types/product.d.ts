@@ -11,7 +11,11 @@ export type Product = {
   status: 'draft' | 'published';
   type: 'physical' | 'digital';
   images: string[];
-  categories: string[];
+  categories: {
+    id: string;
+    name: string;
+    handle: string;
+  }[];
   tags: string[];
   createdAt: string;
   updatedAt: string;

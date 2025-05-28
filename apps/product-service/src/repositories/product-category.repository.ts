@@ -1,5 +1,5 @@
 import { db } from '@/db';
-import { categories, type InsertProductCategory } from '@/db/schemas/categories';
+import { categories, type InsertCategory } from '@/db/schemas/categories';
 import { eq } from 'drizzle-orm';
 
 export class ProductCategoryRepository {
@@ -11,7 +11,7 @@ export class ProductCategoryRepository {
     });
   }
 
-  public async createCategory(category: InsertProductCategory, trx: typeof db = this.dbInstance) {
+  public async createCategory(category: InsertCategory, trx: typeof db = this.dbInstance) {
     const [newCategory] = await trx
       .insert(categories)
       .values({ ...category })
@@ -26,11 +26,7 @@ export class ProductCategoryRepository {
     });
   }
 
-  public async updateCategory(
-    categoryId: string,
-    category: Partial<InsertProductCategory>,
-    trx: typeof db = this.dbInstance
-  ) {
+  public async updateCategory(categoryId: string, category: Partial<InsertCategory>, trx: typeof db = this.dbInstance) {
     const [updatedCategory] = await trx
       .update(categories)
       .set({ ...category, updatedAt: new Date() })

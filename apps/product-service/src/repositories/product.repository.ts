@@ -121,16 +121,35 @@ export class ProductRepository {
 
     const whereConditions = [vendorId ? eq(products.vendorId, vendorId) : eq(products.status, 'published')];
 
-    const items = await trx
-      .select()
-      .from(products)
-      .where(and(...whereConditions))
-      .limit(limit)
-      .offset(offset)
-      .orderBy(orderBy);
+    const items = await trx.query.products.findMany({
+      where: and(...whereConditions),
+      limit,
+      offset,
+      orderBy,
+      with: {
+        categories: {
+          with: {
+            category: {
+              columns: {
+                id: true,
+                name: true,
+                handle: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
     return {
-      items,
+      items: items.map((item) => ({
+        ...item,
+        categories: item.categories.map((category) => ({
+          id: category.category.id,
+          name: category.category.name,
+          handle: category.category.handle,
+        })),
+      })),
       total,
     };
   }

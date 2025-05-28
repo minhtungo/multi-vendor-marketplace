@@ -18,7 +18,7 @@ import type { z } from 'zod';
 const defaultFormValues: z.infer<typeof createProductCategorySchema> = {
   name: '',
   description: '',
-  slug: '',
+  handle: '',
   status: 'active',
 };
 
@@ -58,12 +58,12 @@ export function CreateProductCategoriesForm({}: React.ComponentPropsWithoutRef<'
           />
           <FormField
             control={form.control}
-            name="slug"
+            name="handle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Slug</FormLabel>
+                <FormLabel>Handle</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="category-slug" />
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

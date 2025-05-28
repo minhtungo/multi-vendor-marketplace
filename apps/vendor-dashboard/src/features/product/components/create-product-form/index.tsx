@@ -23,7 +23,7 @@ const defaultFormValues: z.infer<typeof createProductSchema> = {
   categories: [],
   tags: [],
   stock: 0,
-  status: 'draft',
+  status: 'published',
   type: 'physical',
   handle: '',
   compareAtPrice: 0,

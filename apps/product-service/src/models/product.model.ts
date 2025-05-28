@@ -1,4 +1,4 @@
-import { productCategorySchema, productSchema } from '@/db/schemas';
+import { productSchema } from '@/db/schemas';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 

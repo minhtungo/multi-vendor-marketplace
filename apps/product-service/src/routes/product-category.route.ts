@@ -1,11 +1,11 @@
 import { productCategoryController } from '@/controllers/product-category.controller';
-import { insertProductCategorySchema, productCategorySchema } from '@/db/schemas/categories';
+import { insertCategorySchema, categorySchema } from '@/db/schemas/categories';
 import { createApiResponse } from '@repo/server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';
 import { validateRequest } from '@repo/server/middlewares';
-import { CreateProductCategoryRequestSchema } from '@/models/product-categories.model';
+import { CreateCategorySchema } from '@/models/product-categories.model';
 
 export const productCategoryRegistry = new OpenAPIRegistry();
 export const productCategoryRouter: Router = Router();
@@ -15,7 +15,7 @@ productCategoryRegistry.registerPath({
   method: 'get',
   path: '/product-categories',
   tags: ['Product Categories'],
-  responses: createApiResponse(z.array(productCategorySchema), 'Product categories retrieved successfully'),
+  responses: createApiResponse(z.array(categorySchema), 'Product categories retrieved successfully'),
 });
 
 productCategoryRouter.get('/', productCategoryController.getAllProductCategories);
@@ -30,7 +30,7 @@ productCategoryRegistry.registerPath({
       id: z.string().uuid(),
     }),
   },
-  responses: createApiResponse(productCategorySchema, 'Product category retrieved successfully'),
+  responses: createApiResponse(categorySchema, 'Product category retrieved successfully'),
 });
 
 productCategoryRouter.get(`/:id`, productCategoryController.getProductCategory);
@@ -44,17 +44,17 @@ productCategoryRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: CreateProductCategoryRequestSchema,
+          schema: CreateCategorySchema,
         },
       },
     },
   },
-  responses: createApiResponse(z.array(productCategorySchema), 'Product category created successfully'),
+  responses: createApiResponse(z.array(categorySchema), 'Product category created successfully'),
 });
 
 productCategoryRouter.post(
   '/',
-  validateRequest(z.object({ body: CreateProductCategoryRequestSchema })),
+  validateRequest(z.object({ body: CreateCategorySchema })),
   productCategoryController.createProductCategory
 );
 
@@ -70,12 +70,12 @@ productCategoryRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: insertProductCategorySchema.partial(),
+          schema: insertCategorySchema.partial(),
         },
       },
     },
   },
-  responses: createApiResponse(productCategorySchema, 'Product category updated successfully'),
+  responses: createApiResponse(categorySchema, 'Product category updated successfully'),
 });
 
 productCategoryRouter.put(`/:id`, productCategoryController.updateProductCategory);
@@ -90,7 +90,7 @@ productCategoryRegistry.registerPath({
       id: z.string().uuid(),
     }),
   },
-  responses: createApiResponse(productCategorySchema, 'Product category deleted successfully'),
+  responses: createApiResponse(categorySchema, 'Product category deleted successfully'),
 });
 
 productCategoryRouter.delete(`/:id`, productCategoryController.deleteProductCategory);
@@ -100,7 +100,7 @@ productCategoryRegistry.registerPath({
   method: 'delete',
   path: '/product-categories',
   tags: ['Product Categories'],
-  responses: createApiResponse(productCategorySchema, 'All product categories deleted successfully'),
+  responses: createApiResponse(categorySchema, 'All product categories deleted successfully'),
 });
 
 productCategoryRouter.delete('/all', productCategoryController.deleteAllProductCategories);

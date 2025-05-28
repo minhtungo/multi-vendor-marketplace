@@ -1,5 +1,6 @@
 import { createProductRequestSchema, getProductQuerySchema, updateProductRequestSchema } from '@/models/product.model';
 import { productService } from '@/services/product.service';
+import { sortOptions } from '@/utils/constants';
 import { handleServiceResponse } from '@repo/server/lib';
 import type { Request, Response } from 'express';
 
@@ -13,8 +14,12 @@ class ProductController {
   public getProducts = async (req: Request, res: Response) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
-    const sort = req.query.sort as 'price_asc' | 'price_desc' | 'latest_desc' | 'latest_asc' | undefined;
+
+    const sortQuery = req.query.sort as 'price_asc' | 'price_desc' | 'latest_desc' | 'latest_asc' | undefined;
+    const sort = sortOptions.find((option) => option === sortQuery) || 'latest_desc';
+
     const vendorId = req.user?.id;
+
     const serviceResponse = await productService.getAllProducts(page, limit, vendorId, sort);
     handleServiceResponse(serviceResponse, res);
   };

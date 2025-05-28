@@ -9,7 +9,7 @@ import { z } from 'zod';
 
 export const createProductCategorySchema = z.object({
   name: z.string().min(1, 'Product category name is required').max(255, 'Product category name too long'),
-  slug: z.string().min(1, 'Product category slug is required').max(255, 'Product category slug too long'),
+  handle: z.string().min(1, 'Product category handle is required').max(255, 'Product category handle too long'),
   description: z.string().optional(),
   status: z.enum(['active', 'inactive']),
 });

@@ -40,8 +40,8 @@ export function ProductPreview({ product }: ProductPreviewProps) {
         {/* Product Details */}
         <div className='space-y-6'>
           <div>
-            <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2'>
-              <span>{product.categories[0]}</span>
+            <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2 capitalize'>
+              <span>{product.categories[0].name}</span>
             </div>
             <h1 className='text-3xl font-bold mb-4'>{product.name}</h1>
 

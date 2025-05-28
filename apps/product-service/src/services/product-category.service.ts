@@ -1,4 +1,4 @@
-import { ProductCategory, InsertProductCategory } from '@/db/schemas';
+import { Category, InsertCategory } from '@/db/schemas';
 import { productCategoryRepository } from '@/repositories/product-category.repository';
 import { logger } from '@/utils/logger';
 import { ServiceResponse } from '@repo/server/lib';
@@ -7,7 +7,7 @@ import { HTTP_STATUS_CODES } from '@repo/server/core';
 class ProductCategoryService {
   constructor(private readonly categoryRepo = productCategoryRepository) {}
 
-  public async getAllProductCategories(): Promise<ServiceResponse<ProductCategory[] | null>> {
+  public async getAllProductCategories(): Promise<ServiceResponse<Category[] | null>> {
     try {
       const categories = await this.categoryRepo.getAllCategories();
       return ServiceResponse.success('Product categories retrieved successfully', categories, HTTP_STATUS_CODES.OK);
@@ -22,7 +22,7 @@ class ProductCategoryService {
     }
   }
 
-  public async getProductCategory(categoryId: string): Promise<ServiceResponse<ProductCategory | null>> {
+  public async getProductCategory(categoryId: string): Promise<ServiceResponse<Category | null>> {
     try {
       const category = await this.categoryRepo.getCategoryById(categoryId);
 
@@ -38,7 +38,7 @@ class ProductCategoryService {
     }
   }
 
-  public async createProductCategory(data: InsertProductCategory): Promise<ServiceResponse<ProductCategory | null>> {
+  public async createProductCategory(data: InsertCategory): Promise<ServiceResponse<Category | null>> {
     try {
       const category = await this.categoryRepo.createCategory(data);
       return ServiceResponse.success('Product category created successfully', category, HTTP_STATUS_CODES.CREATED);
@@ -51,8 +51,8 @@ class ProductCategoryService {
 
   public async updateProductCategory(
     categoryId: string,
-    data: Partial<InsertProductCategory>
-  ): Promise<ServiceResponse<ProductCategory | null>> {
+    data: Partial<InsertCategory>
+  ): Promise<ServiceResponse<Category | null>> {
     try {
       const category = await this.categoryRepo.getCategoryById(categoryId);
 
