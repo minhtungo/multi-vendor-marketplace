@@ -1,10 +1,11 @@
 import { productController } from '@/controllers/product.controller';
 import { productSchema } from '@/db/schemas/products';
 import {
-  CreateProductRequestSchema,
-  UpdateProductRequestSchema,
-  ProductListResponseSchema,
-  GetProductsQuerySchema,
+  createProductRequestSchema,
+  updateProductRequestSchema,
+  productListResponseSchema,
+  getProductsQuerySchema,
+  getProductQuerySchema,
 } from '@/models/product.model';
 import { createApiResponse } from '@repo/server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
@@ -18,25 +19,18 @@ export const productRouter: Router = Router();
 // Get Single Product Route
 productRegistry.registerPath({
   method: 'get',
-  path: `/products/{id}`,
+  path: `/products`,
   tags: ['Products'],
   request: {
     params: z.object({
       id: z.string().uuid(),
     }),
+    query: getProductQuerySchema,
   },
   responses: createApiResponse(productSchema, 'Product retrieved successfully'),
 });
 
-productRouter.get(
-  `/:id`,
-  validateRequest(
-    z.object({
-      params: z.object({ id: z.string().uuid() }),
-    })
-  ),
-  productController.getProduct
-);
+productRouter.get(`/:id`, validateRequest(getProductQuerySchema), productController.getProduct);
 
 //TODO: separate get products for vendor and public
 // Get All Products Route with Pagination
@@ -45,16 +39,16 @@ productRegistry.registerPath({
   path: '/products',
   tags: ['Products'],
   request: {
-    query: GetProductsQuerySchema,
+    query: getProductsQuerySchema,
   },
-  responses: createApiResponse(ProductListResponseSchema, 'Products retrieved successfully'),
+  responses: createApiResponse(productListResponseSchema, 'Products retrieved successfully'),
 });
 
 productRouter.get(
   '/',
   validateRequest(
     z.object({
-      query: GetProductsQuerySchema.optional(),
+      query: getProductsQuerySchema.optional(),
     })
   ),
   productController.getProducts
@@ -69,7 +63,7 @@ productRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: CreateProductRequestSchema,
+          schema: createProductRequestSchema,
         },
       },
     },
@@ -79,7 +73,7 @@ productRegistry.registerPath({
 
 productRouter.post(
   '/',
-  validateRequest(z.object({ body: CreateProductRequestSchema })),
+  validateRequest(z.object({ body: createProductRequestSchema })),
   productController.createProduct
 );
 
@@ -95,7 +89,7 @@ productRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: UpdateProductRequestSchema,
+          schema: updateProductRequestSchema,
         },
       },
     },
@@ -108,7 +102,7 @@ productRouter.put(
   validateRequest(
     z.object({
       params: z.object({ id: z.string().uuid() }),
-      body: UpdateProductRequestSchema,
+      body: updateProductRequestSchema,
     })
   ),
   productController.updateProduct

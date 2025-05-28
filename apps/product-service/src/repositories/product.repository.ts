@@ -1,6 +1,6 @@
 import { db } from '@/db';
 import { type InsertProduct, products } from '@/db/schemas/products';
-import { eq, sql, count, desc, and } from 'drizzle-orm';
+import { and, count, desc, eq } from 'drizzle-orm';
 
 export class ProductRepository {
   constructor(private readonly dbInstance = db) {}
@@ -8,6 +8,12 @@ export class ProductRepository {
   public async getProductById(productId: string, trx: typeof db = this.dbInstance) {
     return this.dbInstance.query.products.findFirst({
       where: eq(products.id, productId),
+    });
+  }
+
+  public async getProductByHandle(handle: string, trx: typeof db = this.dbInstance) {
+    return this.dbInstance.query.products.findFirst({
+      where: eq(products.handle, handle),
     });
   }
 

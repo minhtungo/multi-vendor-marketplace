@@ -1,16 +1,19 @@
 import { CreateProductRequest, InsertProduct, Product } from '@/db/schemas/products';
-import { UpdateProductRequest } from '@/models/product.model';
+import { GetProductQuery, getProductQuerySchema, UpdateProductRequest } from '@/models/product.model';
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
 import { ServiceResponse } from '@repo/server/lib';
+import z from 'zod';
 
 class ProductService {
   constructor(private readonly productRepo = productRepository) {}
 
-  public async getProduct(productId: string): Promise<ServiceResponse<Product | null>> {
+  public async getProduct(data: GetProductQuery): Promise<ServiceResponse<Product | null>> {
     try {
-      const product = await this.productRepo.getProductById(productId);
+      const product = data.id
+        ? await this.productRepo.getProductById(data.id)
+        : await this.productRepo.getProductByHandle(data.handle!);
 
       if (!product) {
         return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);

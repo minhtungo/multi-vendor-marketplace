@@ -1,6 +1,6 @@
-import { pgTable, text, timestamp, uuid, varchar, boolean } from 'drizzle-orm/pg-core';
-import { products } from '../products/products';
 import { productCategoryStatusSchema, statusSchema } from '@/db/schemas/constants';
+import { boolean, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { products } from '../products/products';
 
 export const productCategories = pgTable('product_categories', {
   id: uuid('id').primaryKey().defaultRandom(),

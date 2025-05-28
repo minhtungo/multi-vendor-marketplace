@@ -1,13 +1,13 @@
 import { insertProductSchema } from '@/db/schemas/products';
-import { CreateProductRequestSchema, UpdateProductRequestSchema } from '@/models/product.model';
+import { createProductRequestSchema, getProductQuerySchema, updateProductRequestSchema } from '@/models/product.model';
 import { productService } from '@/services/product.service';
 import { handleServiceResponse } from '@repo/server/lib';
 import type { NextFunction, Request, Response } from 'express';
 
 class ProductController {
   public getProduct = async (req: Request, res: Response, next: NextFunction) => {
-    const productId = req.params.id;
-    const serviceResponse = await productService.getProduct(productId);
+    const data = getProductQuerySchema.parse(req.query);
+    const serviceResponse = await productService.getProduct(data);
     handleServiceResponse(serviceResponse, res);
   };
 
@@ -22,7 +22,7 @@ class ProductController {
 
   public createProduct = async (req: Request, res: Response, next: NextFunction) => {
     const vendorId = req.user?.id;
-    const data = CreateProductRequestSchema.parse(req.body);
+    const data = createProductRequestSchema.parse(req.body);
     const serviceResponse = await productService.createProduct(data, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };
@@ -30,7 +30,7 @@ class ProductController {
   public updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     const vendorId = req.user?.id;
     const productId = req.params.id;
-    const data = UpdateProductRequestSchema.parse(req.body);
+    const data = updateProductRequestSchema.parse(req.body);
     const serviceResponse = await productService.updateProduct(productId, data, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };
