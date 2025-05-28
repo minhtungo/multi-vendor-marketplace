@@ -1,7 +1,7 @@
 'use client';
 
 import { SubmitButton } from '@/components/common/submit-button';
-import { ErrorMessage } from '@/components/error-messages';
+import { ErrorMessage } from '@/components/error-message';
 import { signUp } from '@/features/auth/api/sign-up';
 import { OAuthActions } from '@/features/auth/components/common/oauth-actions';
 import { Input } from '@repo/ui/components/input';

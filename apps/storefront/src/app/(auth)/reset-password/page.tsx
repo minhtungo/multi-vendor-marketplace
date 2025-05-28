@@ -16,7 +16,7 @@ const ResetPassword = async ({ searchParams }: { searchParams: { token: string }
   return (
     <AuthContainer title='Reset Password' description='Please enter your new password.'>
       <Suspense fallback={<div>Loading...</div>}>
-        <ResetPasswordContainer tokenPromise={tokenValidationPromise} />
+        <ResetPasswordContainer tokenPromise={tokenValidationPromise} token={token} />
       </Suspense>
     </AuthContainer>
   );

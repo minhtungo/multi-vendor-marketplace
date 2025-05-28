@@ -1,45 +1,27 @@
 'use client';
 
-import { clientPaths } from '@/configs/paths';
-import { signUpSchema } from '@/features/auth/api/sign-up';
-import { useVerifyUserMutation } from '@/features/auth/api/verify-user';
+import { SubmitButton } from '@/components/common/submit-button';
+import { verifyUser } from '@/features/auth/api/verify-user';
 import { Button } from '@repo/ui/components/button';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@repo/ui/components/input-otp';
-import { LoaderButton } from '@repo/ui/components/loader-button';
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import { z } from 'zod';
+import { useActionState, useEffect, useState } from 'react';
 
-interface OTPFormProps {
-  userInput: z.infer<typeof signUpSchema>;
-}
+type OTPFormProps = {
+  email: string;
+  password: string;
+};
 
-export function OTPForm({ userInput }: OTPFormProps) {
+export function OTPForm({ email, password }: OTPFormProps) {
   const [otp, setOtp] = useState('');
   const [countdown, setCountdown] = useState(0);
-  const router = useRouter();
+  const [state, formAction] = useActionState(verifyUser, null);
 
-  const { mutate: verifyUser, isPending, isSuccess, isError, error } = useVerifyUserMutation();
-
-  const handleVerifyOTP = () => {
-    verifyUser(
-      {
-        email: userInput.email,
-        password: userInput.password,
-        otp,
-      },
-      {
-        onSuccess: () => {
-          router.push(clientPaths.path.signUp);
-        },
-      }
-    );
-  };
-
-  const handleResendOTP = () => {
-    // TODO: Implement resend OTP API call
-    setCountdown(60);
+  const handleResendOTP = async () => {
+    const formData = new FormData();
+    formData.set('email', email);
+    formData.set('password', password);
+    await verifyUser(null, formData);
   };
 
   useEffect(() => {
@@ -57,7 +39,10 @@ export function OTPForm({ userInput }: OTPFormProps) {
   return (
     <div className='space-y-4'>
       <p className='text-sm text-muted-foreground'>Enter the 6-digit code sent to your email address</p>
-      <div className='space-y-4'>
+      <form action={formAction} className='space-y-4'>
+        <input type='hidden' name='email' value={email} />
+        <input type='hidden' name='password' value={password} />
+        <input type='hidden' name='otp' value={otp} />
         <div>
           <InputOTP maxLength={6} value={otp} onChange={(value) => setOtp(value)}>
             <InputOTPGroup>
@@ -72,32 +57,20 @@ export function OTPForm({ userInput }: OTPFormProps) {
             </InputOTPGroup>
           </InputOTP>
         </div>
-        {isError && (
+        {state && (
           <FormResponse
-            title='Error'
-            variant='destructive'
-            description={error?.message || 'An error occurred while verifying your email.'}
+            title={state.success ? 'Success' : 'Error'}
+            variant={state.success ? 'success' : 'destructive'}
+            description={state?.message}
           />
         )}
-        {isSuccess && (
-          <FormResponse
-            title='Success'
-            variant='success'
-            description='Your email has been verified successfully. You can now sign in.'
-          />
-        )}
-        <LoaderButton
-          isPending={isPending}
-          className='w-full mt-3'
-          onClick={handleVerifyOTP}
-          disabled={otp.length !== 6}
-        >
+        <SubmitButton className='w-full mt-3' disabled={otp.length !== 6}>
           Verify OTP
-        </LoaderButton>
-        <Button variant='ghost' className='w-full' onClick={handleResendOTP} disabled={countdown > 0}>
-          {countdown > 0 ? `Resend OTP in ${countdown}s` : 'Resend OTP'}
-        </Button>
-      </div>
+        </SubmitButton>
+      </form>
+      <Button variant='ghost' className='w-full' onClick={handleResendOTP} disabled={countdown > 0}>
+        {countdown > 0 ? `Resend OTP in ${countdown}s` : 'Resend OTP'}
+      </Button>
     </div>
   );
 }

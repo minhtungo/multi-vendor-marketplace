@@ -1,23 +1,41 @@
+'use server';
+
 import { server } from '@/configs/server';
 import { api } from '@/lib/api-client';
-import { commonValidations } from '@/lib/validations';
-import { type User } from '@repo/types/user';
-import { z } from 'zod';
-import { type ApiResponse } from '@repo/types/api';
+import { ApiError } from '@/lib/core/http/error';
 
-export const forgotPasswordSchema = z.object({
-  email: commonValidations.email,
-});
+export async function forgotPassword(_prevState: unknown, formData: FormData) {
+  const email = formData.get('email') as string;
 
-export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+  try {
+    const response = await api.post<{
+      message: string;
+    }>(
+      server.path.auth.forgotPassword,
+      { email },
+      {
+        skipAuth: true,
+      }
+    );
 
-export async function forgotPassword(data: ForgotPasswordInput): Promise<
-  ApiResponse<{
-    accessToken: string;
-    user: User;
-  }>
-> {
-  return api.post(server.path.auth.forgotPassword, data, {
-    skipAuth: true,
-  });
+    return {
+      data: response.data,
+      success: true,
+      message: response.message || 'Password reset link sent to your email.',
+    };
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return {
+        data: null,
+        success: false,
+        message: error.message,
+      };
+    }
+  }
+
+  return {
+    data: null,
+    success: false,
+    message: 'An unexpected error occurred.',
+  };
 }

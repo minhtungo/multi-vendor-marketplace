@@ -1,9 +1,9 @@
 'use client';
 
 import { SubmitButton } from '@/components/common/submit-button';
-import { ErrorMessage } from '@/components/error-messages';
 import { signIn } from '@/features/auth/api/sign-in';
 import { OAuthActions } from '@/features/auth/components/common/oauth-actions';
+import { FormResponse } from '@repo/ui/components/form-response';
 import { Input } from '@repo/ui/components/input';
 import { Label } from '@repo/ui/components/label';
 import { PasswordInput } from '@repo/ui/components/password-input';
@@ -28,12 +28,12 @@ export function SignInForm() {
           <PasswordInput name='password' autoComplete='current-password' required data-testid='password-input' />
         </div>
       </div>
-      {state?.success ? (
-        <p>{state?.message}</p>
-      ) : (
-        <>
-          <ErrorMessage error={state?.message} />
-        </>
+      {state && (
+        <FormResponse
+          title={state.success ? 'Success' : 'Error'}
+          variant={state.success ? 'success' : 'destructive'}
+          description={state?.message}
+        />
       )}
       <SubmitButton className='w-full'>Sign In</SubmitButton>
     </form>

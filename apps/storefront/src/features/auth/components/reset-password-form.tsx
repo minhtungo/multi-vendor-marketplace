@@ -1,102 +1,61 @@
 'use client';
 
+import { SubmitButton } from '@/components/common/submit-button';
 import { clientPaths } from '@/configs/paths';
-import { resetPasswordSchema, useResetPasswordMutation } from '@/features/auth/api/reset-password';
-import { ApiResponse } from '@/types/api';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/components/form';
+import { resetPassword } from '@/features/auth/api/reset-password';
+import { type ApiResponse } from '@repo/types/api';
 import { FormResponse } from '@repo/ui/components/form-response';
-import { LoaderButton } from '@repo/ui/components/loader-button';
+import { Label } from '@repo/ui/components/label';
 import { PasswordInput } from '@repo/ui/components/password-input';
 import Link from 'next/link';
-import { use } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { use, useActionState } from 'react';
 
-const resetPasswordInputSchema = resetPasswordSchema
-  .extend({
-    confirm_password: z.string().min(1, 'Confirm password is required'),
-  })
-  .refine((data) => data.password === data.confirm_password, {
-    message: 'Passwords do not match',
-    path: ['confirm_password'],
-  });
-
-export function ResetPasswordForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
-  const form = useForm<z.infer<typeof resetPasswordInputSchema>>({
-    resolver: zodResolver(resetPasswordInputSchema),
-    defaultValues: {
-      password: '',
-      confirm_password: '',
-    },
-  });
-
-  const { mutate: resetPassword, isPending, isSuccess, isError, error } = useResetPasswordMutation();
-
-  const onSubmit = (data: z.infer<typeof resetPasswordInputSchema>) => {
-    resetPassword(data);
-  };
+export function ResetPasswordForm({ token }: { token: string }) {
+  const [state, formAction] = useActionState(resetPassword, null);
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-        <div className='space-y-4'>
-          <FormField
-            control={form.control}
-            name='password'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <PasswordInput {...field} autoFocus />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='confirm_password'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <PasswordInput {...field} autoFocus />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <form action={formAction} className='space-y-6'>
+      <input type='hidden' name='token' value={token} />
+      <div className='space-y-4'>
+        <div className='grid gap-2'>
+          <Label>Password</Label>
+          <PasswordInput name='password' autoComplete='new-password' required autoFocus />
         </div>
-        {isSuccess && <FormResponse title='Success' variant='success' description='Password reset successfully.' />}
-        {isError && (
-          <FormResponse
-            title='Error'
-            variant='destructive'
-            description={error?.message || 'An error occurred while resetting password.'}
-          />
-        )}
-
-        <LoaderButton isPending={isPending} className='w-full'>
-          Reset Password
-        </LoaderButton>
-        <div className='text-muted-foreground text-sm'>
-          Already have an account?{' '}
-          <Link href={clientPaths.path.signIn} className='underline underline-offset-4'>
-            Sign In
-          </Link>
+        <div className='grid gap-2'>
+          <Label>Confirm Password</Label>
+          <PasswordInput name='confirm_password' autoComplete='new-password' required />
         </div>
-      </form>
-    </Form>
+      </div>
+      {state && (
+        <FormResponse
+          title={state.success ? 'Success' : 'Error'}
+          variant={state.success ? 'success' : 'destructive'}
+          description={state?.message}
+        />
+      )}
+      <SubmitButton className='w-full'>Reset Password</SubmitButton>
+      <div className='text-muted-foreground text-sm'>
+        Already have an account?{' '}
+        <Link href={clientPaths.auth.signIn} className='underline underline-offset-4'>
+          Sign In
+        </Link>
+      </div>
+    </form>
   );
 }
 
-export function ResetPasswordContainer({ tokenPromise }: { tokenPromise: Promise<ApiResponse<{ isValid: boolean }>> }) {
+export function ResetPasswordContainer({
+  tokenPromise,
+  token,
+}: {
+  tokenPromise: Promise<ApiResponse<{ isValid: boolean }>>;
+  token: string;
+}) {
   const isTokenValid = use(tokenPromise);
 
   if (!isTokenValid.data?.isValid) {
     return <div>Invalid token</div>;
   }
 
-  return <ResetPasswordForm />;
+  return <ResetPasswordForm token={token} />;
 }
