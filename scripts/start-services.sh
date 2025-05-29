@@ -39,5 +39,10 @@ fi
 
 echo ""
 echo "🎉 All services started!"
+echo ""
+echo "📋 Summary of all running services:"
+echo "===================================="
+docker ps --format "table {{.Names}}\t{{.Ports}}" --filter "status=running"
+echo ""
 echo "📋 Check status: docker ps"
 echo "📋 Stop all: ./scripts/stop-services.sh" 
