@@ -15,3 +15,11 @@ export type Cart = {
   currency: string;
   itemCount: number;
 };
+
+export type CartItem = {
+  id: string;
+  productId: string;
+  price: string;
+  quantity: number;
+  total: string;
+};
