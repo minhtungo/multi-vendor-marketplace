@@ -25,9 +25,9 @@ type HeadingProps = Omit<React.HTMLAttributes<HTMLHeadingElement>, 'color'> & {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 };
 
-function Heading({ className, as = 'h2', ...props }: HeadingProps) {
+function Heading({ className, variant, as = 'h2', ...props }: HeadingProps) {
   const Comp = as;
-  return <Comp className={cn(headingVariants({ variant: as, className }))} {...props} />;
+  return <Comp className={cn(headingVariants({ variant, className }))} {...props} />;
 }
 
 export { Heading, headingVariants };

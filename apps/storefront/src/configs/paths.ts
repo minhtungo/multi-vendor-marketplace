@@ -17,6 +17,8 @@ export const clientPaths = {
     root: '/shop',
     product: '/shop/product',
     category: '/shop/category',
+    checkout: '/checkout',
+    cart: '/cart',
   },
 } as const;
 

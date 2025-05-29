@@ -26,17 +26,6 @@ export function Header({ className }: HeaderProps) {
             <MobileMenu className='lg:hidden cursor-pointer' />
           </div>
           <SearchBar className='hidden lg:block max-w-[400px] w-full' />
-          {/* <nav className='hidden lg:block'>
-            <ul className='flex gap-6 text-sm'>
-              {menu.main.map((item) => (
-                <li key={item.href}>
-                  <Link href={item.href} className={buttonVariants({ variant: 'link' })}>
-                    <span>{item.title}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav> */}
           <div className='flex items-center gap-2'>
             <Button size='icon' variant='ghost' asChild>
               <Link href={clientPaths.auth.signIn}>
@@ -44,7 +33,7 @@ export function Header({ className }: HeaderProps) {
               </Link>
             </Button>
             <Button size='icon' variant='ghost' asChild>
-              <Link href={clientPaths.shop.root} className='relative'>
+              <Link href={clientPaths.shop.cart} className='relative'>
                 <ShoppingBag className='size-5' />
                 <span className='absolute right-0 top-0 rounded-full bg-primary text-xs text-primary-foreground w-4 h-4 flex items-center justify-center'>
                   0
