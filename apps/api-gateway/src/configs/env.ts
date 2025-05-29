@@ -32,6 +32,7 @@ const envSchema = z.object({
   PAYMENT_SERVICE_URL: z.string().default('http://localhost:8083'),
   UPLOAD_SERVICE_URL: z.string().default('http://localhost:8084'),
   ORDER_SERVICE_URL: z.string().default('http://localhost:8085'),
+  CART_SERVICE_URL: z.string().default('http://localhost:8087'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

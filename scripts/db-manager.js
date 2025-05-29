@@ -11,6 +11,7 @@ const services = [
   'order-service',
   'user-service',
   'vendor-service',
+  'cart-service',
 ];
 
 const commands = ['generate', 'migrate', 'push', 'studio', 'seed', 'reset'];

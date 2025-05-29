@@ -1,14 +1,11 @@
 import { appConfig } from '@/configs/app';
 import { env } from '@/configs/env';
-import { proxyOptions, forwardUserContext } from '@/lib/proxy-options';
-import { optionalAuth, requireAuth, requireVendorRole } from '@/middlewares/auth';
 import rateLimiter from '@/middlewares/rate-limiter';
 import { healthCheckRouter } from '@repo/server/routes';
-import { logger } from '@/utils/logger';
+import { serviceRoutes } from '@/routes';
 import { errorHandler } from '@repo/server/middlewares';
 import cors from 'cors';
 import express, { type Express } from 'express';
-import proxy from 'express-http-proxy';
 import helmet from 'helmet';
 
 const app: Express = express();
@@ -37,103 +34,7 @@ app.use(rateLimiter);
 
 // Routes
 app.use(`/${appConfig.apiVersion}/health-check`, healthCheckRouter);
-
-// Auth service
-app.use(
-  `/${appConfig.apiVersion}/auth`,
-  proxy(env.AUTH_SERVICE_URL, {
-    ...proxyOptions,
-    proxyReqOptDecorator: forwardUserContext,
-    userResDecorator: (proxyRes, proxyResData) => {
-      logger.info(`Response received from Auth service: ${proxyRes.statusCode}`);
-      return proxyResData;
-    },
-  })
-);
-
-// User service
-app.use(
-  `/${appConfig.apiVersion}/users`,
-  proxy(env.USER_SERVICE_URL, {
-    ...proxyOptions,
-    proxyReqOptDecorator: forwardUserContext,
-    userResDecorator: (proxyRes, proxyResData) => {
-      logger.info(`Response received from User service: ${proxyRes.statusCode}`);
-      return proxyResData;
-    },
-  })
-);
-
-// Product service
-app.use(
-  `/${appConfig.apiVersion}/products`,
-  optionalAuth,
-  proxy(env.PRODUCT_SERVICE_URL, {
-    ...proxyOptions,
-    proxyReqOptDecorator: forwardUserContext,
-    userResDecorator: (proxyRes, proxyResData) => {
-      logger.info(`Response received from Product service: ${proxyRes.statusCode}`);
-      return proxyResData;
-    },
-  })
-);
-
-// Product service
-app.use(
-  `/${appConfig.apiVersion}/product-categories`,
-  optionalAuth,
-  proxy(env.PRODUCT_SERVICE_URL, {
-    ...proxyOptions,
-    proxyReqOptDecorator: forwardUserContext,
-    userResDecorator: (proxyRes, proxyResData) => {
-      logger.info(`Response received from Product category service: ${proxyRes.statusCode}`);
-      return proxyResData;
-    },
-  })
-);
-
-// Payment service
-app.use(
-  `/${appConfig.apiVersion}/payment`,
-  requireAuth,
-  requireVendorRole,
-  proxy(env.PAYMENT_SERVICE_URL, {
-    ...proxyOptions,
-    proxyReqOptDecorator: forwardUserContext,
-    userResDecorator: (proxyRes, proxyResData) => {
-      logger.info(`Response received from Payment service: ${proxyRes.statusCode}`);
-      return proxyResData;
-    },
-  })
-);
-
-// Order service
-app.use(
-  `/${appConfig.apiVersion}/orders`,
-  requireAuth,
-  proxy(env.ORDER_SERVICE_URL, {
-    ...proxyOptions,
-    proxyReqOptDecorator: forwardUserContext,
-    userResDecorator: (proxyRes, proxyResData) => {
-      logger.info(`Response received from Order service: ${proxyRes.statusCode}`);
-      return proxyResData;
-    },
-  })
-);
-
-// Upload service
-app.use(
-  `/${appConfig.apiVersion}/uploads`,
-  requireAuth,
-  proxy(env.UPLOAD_SERVICE_URL, {
-    ...proxyOptions,
-    proxyReqOptDecorator: forwardUserContext,
-    userResDecorator: (proxyRes, proxyResData) => {
-      logger.info(`Response received from Upload service: ${proxyRes.statusCode}`);
-      return proxyResData;
-    },
-  })
-);
+app.use(serviceRoutes);
 
 // Error handlers
 app.use(errorHandler());
