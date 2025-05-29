@@ -3,27 +3,11 @@ import { handleServiceResponse } from '@repo/server/lib';
 import type { Request, Response } from 'express';
 
 class CartController {
-  public getCartByUserId = async (req: Request, res: Response) => {
-    const { userId } = req.params;
-    const serviceResponse = await cartService.getCartByUserId(userId);
-    handleServiceResponse(serviceResponse, res);
-  };
+  public getCart = async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const sessionId = req.params?.sessionId;
 
-  public getCartById = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const serviceResponse = await cartService.getCartById(id);
-    handleServiceResponse(serviceResponse, res);
-  };
-
-  public getCartBySessionId = async (req: Request, res: Response) => {
-    const { sessionId } = req.params;
-    const serviceResponse = await cartService.getCartBySessionId(sessionId);
-    handleServiceResponse(serviceResponse, res);
-  };
-
-  public createCart = async (req: Request, res: Response) => {
-    const cartData = req.body;
-    const serviceResponse = await cartService.createCart(cartData);
+    const serviceResponse = await cartService.getOrCreateCart(userId, sessionId);
     handleServiceResponse(serviceResponse, res);
   };
 

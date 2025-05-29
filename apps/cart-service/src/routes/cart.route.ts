@@ -9,24 +9,20 @@ import { z } from 'zod';
 export const cartRegistry = new OpenAPIRegistry();
 export const cartRouter: Router = express.Router();
 
-// Create cart
+// Get cart
 cartRegistry.registerPath({
-  method: 'post',
+  method: 'get',
   path: '/cart',
   tags: ['Cart'],
   request: {
-    body: {
-      content: {
-        'application/json': {
-          schema: insertCartSchema,
-        },
-      },
-    },
+    params: z.object({
+      sessionId: z.string(),
+    }),
   },
-  responses: createApiResponse(cartSchema, 'Cart created successfully'),
+  responses: createApiResponse(cartSchema, 'Cart retrieved successfully'),
 });
 
-cartRouter.post('/', validateRequest(z.object({ body: insertCartSchema })), cartController.createCart);
+cartRouter.get('/', validateRequest(z.object({ params: z.object({ sessionId: z.string() }) })), cartController.getCart);
 
 // Update cart
 cartRegistry.registerPath({
@@ -52,57 +48,4 @@ cartRouter.put(
   '/:id',
   validateRequest(z.object({ params: z.object({ id: z.string() }), body: updateCartSchema })),
   cartController.updateCart
-);
-
-// Get cart by user ID
-cartRegistry.registerPath({
-  method: 'get',
-  path: '/cart/user/{userId}',
-  tags: ['Cart'],
-  request: {
-    params: z.object({
-      userId: z.string().uuid(),
-    }),
-  },
-  responses: createApiResponse(cartSchema, 'Cart retrieved successfully'),
-});
-
-cartRouter.get(
-  '/user/:userId',
-  validateRequest(z.object({ params: z.object({ userId: z.string().uuid() }) })),
-  cartController.getCartByUserId
-);
-
-// Get cart by cart ID
-cartRegistry.registerPath({
-  method: 'get',
-  path: '/cart/{id}',
-  tags: ['Cart'],
-  request: {
-    params: z.object({
-      id: z.string(),
-    }),
-  },
-  responses: createApiResponse(cartSchema, 'Cart retrieved successfully'),
-});
-
-cartRouter.get('/:id', validateRequest(z.object({ params: z.object({ id: z.string() }) })), cartController.getCartById);
-
-// Get cart by session ID (for guest users)
-cartRegistry.registerPath({
-  method: 'get',
-  path: '/cart/session/{sessionId}',
-  tags: ['Cart'],
-  request: {
-    params: z.object({
-      sessionId: z.string(),
-    }),
-  },
-  responses: createApiResponse(cartSchema, 'Cart retrieved successfully'),
-});
-
-cartRouter.get(
-  '/session/:sessionId',
-  validateRequest(z.object({ params: z.object({ sessionId: z.string() }) })),
-  cartController.getCartBySessionId
 );

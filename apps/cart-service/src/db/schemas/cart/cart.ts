@@ -9,12 +9,11 @@ export const cart = pgTable(
     id: text()
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    userId: uuid('user_id').notNull(),
+    userId: uuid('user_id'),
     status: cartStatus().notNull().default(CART_STATUS.ACTIVE),
-    sessionId: text('session_id'), // for guest users
+    sessionId: text('session_id'),
     subtotal: decimal('subtotal', { precision: 10, scale: 2 }).notNull().default('0.00'),
     total: decimal('total', { precision: 10, scale: 2 }).notNull().default('0.00'),
-    currency: text('currency').notNull().default('USD'),
     itemCount: integer('item_count').default(0),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),

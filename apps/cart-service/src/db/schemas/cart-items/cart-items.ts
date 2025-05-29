@@ -16,6 +16,7 @@ export const cartItems = pgTable(
     quantity: integer('quantity').notNull().default(1),
     total: decimal('total', { precision: 10, scale: 2 }).notNull(),
     createdAt: timestamp('created_at').defaultNow(),
+    updatedAt: timestamp('updated_at').defaultNow(),
   },
   (t) => [index('cart_items_cart_id_index').on(t.cartId), index('cart_items_product_id_index').on(t.productId)]
 );

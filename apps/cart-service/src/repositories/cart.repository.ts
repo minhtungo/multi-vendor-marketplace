@@ -24,14 +24,6 @@ export class CartRepository {
     return result;
   }
 
-  async getCartById(cartId: string) {
-    const result = await this.dbInstance.query.cart.findFirst({
-      where: eq(cart.id, cartId),
-    });
-
-    return result;
-  }
-
   async getCartBySessionId(sessionId: string) {
     const result = await this.dbInstance.query.cart.findFirst({
       where: eq(cart.sessionId, sessionId),

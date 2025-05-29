@@ -7,19 +7,10 @@ export enum CART_STATUS {
 
 export type Cart = {
   id: string;
-  userId: string;
+  userId: string | undefined;
   status: CART_STATUS;
-  sessionId?: string;
+  sessionId: string | undefined;
   subtotal: string;
   total: string;
-  currency: string;
   itemCount: number;
-};
-
-export type CartItem = {
-  id: string;
-  productId: string;
-  price: string;
-  quantity: number;
-  total: string;
 };
