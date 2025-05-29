@@ -25,10 +25,7 @@ export const products = pgTable(
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
   },
-  (t) => ({
-    nameIndex: index('name_index').on(t.name),
-    handleIndex: index('handle_index').on(t.handle),
-  })
+  (t) => [index('name_index').on(t.name), index('handle_index').on(t.handle)]
 );
 
 export const productsRelations = relations(products, ({ many }) => ({
