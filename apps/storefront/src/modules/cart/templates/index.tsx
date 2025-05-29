@@ -44,10 +44,10 @@ const total = subtotal + shipping + tax;
 
 export function CartTemplate() {
   return (
-    <div className=''>
+    <div className='w-full'>
       <div className='flex items-center gap-2 mb-8'>
         <ShoppingBag className='h-6 w-6' />
-        <Heading variant='h5' as='h3'>
+        <Heading variant='h5' as='h1'>
           Shopping Cart
         </Heading>
         <span className='text-sm text-muted-foreground'>({cartItems.length} items)</span>
