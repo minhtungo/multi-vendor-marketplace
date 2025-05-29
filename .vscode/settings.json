@@ -3,5 +3,16 @@
     {
       "mode": "auto"
     }
-  ]
+  ],
+  "editor.formatOnSave": true,
+  "typescript.preferences.autoImportFileExcludePatterns": ["next/router.d.ts", "next/dist/client/router.d.ts"],
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }
