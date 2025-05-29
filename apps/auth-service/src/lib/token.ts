@@ -1,7 +1,7 @@
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
+import { tokenService } from '@/services/token.service';
 
-import { redisService } from '@/services/redis.service';
 import type { AccessTokenPayload } from '@/types/token';
 
 import { sign } from 'jsonwebtoken';
@@ -43,8 +43,7 @@ export const generateRefreshToken = async (
     }
   );
 
-  // Store the refresh token in Redis
-  await redisService.storeRefreshToken(userId, sessionId, token);
+  await tokenService.storeRefreshToken(userId, sessionId, token);
 
   return {
     token,
@@ -54,9 +53,9 @@ export const generateRefreshToken = async (
 };
 
 export const validateRefreshToken = async (sessionId: string, token: string): Promise<boolean> => {
-  return await redisService.validateRefreshToken(sessionId, token);
+  return await tokenService.validateRefreshToken(sessionId, token);
 };
 
 export const invalidateRefreshToken = async (userId: string, sessionId: string): Promise<void> => {
-  await redisService.invalidateRefreshToken(userId, sessionId);
+  await tokenService.invalidateRefreshToken(userId, sessionId);
 };
