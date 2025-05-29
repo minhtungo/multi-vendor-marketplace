@@ -25,6 +25,7 @@ export const clientPaths = {
 } as const;
 
 const authPath = `/auth/user`;
+const cartPath = `/cart`;
 
 export const serverPaths = {
   auth: {
@@ -38,5 +39,8 @@ export const serverPaths = {
   },
   user: {
     me: `${authPath}/me`,
+  },
+  cart: {
+    retrieve: `${cartPath}`,
   },
 };

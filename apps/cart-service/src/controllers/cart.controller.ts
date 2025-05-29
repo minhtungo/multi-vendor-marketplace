@@ -20,6 +20,19 @@ class CartController {
     const serviceResponse = await cartService.getCartBySessionId(sessionId);
     handleServiceResponse(serviceResponse, res);
   };
+
+  public createCart = async (req: Request, res: Response) => {
+    const cartData = req.body;
+    const serviceResponse = await cartService.createCart(cartData);
+    handleServiceResponse(serviceResponse, res);
+  };
+
+  public updateCart = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const cartData = req.body;
+    const serviceResponse = await cartService.updateCart(id, cartData);
+    handleServiceResponse(serviceResponse, res);
+  };
 }
 
 export const cartController = new CartController();

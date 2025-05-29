@@ -2,6 +2,7 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { cart } from './cart';
 
 export const insertCartSchema = createInsertSchema(cart);
+export const updateCartSchema = insertCartSchema.partial();
 export const cartSchema = createSelectSchema(cart);
 
 export type InsertCart = typeof cart.$inferInsert;
