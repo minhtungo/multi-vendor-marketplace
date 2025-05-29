@@ -1,11 +1,11 @@
 import { Footer } from '@/components/footer/footer';
 import { Header } from '@/components/header';
-import { siteConfig } from '@/configs/site';
 import { Providers } from '@/components/providers';
+import { siteConfig } from '@/configs/site';
+import { Toaster } from '@repo/ui/components/sonner';
 import '@repo/ui/globals.css';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { Toaster } from '@repo/ui/components/sonner';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],

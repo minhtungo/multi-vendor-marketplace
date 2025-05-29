@@ -8,10 +8,12 @@ export const clientPaths = {
   },
   account: {
     root: '/account',
-    profile: '/account/profile',
+    profile: '/account',
     orders: '/account/orders',
     address: '/account/address',
     wishlist: '/account/wishlist',
+    settings: '/account/settings',
+    paymentMethods: '/account/payment-methods',
   },
   shop: {
     root: '/shop',

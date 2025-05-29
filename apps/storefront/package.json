@@ -10,10 +10,11 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
+    "@repo/shared": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",
-    "@repo/shared": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.4",
+    "class-variance-authority": "^0.7.1",
     "next": "15.3.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
