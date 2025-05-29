@@ -14,7 +14,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - multivendor-network
+      - multivendor-network-2
 
   # MailHog for email testing
   mailhog:
@@ -32,7 +32,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - multivendor-network
+      - multivendor-network-2
 
   # RabbitMQ service
   rabbitmq:
@@ -53,7 +53,7 @@ services:
       timeout: 10s
       retries: 5
     networks:
-      - multivendor-network
+      - multivendor-network-2
 
   # MinIO for file storage
   minio:
@@ -74,12 +74,12 @@ services:
       timeout: 20s
       retries: 3
     networks:
-      - multivendor-network
+      - multivendor-network-2
 
 networks:
-  multivendor-network:
+  multivendor-network-2:
     driver: bridge
-    name: multivendor-network
+    name: multivendor-network-2
 
 volumes:
   redis-data:

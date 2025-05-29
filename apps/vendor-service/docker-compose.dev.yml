@@ -3,8 +3,10 @@ services:
     image: postgres:latest
     container_name: vendor-service-db
     restart: always
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-vendor_db}
     volumes:
       - ../../docker-data/vendor-db:/var/lib/postgresql/data
     ports:
@@ -15,8 +17,8 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - multivendor-network
+      - multivendor-network-2
 
 networks:
-  multivendor-network:
+  multivendor-network-2:
     external: true
