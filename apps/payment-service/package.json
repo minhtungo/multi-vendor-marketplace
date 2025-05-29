@@ -20,6 +20,7 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@repo/eslint-config": "workspace:*",
     "@repo/types": "workspace:*",
     "@asteasolutions/zod-to-openapi": "7.3.0",
     "@repo/redis": "workspace:*",
@@ -28,6 +29,7 @@
     "dotenv": "16.5.0",
     "drizzle-orm": "^0.43.1",
     "drizzle-zod": "^0.7.1",
+    "eslint": "^9.27.0",
     "express": "5.1.0",
     "express-rate-limit": "7.5.0",
     "pg": "^8.15.6",

@@ -25,7 +25,6 @@
     "@repo/redis": "workspace:*",
     "@repo/server": "workspace:*",
     "@repo/messaging": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
     "argon2": "^0.43.0",
     "axios": "^1.9.0",
     "cookie-parser": "^1.4.7",
@@ -43,7 +42,8 @@
     "zod": "3.24.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/eslint-config": "workspace:*",
     "@repo/types": "workspace:*",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "2.8.17",
@@ -57,6 +57,7 @@
     "@types/swagger-ui-express": "4.1.8",
     "@vitest/coverage-v8": "3.1.2",
     "drizzle-kit": "^0.31.0",
+    "eslint": "^9.27.0",
     "supertest": "7.1.0",
     "tsup": "8.4.0",
     "tsx": "4.19.4",
