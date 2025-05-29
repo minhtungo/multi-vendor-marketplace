@@ -1,43 +1,104 @@
-# Multi-Vendor Marketplace Platform
+# Multi-Tenant E-commerce Platform
 
 Built using a microservices architecture and Turborepo for monorepo management.
 
 ## Project Structure
 
-### Applications
+### Applications (`/apps`)
 
-- `api-gateway`: API Gateway service for routing and managing requests
-- `auth-service`: Authentication and authorization service
-- `storefront`: Storefront application
-- `vendor-dashboard`: Dashboard for vendors to manage their products and orders
-- `vendor-service`: Service for managing vendors
-- `user-service`: Service for managing users
-- `upload-service`: Service for handling file uploads
-- `product-service`: Service for managing products
-- `order-service`: Service for handling orders
-- `payment-service`: Service for processing payments and transactions
+- **`api-gateway`**: Central API Gateway for routing and request management
+- **`auth-service`**: Authentication and authorization service with JWT
+- **`storefront`**: Customer-facing Next.js application
+- **`vendor-dashboard`**: Vendor management dashboard
+- **`vendor-service`**: Vendor profile and business logic management
+- **`user-service`**: User account and profile management
+- **`upload-service`**: File upload and media management
+- **`product-service`**: Product catalog and inventory management
+- **`order-service`**: Order processing and fulfillment
+- **`payment-service`**: Payment processing and transaction handling
+- **`cart-service`**: Shopping cart management and persistence
 
-### Shared Packages
+### Shared Packages (`/packages`)
 
-- `@repo/ui`: Shared UI components library
-- `@repo/server`: Shared server utilities and configurations
-- `@repo/eslint-config`: ESLint configurations
-- `@repo/typescript-config`: TypeScript configurations used throughout the monorepo
-- `@repo/types`: Shared type definitions
-- `@repo/shared`: Common utilities and shared code
-- `@repo/messaging`: Message broker
-- `@repo/redis`: Redis client
-- `@repo/email`: Email service and templates
+- **`@repo/ui`**: Shared UI components library with Tailwind CSS
+- **`@repo/server`**: Common server utilities and configurations
+- **`@repo/eslint-config`**: Centralized ESLint configurations
+- **`@repo/typescript-config`**: TypeScript configurations for the monorepo
+- **`@repo/types`**: Shared TypeScript type definitions
+- **`@repo/shared`**: Common utilities and helper functions
+- **`@repo/messaging`**: RabbitMQ message broker integration
+- **`@repo/redis`**: Redis client configuration and utilities
+- **`@repo/email`**: Email service templates and sending logic
 
 ## Technology Stack
 
-- [TypeScript](https://www.typescriptlang.org/)
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [TanStack Router](https://tanstack.com/router)
-- [Express](https://expressjs.com/) for backend API development
-- [ESLint](https://eslint.org/) for code linting
-- [Docker](https://www.docker.com/) for containerization
-- [Turborepo](https://turbo.build/repo) for monorepo management
-- [Redis](https://redis.io/) for caching and message queuing
-- [RabbitMQ](https://www.rabbitmq.com/) for event-driven communication
+### Frontend
+
+- **[Next.js 15](https://nextjs.org/)**
+- **[React 19](https://react.dev/)**
+- **[Tailwind CSS v4](https://tailwindcss.com/)**
+- **[TypeScript](https://www.typescriptlang.org/)**
+
+### Backend
+
+- **[Express.js](https://expressjs.com/)**
+- **[Drizzle ORM](https://orm.drizzle.team/)**
+- **[PostgreSQL](https://www.postgresql.org/)** - Primary database
+
+### Infrastructure & DevOps
+
+- **[Docker](https://www.docker.com/)**
+- **[Turborepo](https://turbo.build/repo)**
+- **[PNPM](https://pnpm.io/)**
+- **[Redis](https://redis.io/)**
+- **[RabbitMQ](https://www.rabbitmq.com/)**
+- **[MinIO](https://min.io/)** - S3-compatible object storage
+- **[MailHog](https://github.com/mailhog/MailHog)** - Email testing in development
+
+### Development Tools
+
+- **[ESLint](https://eslint.org/)** & **[Biome](https://biomejs.dev/)** - Code linting and formatting
+- **[Vitest](https://vitest.dev/)** - Unit testing framework
+- **[TSup](https://tsup.egoist.dev/)** - TypeScript bundler
+
+## Getting Started
+
+1. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+2. Start infrastructure services:
+
+   ```bash
+   ./scripts/start-services.sh
+   # or
+   docker-compose -f docker-compose.dev.yml up -d
+   ```
+
+3. Start development servers:
+
+   ```bash
+   pnpm dev
+   ```
+
+4. Stop infrastructure services:
+   ```bash
+   ./scripts/stop-services.sh
+   ```
+
+## Development
+
+- **Build all packages**: `pnpm build`
+- **Lint code**: `pnpm lint`
+- **Type checking**: `pnpm check-types`
+- **Run tests**: `pnpm test`
+- **Format code**: `pnpm format`
+
+## Scripts & Management
+
+- `pnpm db`: Database management utility
+- `scripts/start-services.sh`: Start infrastructure services
+- `scripts/stop-services.sh`: Stop infrastructure services
+- `docker-compose.dev.yml`: Development infrastructure configuration
