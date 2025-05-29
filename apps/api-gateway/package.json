@@ -7,11 +7,10 @@
     "build": "tsc && tsup",
     "dev": "node --import=tsx --watch src/index.ts",
     "prod": "node dist/index.js",
-    "lint": "biome lint --fix",
-    "format": "biome format --write",
-    "check": "pnpm lint && pnpm format && pnpm build && pnpm test",
-    "clean": "rm -rf node_modules dist",
-    "prebuild": "pnpm --filter '../../packages/**' build"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --config .prettierrc --write .",
+    "check": "pnpm lint && pnpm format && pnpm build && pnpm test"
   },
   "dependencies": {
     "@repo/server": "workspace:*",
