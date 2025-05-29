@@ -6,11 +6,13 @@ type FeaturedProductsProps = React.ComponentProps<'div'>;
 export async function FeaturedProducts({}: FeaturedProductsProps) {
   const products = await getProducts({
     queryParams: {
-      sort: 'latest_desc',
+      sort: 'price_desc',
       limit: 4,
       page: 1,
     },
   });
+
+  console.log(products);
 
   return (
     <ul className='grid grid-cols-2 lg:grid-cols-4 gap-4'>

@@ -14,7 +14,7 @@ export function ProductCard({ product }: ProductCardProps) {
     <div className='group relative'>
       <Image
         alt={product.images[0]}
-        src={product.images[0]}
+        src={product.images[0] || '/placeholder.svg'}
         width={400}
         height={400}
         className='aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80'

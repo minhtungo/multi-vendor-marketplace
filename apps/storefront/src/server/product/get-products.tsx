@@ -14,12 +14,11 @@ type GetProductsProps = {
 
 export async function getProducts({ queryParams }: GetProductsProps) {
   const sort = sortOptions.find((option) => option === queryParams.sort) || 'latest_desc';
+
   const response = await api.get<{
     products: Product[];
     count: number;
-  }>('/products', {
-    params: { ...queryParams, sort },
-  });
+  }>('/products', {});
 
   return response.data;
 }

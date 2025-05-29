@@ -19,9 +19,12 @@ export const createProductRequestSchema = productSchema
     id: true,
     createdAt: true,
     updatedAt: true,
+    vendorId: true,
   })
   .extend({
     categories: z.array(z.string()),
+    price: z.coerce.number().min(0),
+    compareAtPrice: z.coerce.number().min(0).optional(),
   });
 
 export const updateProductRequestSchema = createProductRequestSchema.partial();

@@ -18,7 +18,7 @@ class ProductController {
     const sortQuery = req.query.sort as 'price_asc' | 'price_desc' | 'latest_desc' | 'latest_asc' | undefined;
     const sort = sortOptions.find((option) => option === sortQuery) || 'latest_desc';
 
-    const vendorId = req.user?.id;
+    const vendorId = req.user?.role === 'vendor' ? req.user?.id : undefined;
 
     const serviceResponse = await productService.getAllProducts(page, limit, vendorId, sort);
     handleServiceResponse(serviceResponse, res);
