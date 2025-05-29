@@ -218,6 +218,88 @@ importers:
         specifier: 3.1.2
         version: 3.1.2(@types/node@20.17.46)(jiti@2.4.2)(jsdom@26.1.0)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1)
 
+  apps/cart-service:
+    dependencies:
+      '@asteasolutions/zod-to-openapi':
+        specifier: 7.3.0
+        version: 7.3.0(zod@3.24.3)
+      '@repo/redis':
+        specifier: workspace:*
+        version: link:../../packages/redis
+      '@repo/server':
+        specifier: workspace:*
+        version: link:../../packages/server
+      dotenv:
+        specifier: 16.5.0
+        version: 16.5.0
+      drizzle-orm:
+        specifier: ^0.43.1
+        version: 0.43.1(@types/pg@8.15.1)(pg@8.15.6)
+      drizzle-zod:
+        specifier: ^0.7.1
+        version: 0.7.1(drizzle-orm@0.43.1(@types/pg@8.15.1)(pg@8.15.6))(zod@3.24.3)
+      express:
+        specifier: 5.1.0
+        version: 5.1.0
+      pg:
+        specifier: ^8.15.6
+        version: 8.15.6
+      swagger-ui-express:
+        specifier: 5.0.1
+        version: 5.0.1(express@5.1.0)
+      zod:
+        specifier: 3.24.3
+        version: 3.24.3
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/express':
+        specifier: 5.0.1
+        version: 5.0.1
+      '@types/pg':
+        specifier: ^8.11.14
+        version: 8.15.1
+      '@types/supertest':
+        specifier: 6.0.3
+        version: 6.0.3
+      '@types/swagger-ui-express':
+        specifier: 4.1.8
+        version: 4.1.8
+      '@vitest/coverage-v8':
+        specifier: 3.1.2
+        version: 3.1.2(vitest@3.1.2(@types/node@22.15.17)(jiti@2.4.2)(jsdom@26.1.0)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1))
+      drizzle-kit:
+        specifier: ^0.31.0
+        version: 0.31.1
+      eslint:
+        specifier: ^9.27.0
+        version: 9.27.0(jiti@2.4.2)
+      supertest:
+        specifier: 7.1.0
+        version: 7.1.0
+      tsup:
+        specifier: 8.4.0
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.7.1)
+      tsx:
+        specifier: 4.19.4
+        version: 4.19.4
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+      vite-tsconfig-paths:
+        specifier: 5.1.4
+        version: 5.1.4(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.17)(jiti@2.4.2)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1))
+      vitest:
+        specifier: 3.1.2
+        version: 3.1.2(@types/node@22.15.17)(jiti@2.4.2)(jsdom@26.1.0)(lightningcss@1.29.2)(tsx@4.19.4)(yaml@2.7.1)
+
   apps/order-service:
     dependencies:
       '@asteasolutions/zod-to-openapi':
@@ -229,12 +311,6 @@ importers:
       '@repo/server':
         specifier: workspace:*
         version: link:../../packages/server
-      '@repo/types':
-        specifier: workspace:*
-        version: link:../../packages/types
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       dotenv:
         specifier: 16.5.0
         version: 16.5.0
@@ -263,6 +339,12 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@types/express':
         specifier: 5.0.1
         version: 5.0.1
