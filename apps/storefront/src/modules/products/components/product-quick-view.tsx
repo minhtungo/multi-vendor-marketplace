@@ -15,7 +15,7 @@ type ProductQuickViewProps = {
 export function ProductQuickView({ triggerButton, productId }: ProductQuickViewProps) {
   return (
     <Dialog>
-      <DialogTrigger>{triggerButton}</DialogTrigger>
+      <DialogTrigger asChild>{triggerButton}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>

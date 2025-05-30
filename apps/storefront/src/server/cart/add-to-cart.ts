@@ -5,14 +5,16 @@ import { api } from '@/lib/api-client';
 import { getOrCreateSessionId } from '@/lib/session';
 import { type Cart } from '@repo/types/cart';
 
-export const updateCart = async (data: Cart) => {
+interface AddToCartData {
+  productId: string;
+  quantity: number;
+  price: number;
+}
+
+export const addToCart = async (data: AddToCartData) => {
   const id = await getOrCreateSessionId();
 
-  if (!id) {
-    throw new Error('No session ID available for cart update');
-  }
-
-  const response = await api.put<Cart>(`${serverPaths.cart.update}`, {
+  const response = await api.post<Cart>(`${serverPaths.cart.create}/items`, {
     ...data,
     sessionId: id,
   });

@@ -1,5 +1,5 @@
 import { cartController } from '@/controllers/cart.controller';
-import { cartSchema, insertCartSchema, updateCartSchema } from '@/db/schemas/cart/validation';
+import { cartSchema, updateCartSchema } from '@/db/schemas/cart/validation';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/server/docs';
 import { validateRequest } from '@repo/server/middlewares';
@@ -14,12 +14,12 @@ cartRegistry.registerPath({
   method: 'get',
   path: '/cart',
   tags: ['Cart'],
-  request: {
-    params: z.object({
-      sessionId: z.string(),
-    }),
-  },
-  responses: createApiResponse(cartSchema, 'Cart retrieved successfully'),
+  // request: {
+  //   params: z.object({
+  //     sessionId: z.string(),
+  //   }),
+  // },
+  responses: createApiResponse(z.object({}), 'Cart retrieved successfully'),
 });
 
 cartRouter.get('/', validateRequest(z.object({ params: z.object({ sessionId: z.string() }) })), cartController.getCart);
@@ -29,24 +29,24 @@ cartRegistry.registerPath({
   method: 'put',
   path: '/cart/{id}',
   tags: ['Cart'],
-  request: {
-    params: z.object({
-      id: z.string(),
-    }),
-    body: {
-      content: {
-        'application/json': {
-          schema: updateCartSchema,
-        },
-      },
-    },
-  },
-  responses: createApiResponse(cartSchema, 'Cart updated successfully'),
+  // request: {
+  //   params: z.object({
+  //     id: z.string(),
+  //   }),
+  //   body: {
+  //     content: {
+  //       'application/json': {
+  //         schema: updateCartSchema,
+  //       },
+  //     },
+  //   },
+  // },
+  responses: createApiResponse(z.object({}), 'Cart updated successfully'),
 });
 
 cartRouter.put(
   '/:id',
-  validateRequest(z.object({ params: z.object({ id: z.string() }), body: updateCartSchema })),
+  validateRequest(z.object({ params: z.object({ id: z.string() }), body: z.object({}) })),
   cartController.updateCart
 );
 
@@ -55,11 +55,11 @@ cartRegistry.registerPath({
   method: 'delete',
   path: '/cart/{id}',
   tags: ['Cart'],
-  request: {
-    params: z.object({
-      id: z.string(),
-    }),
-  },
+  // request: {
+  //   params: z.object({
+  //     id: z.string(),
+  //   }),
+  // },
   responses: createApiResponse(z.null(), 'Cart deleted successfully'),
 });
 

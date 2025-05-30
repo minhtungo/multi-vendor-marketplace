@@ -2,12 +2,19 @@
 
 import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
-import { getCartId } from '@/lib/cookies';
+import { getOrCreateSessionId } from '@/lib/session';
 import { type Cart } from '@repo/types/cart';
 
-export const retrieveCart = async (cartId?: string) => {
-  const id = cartId || (await getCartId());
+export const retrieveCart = async () => {
+  const id = await getOrCreateSessionId();
 
-  const response = await api.get<Cart>(`${serverPaths.cart.retrieve}/${id}`);
+  if (!id) {
+    return null;
+  }
+
+  const response = await api.get<Cart>(`${serverPaths.cart.retrieve}`, {
+    params: { sessionId: id },
+  });
+
   return response.data;
 };

@@ -26,24 +26,24 @@ export const removeAuthToken = async () => {
   cookieStore.delete(env.ACCESS_TOKEN_COOKIE_NAME);
 };
 
-export const getCartId = async () => {
+export const getSessionId = async () => {
   try {
     const cookieStore = await nextCookies();
-    return cookieStore.get(env.CART_ID_COOKIE_NAME)?.value;
+    return cookieStore.get(env.SESSION_ID_COOKIE_NAME)?.value;
   } catch (error) {
     console.error('Failed to access cookies:', error);
     return '';
   }
 };
 
-export const setCartId = async (cartId: string) => {
+export const setSessionId = async (sessionId: string) => {
   const cookieStore = await nextCookies();
-  cookieStore.set(env.CART_ID_COOKIE_NAME, cartId, {
-    ...cookiesConfig.cartId,
+  cookieStore.set(env.SESSION_ID_COOKIE_NAME, sessionId, {
+    ...cookiesConfig.sessionId,
   });
 };
 
-export const removeCartId = async () => {
+export const removeSessionId = async () => {
   const cookieStore = await nextCookies();
-  cookieStore.delete(env.CART_ID_COOKIE_NAME);
+  cookieStore.delete(env.SESSION_ID_COOKIE_NAME);
 };

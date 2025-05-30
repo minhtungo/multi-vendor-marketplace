@@ -1,3 +1,4 @@
+import { AddToCartButton } from '@/modules/products/components/add-to-cart-button';
 import { Product } from '@repo/types/product';
 import { Button } from '@repo/ui/components/button';
 import { Heart, Minus, Plus, RotateCcw, Share2, Shield, ShoppingCart, Truck } from '@repo/ui/icons';
@@ -8,8 +9,6 @@ type ProductPreviewProps = {
 };
 
 export function ProductPreview({ product }: ProductPreviewProps) {
-  console.log(product);
-
   if (!product) {
     return <div>Product not found</div>;
   }
@@ -27,7 +26,13 @@ export function ProductPreview({ product }: ProductPreviewProps) {
         {/* Product Images */}
         <div className='space-y-4'>
           <div className='relative aspect-square bg-gray-50 rounded-lg overflow-hidden'>
-            <Image src={product.images[0]} alt={product.name} fill className='object-cover' priority />
+            <Image
+              src={product.images[0] || '/placeholder.svg'}
+              alt={product.name}
+              fill
+              className='object-cover'
+              priority
+            />
             <Button variant='ghost' size='icon' className='absolute top-4 right-4 bg-white/80 hover:bg-white'>
               <Heart className='size-5' />
             </Button>
@@ -66,12 +71,8 @@ export function ProductPreview({ product }: ProductPreviewProps) {
             </div>
           </div>
 
-          {/* Add to Cart */}
           <div className='space-y-3'>
-            <Button size='lg' className='w-full'>
-              <ShoppingCart className='w-5 h-5 mr-2' />
-              Add to Cart
-            </Button>
+            <AddToCartButton product={product} />
             <Button variant='outline' size='lg' className='w-full'>
               Buy Now
             </Button>

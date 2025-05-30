@@ -5,7 +5,7 @@ import type { Request, Response } from 'express';
 class CartController {
   public getCart = async (req: Request, res: Response) => {
     const userId = req.user?.id;
-    const sessionId = req.params?.sessionId;
+    const sessionId = req.body?.sessionId;
 
     const serviceResponse = await cartService.getOrCreateCart(userId, sessionId);
     handleServiceResponse(serviceResponse, res);

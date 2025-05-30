@@ -45,8 +45,6 @@ async function fetchApi<T>(url: string, options: RequestOptions = {}): Promise<T
 
   const fullUrl = buildUrlWithParams(`${env.SERVER_URL}/v1${url}`, params);
 
-  console.log('url', fullUrl);
-
   try {
     const accessToken = await getAuthToken();
 
