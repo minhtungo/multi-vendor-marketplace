@@ -44,6 +44,22 @@ class CartService {
       return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
     }
   }
+
+  public async deleteCart(cartId: string): Promise<ServiceResponse<null>> {
+    try {
+      const existingCart = await this.cartRepo.getCartByUserId(cartId);
+      if (!existingCart) {
+        return ServiceResponse.failure('Cart not found', null, HTTP_STATUS_CODES.NOT_FOUND);
+      }
+
+      await this.cartRepo.deleteCart(cartId);
+      return ServiceResponse.success('Cart deleted successfully', null, HTTP_STATUS_CODES.OK);
+    } catch (error) {
+      const errorMessage = `Error deleting cart: ${(error as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
 
 export const cartService = new CartService();

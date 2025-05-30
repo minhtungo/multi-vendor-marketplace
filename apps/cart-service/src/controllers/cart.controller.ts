@@ -17,6 +17,12 @@ class CartController {
     const serviceResponse = await cartService.updateCart(id, cartData);
     handleServiceResponse(serviceResponse, res);
   };
+
+  public deleteCart = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const serviceResponse = await cartService.deleteCart(id);
+    handleServiceResponse(serviceResponse, res);
+  };
 }
 
 export const cartController = new CartController();

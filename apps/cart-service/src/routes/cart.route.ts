@@ -49,3 +49,22 @@ cartRouter.put(
   validateRequest(z.object({ params: z.object({ id: z.string() }), body: updateCartSchema })),
   cartController.updateCart
 );
+
+// Delete cart
+cartRegistry.registerPath({
+  method: 'delete',
+  path: '/cart/{id}',
+  tags: ['Cart'],
+  request: {
+    params: z.object({
+      id: z.string(),
+    }),
+  },
+  responses: createApiResponse(z.null(), 'Cart deleted successfully'),
+});
+
+cartRouter.delete(
+  '/:id',
+  validateRequest(z.object({ params: z.object({ id: z.string() }) })),
+  cartController.deleteCart
+);

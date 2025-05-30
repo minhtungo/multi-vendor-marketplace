@@ -31,6 +31,11 @@ export class CartRepository {
 
     return result;
   }
+
+  async deleteCart(cartId: string) {
+    const result = await this.dbInstance.delete(cart).where(eq(cart.id, cartId)).returning();
+    return result[0];
+  }
 }
 
 export const cartRepository = new CartRepository();
