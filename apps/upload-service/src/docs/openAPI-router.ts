@@ -4,7 +4,7 @@ import { generateOpenAPIDocument } from '@repo/server/docs';
 import { uploadRegistry } from '@/routes/upload.route';
 
 export const openAPIRouter: Router = express.Router();
-const openAPIDocument = generateOpenAPIDocument([uploadRegistry], {
+const openAPIDocument = generateOpenAPIDocument([], {
   title: 'Upload Service API',
   version: '1.0.0',
 });

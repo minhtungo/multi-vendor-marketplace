@@ -33,15 +33,15 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.2",
-    "pino": "9.6.0",
+    "pino": "9.7.0",
     "pino-http": "10.4.0",
-    "zod": "3.25.39"
+    "zod": "3.25.41"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/express": "5.0.1"
+    "@types/express": "5.0.2"
   },
   "peerDependencies": {
     "express": "5.1.0"

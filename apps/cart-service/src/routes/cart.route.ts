@@ -1,5 +1,4 @@
 import { cartController } from '@/controllers/cart.controller';
-import { cartSchema, updateCartSchema } from '@/db/schemas/cart/validation';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/server/docs';
 import { validateRequest } from '@repo/server/middlewares';

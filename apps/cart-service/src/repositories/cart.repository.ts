@@ -19,6 +19,9 @@ export class CartRepository {
   async getCartByUserId(userId: string) {
     const result = await this.dbInstance.query.cart.findFirst({
       where: eq(cart.userId, userId),
+      with: {
+        items: true,
+      },
     });
 
     return result;
@@ -27,6 +30,9 @@ export class CartRepository {
   async getCartBySessionId(sessionId: string) {
     const result = await this.dbInstance.query.cart.findFirst({
       where: eq(cart.sessionId, sessionId),
+      with: {
+        items: true,
+      },
     });
 
     return result;
