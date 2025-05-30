@@ -1,5 +1,4 @@
 import { cartItemService } from '@/services/cart-item.service';
-import { cartService } from '@/services/cart.service';
 import { handleServiceResponse } from '@repo/server/lib';
 import type { Request, Response } from 'express';
 
@@ -10,6 +9,25 @@ class CartItemController {
     const cartItemData = req.body;
 
     const serviceResponse = await cartItemService.addItemToCart(userId, sessionId, cartItemData);
+    handleServiceResponse(serviceResponse, res);
+  };
+
+  public updateCartItemQuantity = async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const sessionId = req.params?.sessionId;
+    const cartItemId = req.params.cartItemId;
+    const { quantity } = req.body;
+
+    const serviceResponse = await cartItemService.updateCartItemQuantity(userId, sessionId, cartItemId, quantity);
+    handleServiceResponse(serviceResponse, res);
+  };
+
+  public removeCartItem = async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const sessionId = req.params?.sessionId;
+    const cartItemId = req.params.cartItemId;
+
+    const serviceResponse = await cartItemService.removeCartItem(userId, sessionId, cartItemId);
     handleServiceResponse(serviceResponse, res);
   };
 }

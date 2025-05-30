@@ -34,6 +34,13 @@ export class CartItemRepository {
     return result;
   }
 
+  async getCartItemById(cartItemId: string) {
+    const result = await this.dbInstance.query.cartItems.findFirst({
+      where: eq(cartItems.id, cartItemId),
+    });
+    return result;
+  }
+
   async deleteCartItem(cartItemId: string) {
     const result = await this.dbInstance.delete(cartItems).where(eq(cartItems.id, cartItemId)).returning();
     return result[0];
