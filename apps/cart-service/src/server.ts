@@ -5,6 +5,7 @@ import { openAPIRouter } from '@/docs/openAPI-router';
 import { createRequestLogger, errorHandler, optionalUserContext } from '@repo/server/middlewares';
 import { cartRouter } from '@/routes/cart.route';
 import { healthCheckRouter } from '@repo/server/routes';
+import { cartItemRouter } from '@/routes/cart-item.route';
 
 const app: Express = express();
 
@@ -22,8 +23,8 @@ app.use(optionalUserContext as RequestHandler);
 
 // Routes
 app.use('/api/cart/health-check', healthCheckRouter);
+app.use('/api/cart/items', cartItemRouter);
 app.use('/api/cart', cartRouter);
-
 // Swagger UI
 app.use(openAPIRouter);
 
