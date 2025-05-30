@@ -5,7 +5,7 @@ import { productToCategoryRepository } from '@/repositories/product-to-category.
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse } from '@repo/server/lib';
+import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
 
 class ProductService {
   constructor(
@@ -14,21 +14,21 @@ class ProductService {
   ) {}
 
   public async getProduct(data: GetProductQuery): Promise<ServiceResponse<ProductResponse | null>> {
-    try {
-      const product = data.id
-        ? await this.productRepo.getProductById(data.id)
-        : await this.productRepo.getProductByHandle(data.handle!);
+    return executeWithErrorHandling(
+      'getProduct',
+      async () => {
+        const product = data.id
+          ? await this.productRepo.getProductById(data.id)
+          : await this.productRepo.getProductByHandle(data.handle!);
 
-      if (!product) {
-        return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);
-      }
+        if (!product) {
+          return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);
+        }
 
-      return ServiceResponse.success('Product retrieved successfully', product, HTTP_STATUS_CODES.OK);
-    } catch (error) {
-      const errorMessage = `Error fetching product: ${(error as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
-    }
+        return ServiceResponse.success('Product retrieved successfully', product, HTTP_STATUS_CODES.OK);
+      },
+      logger
+    );
   }
 
   public async getAllProducts(
@@ -42,48 +42,48 @@ class ProductService {
       count: number;
     } | null>
   > {
-    try {
-      const result = await this.productRepo.getPaginatedProducts(page, limit, vendorId, sort);
+    return executeWithErrorHandling(
+      'getAllProducts',
+      async () => {
+        const result = await this.productRepo.getPaginatedProducts(page, limit, vendorId, sort);
 
-      return ServiceResponse.success(
-        'Products retrieved successfully',
-        {
-          products: result.items,
-          count: result.total,
-        },
-        HTTP_STATUS_CODES.OK
-      );
-    } catch (error) {
-      const errorMessage = `Error fetching products: ${(error as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
-    }
+        return ServiceResponse.success(
+          'Products retrieved successfully',
+          {
+            products: result.items,
+            count: result.total,
+          },
+          HTTP_STATUS_CODES.OK
+        );
+      },
+      logger
+    );
   }
 
   public async createProduct(data: CreateProduct, vendorId: string): Promise<ServiceResponse<Product | null>> {
-    try {
-      const { categories, ...productData } = data;
+    return executeWithErrorHandling(
+      'createProduct',
+      async () => {
+        const { categories, ...productData } = data;
 
-      const product = await this.productRepo.createProduct({
-        ...productData,
-        price: productData.price.toString(),
-        compareAtPrice: productData.compareAtPrice?.toString(),
-        vendorId,
-      });
+        const product = await this.productRepo.createProduct({
+          ...productData,
+          price: productData.price.toString(),
+          compareAtPrice: productData.compareAtPrice?.toString(),
+          vendorId,
+        });
 
-      if (categories) {
-        const promises = categories.map((category) =>
-          this.productToCategoryRepo.createProductToCategory(product.id, category)
-        );
-        await Promise.all(promises);
-      }
+        if (categories) {
+          const promises = categories.map((category) =>
+            this.productToCategoryRepo.createProductToCategory(product.id, category)
+          );
+          await Promise.all(promises);
+        }
 
-      return ServiceResponse.success('Product created successfully', null, HTTP_STATUS_CODES.CREATED);
-    } catch (error) {
-      const errorMessage = `Error creating product: ${(error as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
-    }
+        return ServiceResponse.success('Product created successfully', null, HTTP_STATUS_CODES.CREATED);
+      },
+      logger
+    );
   }
 
   public async updateProduct(
@@ -91,69 +91,69 @@ class ProductService {
     data: UpdateProduct,
     vendorId: string
   ): Promise<ServiceResponse<Product | null>> {
-    try {
-      const product = await this.productRepo.getProductById(productId);
+    return executeWithErrorHandling(
+      'updateProduct',
+      async () => {
+        const product = await this.productRepo.getProductById(productId);
 
-      if (!product) {
-        return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);
-      }
+        if (!product) {
+          return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);
+        }
 
-      if (product.vendorId !== vendorId) {
-        return ServiceResponse.failure('Unauthorized to update this product', null, HTTP_STATUS_CODES.FORBIDDEN);
-      }
+        if (product.vendorId !== vendorId) {
+          return ServiceResponse.failure('Unauthorized to update this product', null, HTTP_STATUS_CODES.FORBIDDEN);
+        }
 
-      const updatedProduct = await this.productRepo.updateProduct(productId, {
-        ...data,
-        price: data.price?.toString(),
-        compareAtPrice: data.compareAtPrice?.toString(),
-        updatedAt: new Date(),
-      });
+        const updatedProduct = await this.productRepo.updateProduct(productId, {
+          ...data,
+          price: data.price?.toString(),
+          compareAtPrice: data.compareAtPrice?.toString(),
+          updatedAt: new Date(),
+        });
 
-      if (data.categories) {
-        const promises = data.categories.map((category) =>
-          this.productToCategoryRepo.createProductToCategory(productId, category)
-        );
-        await Promise.all(promises);
-      }
+        if (data.categories) {
+          const promises = data.categories.map((category) =>
+            this.productToCategoryRepo.createProductToCategory(productId, category)
+          );
+          await Promise.all(promises);
+        }
 
-      return ServiceResponse.success('Product updated successfully', null, HTTP_STATUS_CODES.OK);
-    } catch (error) {
-      const errorMessage = `Error updating product: ${(error as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
-    }
+        return ServiceResponse.success('Product updated successfully', null, HTTP_STATUS_CODES.OK);
+      },
+      logger
+    );
   }
 
   public async deleteAllProducts(vendorId: string): Promise<ServiceResponse<Product[] | null>> {
-    try {
-      const deletedProducts = await this.productRepo.deleteAllProducts(vendorId);
-      return ServiceResponse.success('All products deleted successfully', deletedProducts, HTTP_STATUS_CODES.OK);
-    } catch (error) {
-      const errorMessage = `Error deleting all products: ${(error as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
-    }
+    return executeWithErrorHandling(
+      'deleteAllProducts',
+      async () => {
+        const deletedProducts = await this.productRepo.deleteAllProducts(vendorId);
+        return ServiceResponse.success('All products deleted successfully', deletedProducts, HTTP_STATUS_CODES.OK);
+      },
+      logger
+    );
   }
 
   public async deleteProduct(productId: string, vendorId: string): Promise<ServiceResponse<null>> {
-    try {
-      const product = await this.productRepo.getProductById(productId);
-      console.log('vendorId', vendorId);
-      console.log(product);
-      if (!product) {
-        return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);
-      }
+    return executeWithErrorHandling(
+      'deleteProduct',
+      async () => {
+        const product = await this.productRepo.getProductById(productId);
+        console.log('vendorId', vendorId);
+        console.log(product);
+        if (!product) {
+          return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);
+        }
 
-      if (product.vendorId !== vendorId) {
-        return ServiceResponse.failure('Unauthorized to delete this product', null, HTTP_STATUS_CODES.FORBIDDEN);
-      }
-      await this.productRepo.deleteProduct(productId);
-      return ServiceResponse.success('Product deleted successfully', null, HTTP_STATUS_CODES.OK);
-    } catch (error) {
-      const errorMessage = `Error deleting product: ${(error as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure('Internal server error', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
-    }
+        if (product.vendorId !== vendorId) {
+          return ServiceResponse.failure('Unauthorized to delete this product', null, HTTP_STATUS_CODES.FORBIDDEN);
+        }
+        await this.productRepo.deleteProduct(productId);
+        return ServiceResponse.success('Product deleted successfully', null, HTTP_STATUS_CODES.OK);
+      },
+      logger
+    );
   }
 }
 

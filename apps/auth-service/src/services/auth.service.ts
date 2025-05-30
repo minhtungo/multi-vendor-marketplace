@@ -12,43 +12,39 @@ import { emailService } from '@repo/email';
 import { userAuthProducer } from '@repo/messaging';
 import { getRedisClient } from '@repo/redis';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse } from '@repo/server/lib';
+import { executeWithErrorHandling, ServiceResponse } from '@repo/server/lib';
 import type { NextFunction, Request, Response } from 'express';
 
 import { verify } from 'jsonwebtoken';
 
 export class AuthService {
   async signUp(data: SignUpInput, next: NextFunction): Promise<ServiceResponse> {
-    try {
-      const existingUser = await userServiceClient.getUserByEmail(data.email);
+    return executeWithErrorHandling(
+      'signUp',
+      async () => {
+        const existingUser = await userServiceClient.getUserByEmail(data.email);
 
-      if (existingUser) {
+        if (existingUser) {
+          return ServiceResponse.success(
+            'If your email is not registered, you will receive an email with a otp shortly',
+            null,
+            HTTP_STATUS_CODES.OK
+          );
+        }
+
+        await checkOtpRestrictions(data.email, next);
+        await trackOtpRequests(data.email, next);
+
+        await sendOtp(data.email);
+
         return ServiceResponse.success(
           'If your email is not registered, you will receive an email with a otp shortly',
           null,
           HTTP_STATUS_CODES.OK
         );
-      }
-
-      await checkOtpRestrictions(data.email, next);
-      await trackOtpRequests(data.email, next);
-
-      await sendOtp(data.email);
-
-      return ServiceResponse.success(
-        'If your email is not registered, you will receive an email with a otp shortly',
-        null,
-        HTTP_STATUS_CODES.OK
-      );
-    } catch (ex) {
-      const errorMessage = `Error signing up: ${(ex as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure(
-        'An error occurred while signing up.',
-        null,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
+      },
+      logger
+    );
   }
 
   async signIn(
@@ -60,116 +56,103 @@ export class AuthService {
       user: { id: string };
     } | null>
   > {
-    try {
-      const user = await userServiceClient.getUserByEmail(data.email);
+    return executeWithErrorHandling(
+      'signIn',
+      async () => {
+        const user = await userServiceClient.getUserByEmail(data.email);
 
-      if (!user || !user.id) {
-        return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
-      }
+        if (!user || !user.id) {
+          return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
+        }
 
-      const isPasswordValid = await userServiceClient.verifyPassword(user.email, data.password);
+        const isPasswordValid = await userServiceClient.verifyPassword(user.email, data.password);
 
-      if (!isPasswordValid) {
-        return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
-      }
+        if (!isPasswordValid) {
+          return ServiceResponse.failure('Invalid credentials', null, HTTP_STATUS_CODES.UNAUTHORIZED);
+        }
 
-      const { token: refreshToken, sessionId } = await generateRefreshToken(user.id, 'user');
+        const { token: refreshToken, sessionId } = await generateRefreshToken(user.id, 'user');
 
-      const accessToken = generateAccessToken({
-        sub: user.id,
-        email: user.email,
-        userId: user.id,
-        sessionId,
-        role: 'user',
-      });
+        const accessToken = generateAccessToken({
+          sub: user.id,
+          email: user.email,
+          userId: user.id,
+          sessionId,
+          role: 'user',
+        });
 
-      setRefreshTokenCookie(res, refreshToken, 'user');
+        setRefreshTokenCookie(res, refreshToken, 'user');
 
-      return ServiceResponse.success(
-        'Signed in successfully',
-        {
-          accessToken,
-          user: {
-            id: user.id,
+        return ServiceResponse.success(
+          'Signed in successfully',
+          {
+            accessToken,
+            user: {
+              id: user.id,
+            },
           },
-        },
-        HTTP_STATUS_CODES.OK
-      );
-    } catch (ex) {
-      const errorMessage = `Error signing in: ${(ex as Error).message}`;
-      logger.error(errorMessage);
-
-      return ServiceResponse.failure(
-        'An error occurred while signing in.',
-        null,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
+          HTTP_STATUS_CODES.OK
+        );
+      },
+      logger
+    );
   }
 
   async forgotPassword(email: string, next: NextFunction): Promise<ServiceResponse> {
-    try {
-      const user = await userServiceClient.getUserByEmail(email);
+    return executeWithErrorHandling(
+      'forgotPassword',
+      async () => {
+        const user = await userServiceClient.getUserByEmail(email);
 
-      if (!user || !user.id) {
+        if (!user || !user.id) {
+          return ServiceResponse.success(
+            'If a matching account is found, a password reset email will be sent to you shortly',
+            null,
+            HTTP_STATUS_CODES.OK
+          );
+        }
+
+        const resetPasswordToken = await tokenRepository.createResetPasswordToken(user.id);
+
+        await emailService.sendPasswordResetEmail(user.email, user.email, resetPasswordToken);
+
         return ServiceResponse.success(
           'If a matching account is found, a password reset email will be sent to you shortly',
           null,
           HTTP_STATUS_CODES.OK
         );
-      }
-
-      const resetPasswordToken = await tokenRepository.createResetPasswordToken(user.id);
-
-      await emailService.sendPasswordResetEmail(user.email, user.email, resetPasswordToken);
-
-      return ServiceResponse.success(
-        'If a matching account is found, a password reset email will be sent to you shortly',
-        null,
-        HTTP_STATUS_CODES.OK
-      );
-    } catch (ex) {
-      const errorMessage = `Error forgetting password: ${(ex as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure(
-        'An error occurred while forgetting password',
-        null,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
+      },
+      logger
+    );
   }
 
   async resetPassword(token: string, password: string): Promise<ServiceResponse> {
-    try {
-      const existingToken = await tokenRepository.getResetPasswordTokenByToken(token);
+    return executeWithErrorHandling(
+      'resetPassword',
+      async () => {
+        const existingToken = await tokenRepository.getResetPasswordTokenByToken(token);
 
-      if (!existingToken || existingToken.expires < new Date()) {
-        return ServiceResponse.failure('Invalid token', null, HTTP_STATUS_CODES.BAD_REQUEST);
-      }
+        if (!existingToken || existingToken.expires < new Date()) {
+          return ServiceResponse.failure('Invalid token', null, HTTP_STATUS_CODES.BAD_REQUEST);
+        }
 
-      if (!existingToken.userId) {
-        return ServiceResponse.failure('Invalid token', null, HTTP_STATUS_CODES.BAD_REQUEST);
-      }
+        if (!existingToken.userId) {
+          return ServiceResponse.failure('Invalid token', null, HTTP_STATUS_CODES.BAD_REQUEST);
+        }
 
-      await createTransaction(async (trx) => {
-        await userAuthProducer.publishUserPasswordReset({
-          userId: existingToken.userId!,
-          password,
-          timestamp: Date.now(),
+        await createTransaction(async (trx) => {
+          await userAuthProducer.publishUserPasswordReset({
+            userId: existingToken.userId!,
+            password,
+            timestamp: Date.now(),
+          });
+          await tokenRepository.deleteResetPasswordTokenByToken(token, trx);
         });
-        await tokenRepository.deleteResetPasswordTokenByToken(token, trx);
-      });
 
-      return ServiceResponse.success('Password reset successfully', null, HTTP_STATUS_CODES.OK);
-    } catch (ex) {
-      const errorMessage = `Error resetting password: ${(ex as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure(
-        'An error occurred while resetting password',
-        null,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
+        return ServiceResponse.success('Password reset successfully', null, HTTP_STATUS_CODES.OK);
+      },
+      logger
+    );
   }
 
   async refreshToken(
@@ -227,92 +210,80 @@ export class AuthService {
         }
       }
 
-      const errorMessage = `Error refreshing token: ${(ex as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure(
-        'An error occurred while refreshing token',
-        null,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+      return executeWithErrorHandling(
+        'refreshToken',
+        async () => {
+          throw ex;
+        },
+        logger
       );
     }
   }
 
   async verifyUser({ email, password, otp }: VerifyUserInput): Promise<ServiceResponse> {
-    try {
-      const redis = getRedisClient();
-      const storedOtp = await redis.get(`otp:${email}`);
+    return executeWithErrorHandling(
+      'verifyUser',
+      async () => {
+        const redis = getRedisClient();
+        const storedOtp = await redis.get(`otp:${email}`);
 
-      if (!storedOtp) {
-        return ServiceResponse.failure('Invalid OTP', null, HTTP_STATUS_CODES.BAD_REQUEST);
-      }
-
-      const failedAttemptsKey = `otp_attempts:${email}`;
-      const failedAttempts = parseInt((await redis.get(failedAttemptsKey)) || '0');
-
-      if (storedOtp !== otp) {
-        if (failedAttempts >= 2) {
-          await redis.set(`otp_lock:${email}`, 'locked', 'EX', 1800);
-          await redis.del(`otp:${email}`, failedAttemptsKey);
-          return ServiceResponse.failure(
-            'Account locked due to multiple OTP requests. Try again after 30 minutes.',
-            null,
-            HTTP_STATUS_CODES.TOO_MANY_REQUESTS
-          );
+        if (!storedOtp) {
+          return ServiceResponse.failure('Invalid OTP', null, HTTP_STATUS_CODES.BAD_REQUEST);
         }
 
-        await redis.set(failedAttemptsKey, failedAttempts + 1, 'EX', 300);
-        return ServiceResponse.failure('Invalid OTP', null, HTTP_STATUS_CODES.BAD_REQUEST);
-      }
+        const failedAttemptsKey = `otp_attempts:${email}`;
+        const failedAttempts = parseInt((await redis.get(failedAttemptsKey)) || '0');
 
-      await redis.del(`otp:${email}`, failedAttemptsKey);
+        if (storedOtp !== otp) {
+          if (failedAttempts >= 2) {
+            await redis.set(`otp_lock:${email}`, 'locked', 'EX', 1800);
+            await redis.del(`otp:${email}`, failedAttemptsKey);
+            return ServiceResponse.failure(
+              'Account locked due to multiple OTP requests. Try again after 30 minutes.',
+              null,
+              HTTP_STATUS_CODES.TOO_MANY_REQUESTS
+            );
+          }
 
-      await userAuthProducer.publishUserRegistered({
-        email,
-        password,
-        timestamp: Date.now(),
-      });
+          await redis.set(failedAttemptsKey, failedAttempts + 1, 'EX', 300);
+          return ServiceResponse.failure('Invalid OTP', null, HTTP_STATUS_CODES.BAD_REQUEST);
+        }
 
-      return ServiceResponse.success('User created successfully', null, HTTP_STATUS_CODES.CREATED);
-    } catch (ex) {
-      const errorMessage = `Error verifying email: ${(ex as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure(
-        'An error occurred while verifying email',
-        null,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
+        await redis.del(`otp:${email}`, failedAttemptsKey);
+
+        await userAuthProducer.publishUserRegistered({
+          email,
+          password,
+          timestamp: Date.now(),
+        });
+
+        return ServiceResponse.success('User created successfully', null, HTTP_STATUS_CODES.CREATED);
+      },
+      logger
+    );
   }
 
   async signOut(refreshToken: string): Promise<ServiceResponse> {
-    try {
-      const payload = verify(refreshToken, tokenConfig.refreshToken.secret) as RefreshTokenPayload;
-      await invalidateRefreshToken(payload.sub, payload.sessionId);
-      return ServiceResponse.success('Signed out successfully', null, HTTP_STATUS_CODES.OK);
-    } catch (ex) {
-      const errorMessage = `Error signing out: ${(ex as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure(
-        'An error occurred while signing out.',
-        null,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
+    return executeWithErrorHandling(
+      'signOut',
+      async () => {
+        const payload = verify(refreshToken, tokenConfig.refreshToken.secret) as RefreshTokenPayload;
+        await invalidateRefreshToken(payload.sub, payload.sessionId);
+        return ServiceResponse.success('Signed out successfully', null, HTTP_STATUS_CODES.OK);
+      },
+      logger
+    );
   }
 
   async getMe(userId: string): Promise<ServiceResponse<Express.User | null>> {
-    try {
-      const user = await userServiceClient.getUserById(userId);
-      return ServiceResponse.success('User retrieved successfully', user, HTTP_STATUS_CODES.OK);
-    } catch (error) {
-      const errorMessage = `Error getting user: ${(error as Error).message}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure(
-        'An error occurred while getting user',
-        null,
-        HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-      );
-    }
+    return executeWithErrorHandling(
+      'getMe',
+      async () => {
+        const user = await userServiceClient.getUserById(userId);
+        return ServiceResponse.success('User retrieved successfully', user, HTTP_STATUS_CODES.OK);
+      },
+      logger
+    );
   }
 }
 
