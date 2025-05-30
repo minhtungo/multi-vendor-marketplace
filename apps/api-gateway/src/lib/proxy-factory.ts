@@ -12,9 +12,3 @@ export const createServiceProxy = (serviceUrl: string, serviceName: string) => {
     },
   });
 };
-
-export const createSimpleProxy = (serviceUrl: string) => {
-  return proxy(serviceUrl, {
-    ...proxyOptions,
-  });
-};

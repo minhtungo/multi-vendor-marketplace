@@ -19,12 +19,20 @@ export const forwardUserContext: ProxyReqOptDecorator = (proxyReqOpts, srcReq) =
     headers['x-user-role'] = srcReq.user.role;
   }
 
+  // Forward session ID from cookies
+  console.log('srcReq.cookies', srcReq.cookies.sessionId);
+  if (srcReq.cookies.sessionId) {
+    const headers = proxyReqOpts.headers as Record<string, string>;
+    headers['session-id'] = srcReq.cookies.sessionId as string;
+  }
+
   return proxyReqOpts;
 };
 
 export const proxyOptions: ProxyOptions = {
   proxyReqPathResolver: (req: Request) => {
     logger.info(`Proxying request to: ${req.originalUrl}`);
+
     return req.originalUrl.replace(new RegExp(`^/${appConfig.apiVersion}`), '/api');
   },
   proxyErrorHandler: (err: Error, res: Response, next: NextFunction) => {

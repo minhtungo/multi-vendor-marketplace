@@ -12,11 +12,10 @@ interface AddToCartData {
 }
 
 export const addToCart = async (data: AddToCartData) => {
-  const id = await getOrCreateSessionId();
+  await getOrCreateSessionId();
 
   const response = await api.post<Cart>(`${serverPaths.cart.create}/items`, {
     ...data,
-    sessionId: id,
   });
 
   return response.data;

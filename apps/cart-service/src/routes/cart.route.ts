@@ -22,7 +22,7 @@ cartRegistry.registerPath({
   responses: createApiResponse(z.object({}), 'Cart retrieved successfully'),
 });
 
-cartRouter.get('/', validateRequest(z.object({ params: z.object({ sessionId: z.string() }) })), cartController.getCart);
+cartRouter.get('/', cartController.getCart);
 
 // Update cart
 cartRegistry.registerPath({

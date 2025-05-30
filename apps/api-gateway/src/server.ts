@@ -7,6 +7,7 @@ import { errorHandler } from '@repo/server/middlewares';
 import cors from 'cors';
 import express, { type Express } from 'express';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 
 const app: Express = express();
 
@@ -16,6 +17,7 @@ app.set('trust proxy', true);
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   cors({
     origin: (origin, callback) => {

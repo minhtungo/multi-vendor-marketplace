@@ -6,15 +6,9 @@ import { getOrCreateSessionId } from '@/lib/session';
 import { type Cart } from '@repo/types/cart';
 
 export const retrieveCart = async () => {
-  const id = await getOrCreateSessionId();
+  await getOrCreateSessionId();
 
-  if (!id) {
-    return null;
-  }
-
-  const response = await api.get<Cart>(`${serverPaths.cart.retrieve}`, {
-    params: { sessionId: id },
-  });
+  const response = await api.get<Cart>(`${serverPaths.cart.retrieve}`);
 
   return response.data;
 };

@@ -19,6 +19,9 @@ const extractUserContext = (options: UserContextOptions = { requireAuth: true })
       const serviceResponse = ServiceResponse.failure('Unauthorized', null, HTTP_STATUS_CODES.UNAUTHORIZED);
       return handleServiceResponse(serviceResponse, res);
     }
+    if (req.headers['session-id']) {
+      req.sessionId = req.headers['session-id'] as string;
+    }
 
     next();
   };

@@ -6,15 +6,10 @@ import { getOrCreateSessionId } from '@/lib/session';
 import { type Cart } from '@repo/types/cart';
 
 export const updateCart = async (data: Cart) => {
-  const id = await getOrCreateSessionId();
-
-  if (!id) {
-    throw new Error('No session ID available for cart update');
-  }
+  await getOrCreateSessionId();
 
   const response = await api.put<Cart>(`${serverPaths.cart.update}`, {
     ...data,
-    sessionId: id,
   });
 
   return response.data;

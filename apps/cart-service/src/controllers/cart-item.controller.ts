@@ -5,11 +5,8 @@ import type { Request, Response } from 'express';
 class CartItemController {
   public addItemToCart = async (req: Request, res: Response) => {
     const userId = req.user?.id;
-    const sessionId = req.body?.sessionId;
+    const sessionId = req.sessionId;
     const cartItemData = req.body;
-    console.log('cartItemData======', cartItemData);
-    console.log('sessionId======', sessionId);
-    console.log('userId======', userId);
 
     const serviceResponse = await cartItemService.addItemToCart(userId, sessionId, cartItemData);
     handleServiceResponse(serviceResponse, res);
@@ -17,7 +14,7 @@ class CartItemController {
 
   public updateCartItemQuantity = async (req: Request, res: Response) => {
     const userId = req.user?.id;
-    const sessionId = req.body?.sessionId;
+    const sessionId = req.sessionId;
     const cartItemId = req.params.cartItemId;
     const { quantity } = req.body;
 
@@ -27,7 +24,7 @@ class CartItemController {
 
   public removeCartItem = async (req: Request, res: Response) => {
     const userId = req.user?.id;
-    const sessionId = req.body?.sessionId;
+    const sessionId = req.sessionId;
     const cartItemId = req.params.cartItemId;
 
     const serviceResponse = await cartItemService.removeCartItem(userId, sessionId, cartItemId);

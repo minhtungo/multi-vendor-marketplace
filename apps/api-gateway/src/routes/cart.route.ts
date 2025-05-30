@@ -1,10 +1,10 @@
 import { appConfig } from '@/configs/app';
 import { env } from '@/configs/env';
-import { createSimpleProxy } from '../lib/proxy-factory';
+import { createServiceProxy } from '../lib/proxy-factory';
 import { Router } from 'express';
 
 const router = Router();
 
-router.use(`/${appConfig.apiVersion}/cart`, createSimpleProxy(env.CART_SERVICE_URL));
+router.use(`/${appConfig.apiVersion}/cart`, createServiceProxy(env.CART_SERVICE_URL, 'Cart'));
 
 export { router as cartRoutes };

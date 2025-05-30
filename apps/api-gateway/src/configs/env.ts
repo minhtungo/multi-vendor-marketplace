@@ -25,6 +25,7 @@ const envSchema = z.object({
   COMMON_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(1000),
   //JWT
   JWT_SECRET: z.string().min(1),
+
   //URLs
   AUTH_SERVICE_URL: z.string().default('http://localhost:8081'),
   USER_SERVICE_URL: z.string().default('http://localhost:8086'),
