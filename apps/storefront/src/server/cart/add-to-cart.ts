@@ -21,7 +21,5 @@ export const addToCart = async (data: AddToCartData) => {
     ...data,
   });
 
-  console.log('response', response);
-
   return response.data;
 };

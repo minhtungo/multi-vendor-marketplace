@@ -46,8 +46,6 @@ export function CreateProductForm({}: React.ComponentPropsWithoutRef<'div'>) {
     });
   };
 
-  console.log('images', form.watch('images'));
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

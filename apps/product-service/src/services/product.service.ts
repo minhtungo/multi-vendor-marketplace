@@ -140,8 +140,7 @@ class ProductService {
       'deleteProduct',
       async () => {
         const product = await this.productRepo.getProductById(productId);
-        console.log('vendorId', vendorId);
-        console.log(product);
+
         if (!product) {
           return ServiceResponse.failure('Product not found', null, HTTP_STATUS_CODES.NOT_FOUND);
         }

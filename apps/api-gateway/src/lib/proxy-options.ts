@@ -20,7 +20,6 @@ export const forwardUserContext: ProxyReqOptDecorator = (proxyReqOpts, srcReq) =
   }
 
   // Forward session ID from cookies
-  console.log('srcReq.cookies', srcReq.cookies.sessionId);
   if (srcReq.cookies.sessionId) {
     const headers = proxyReqOpts.headers as Record<string, string>;
     headers['session-id'] = srcReq.cookies.sessionId as string;

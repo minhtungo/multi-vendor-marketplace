@@ -1,4 +1,4 @@
-import { SkeletonProductGrid } from '@/components/skeletons/skeleton-propduct-grid';
+import { SkeletonProductGrid } from '@/components/skeletons/skeleton-product-grid';
 import { SortOptions } from '@/lib/constants';
 import { PaginatedProducts } from '@/modules/products/components/paginated-products';
 import { Metadata } from 'next';

@@ -19,7 +19,6 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       productImage: product.images[0] || 'asd',
       total: product.price,
     });
-    console.log('response', response);
   };
   return (
     <Button size='lg' className='w-full' onClick={handleAddToCart}>

@@ -1,3 +1,4 @@
+import { retrieveCart } from '@/server/cart/retrieve-cart';
 import { formatPrice } from '@repo/shared/utils';
 import { Button } from '@repo/ui/components/button';
 import { Card, CardContent } from '@repo/ui/components/card';
@@ -7,42 +8,14 @@ import { Minus, Plus, ShoppingBag, Trash2 } from '@repo/ui/icons';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const cartItems = [
-  {
-    id: 1,
-    name: 'Wireless Bluetooth Headphones',
-    price: 129.99,
-    quantity: 1,
-    image: '/placeholder.svg?height=120&width=120',
-    color: 'Black',
-    size: 'One Size',
-  },
-  {
-    id: 2,
-    name: 'Premium Cotton T-Shirt',
-    price: 39.99,
-    quantity: 2,
-    image: '/placeholder.svg?height=120&width=120',
-    color: 'Navy Blue',
-    size: 'Large',
-  },
-  {
-    id: 3,
-    name: 'Leather Crossbody Bag',
-    price: 89.99,
-    quantity: 1,
-    image: '/placeholder.svg?height=120&width=120',
-    color: 'Brown',
-    size: 'Medium',
-  },
-];
+export async function CartTemplate() {
+  const cart = await retrieveCart();
+  const cartItems = cart.items;
 
-const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-const shipping = 9.99;
-const tax = subtotal * 0.08;
-const total = subtotal + shipping + tax;
+  if (cartItems.length === 0) {
+    return <div>No items in cart</div>;
+  }
 
-export function CartTemplate() {
   return (
     <div className='w-full'>
       <div className='flex items-center gap-2 mb-8'>
@@ -62,8 +35,8 @@ export function CartTemplate() {
                   <div className='flex items-start gap-4'>
                     <div className='flex-shrink-0'>
                       <Image
-                        src={item.image || '/placeholder.svg'}
-                        alt={item.name}
+                        src={item.productImage || '/placeholder.svg'}
+                        alt={item.productName}
                         width={120}
                         height={120}
                         className='rounded-lg object-cover'
@@ -73,9 +46,9 @@ export function CartTemplate() {
                     <div className='flex-1 min-w-0'>
                       <div className='flex items-center gap-2 justify-between'>
                         <Heading variant='h5' as='h3'>
-                          {item.name}
+                          {item.productName}
                         </Heading>
-                        <p className='text-lg font-semibold'>${(item.price * item.quantity).toFixed(2)}</p>
+                        <p className='text-lg font-semibold'>${item.total}</p>
                       </div>
 
                       <div className='flex items-center justify-between mt-4'>
@@ -115,24 +88,24 @@ export function CartTemplate() {
               <div className='space-y-3'>
                 <div className='flex justify-between text-sm'>
                   <span className='text-muted-foreground'>Subtotal</span>
-                  <span className='font-medium'>{formatPrice(subtotal)}</span>
+                  <span className='font-medium'>{formatPrice(parseFloat(cart.subtotal))}</span>
                 </div>
 
                 <div className='flex justify-between text-sm'>
                   <span className='text-muted-foreground'>Shipping</span>
-                  <span className='font-medium'>{formatPrice(shipping)}</span>
+                  <span className='font-medium'>{formatPrice(9.99)}</span>
                 </div>
 
-                <div className='flex justify-between text-sm'>
+                {/* <div className='flex justify-between text-sm'>
                   <span className='text-muted-foreground'>Tax</span>
-                  <span className='font-medium'>{formatPrice(tax)}</span>
-                </div>
+                  <span className='font-medium'>{formatPrice(parseFloat(cart.))}</span>
+                </div> */}
 
                 <Separator />
 
                 <div className='flex justify-between text-base font-semibold'>
                   <span>Total</span>
-                  <span>{formatPrice(total)}</span>
+                  <span>{formatPrice(parseFloat(cart.total))}</span>
                 </div>
               </div>
 

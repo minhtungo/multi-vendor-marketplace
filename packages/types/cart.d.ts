@@ -1,3 +1,5 @@
+import type { CartItem } from './cart-item';
+
 export enum CART_STATUS {
   ACTIVE = 'active',
   CHECKOUT = 'checkout',
@@ -8,9 +10,12 @@ export enum CART_STATUS {
 export type Cart = {
   id: string;
   userId: string | undefined;
+  sessionId: string | undefined;
   status: CART_STATUS;
   sessionId: string | undefined;
   subtotal: string;
   total: string;
   itemCount: number;
+  items: CartItem[];
+  status: CART_STATUS;
 };

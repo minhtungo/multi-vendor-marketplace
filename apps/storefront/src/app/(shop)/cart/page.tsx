@@ -1,9 +1,11 @@
+import { SkeletonCartPage } from '@/components/skeletons/skeleton-cart-page';
 import { CartTemplate } from '@/modules/cart/templates';
-import { retrieveCart } from '@/server/cart/retrieve-cart';
+import { Suspense } from 'react';
 
 export default async function CartPage() {
-  const cart = await retrieveCart();
-
-  console.log('cart', cart);
-  return <CartTemplate />;
+  return (
+    <Suspense fallback={<SkeletonCartPage />}>
+      <CartTemplate />
+    </Suspense>
+  );
 }
