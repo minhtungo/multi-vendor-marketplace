@@ -26,7 +26,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <Eye />
             </Button>
           }
-          productId={product.id}
+          product={product}
         />
       </div>
       <div className='mt-4 flex justify-between'>
