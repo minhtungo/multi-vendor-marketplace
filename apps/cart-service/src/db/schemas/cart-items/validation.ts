@@ -10,6 +10,5 @@ export const updateCartItemQuantitySchema = z.object({
 export const cartItemSchema = createSelectSchema(cartItems);
 
 export type InsertCartItem = typeof cartItems.$inferInsert;
-export type UpdateCartItem = z.infer<typeof updateCartItemSchema>;
 export type UpdateCartItemQuantity = z.infer<typeof updateCartItemQuantitySchema>;
 export type CartItem = typeof cartItems.$inferSelect;

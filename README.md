@@ -55,6 +55,10 @@ Built using a microservices architecture and Turborepo for monorepo management.
 - **[MinIO](https://min.io/)** - S3-compatible object storage
 - **[MailHog](https://github.com/mailhog/MailHog)** - Email testing in development
 
+### Analytics
+
+- **[PostHog](https://posthog.com/)**
+
 ### Development Tools
 
 - **[ESLint](https://eslint.org/)** & **[Biome](https://biomejs.dev/)** - Code linting and formatting

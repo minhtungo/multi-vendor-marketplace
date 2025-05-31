@@ -1,5 +1,6 @@
 import { cartItemController } from '@/controllers/cart-item.controller';
 import { updateCartItemQuantitySchema } from '@/db/schemas/cart-items/validation';
+import { addToCartItemSchema } from '@/models/cart-item.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/server/docs';
 import { validateRequest } from '@repo/server/middlewares';
@@ -26,7 +27,7 @@ cartItemRegistry.registerPath({
   responses: createApiResponse(z.object({}), 'Cart created successfully'),
 });
 
-cartItemRouter.post('/', validateRequest(z.object({ body: z.object({}) })), cartItemController.addItemToCart);
+cartItemRouter.post('/', validateRequest(z.object({ body: addToCartItemSchema })), cartItemController.addItemToCart);
 
 // Update cart item quantity
 cartItemRegistry.registerPath({

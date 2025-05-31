@@ -1,4 +1,4 @@
-import { decimal, integer, jsonb, pgTable, text, timestamp, uuid, index } from 'drizzle-orm/pg-core';
+import { decimal, integer, pgTable, text, timestamp, index } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { cart } from '@/db/schemas/cart/cart';
 
@@ -12,6 +12,9 @@ export const cartItems = pgTable(
       .notNull()
       .references(() => cart.id, { onDelete: 'cascade' }),
     productId: text('product_id').notNull(),
+    productName: text('product_name').notNull(),
+    productImage: text('product_image').notNull(),
+    productSnapshottedAt: timestamp('product_snapshotted_at').defaultNow(),
     price: decimal('price', { precision: 10, scale: 2 }).notNull(),
     quantity: integer('quantity').notNull().default(1),
     total: decimal('total', { precision: 10, scale: 2 }).notNull(),

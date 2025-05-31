@@ -1,10 +1,11 @@
+import type { CartItem } from '@/db/schemas/cart-items/validation';
+import { AddToCartItem } from '@/models/cart-item.model';
 import { cartItemRepository } from '@/repositories/cart-item.repository';
 import { cartRepository } from '@/repositories/cart.repository';
+import { cartService } from '@/services/cart.service';
 import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
 import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
-import type { CartItem, InsertCartItem } from '@/db/schemas/cart-items/validation';
-import { cartService } from '@/services/cart.service';
 
 class CartItemService {
   constructor(
@@ -16,7 +17,7 @@ class CartItemService {
   public async addItemToCart(
     userId: string | undefined,
     sessionId: string | undefined,
-    cartItemData: Omit<InsertCartItem, 'cartId' | 'id' | 'total' | 'createdAt' | 'updatedAt'>
+    cartItemData: AddToCartItem
   ): Promise<ServiceResponse<CartItem | null>> {
     return executeWithErrorHandling(
       'addItemToCart',
@@ -35,7 +36,7 @@ class CartItemService {
 
         if (existingCartItem) {
           const newQuantity = existingCartItem.quantity + cartItemData.quantity!;
-          const newTotal = (parseFloat(cartItemData.price) * newQuantity).toFixed(2);
+          const newTotal = (parseFloat(cartItemData.price.toString()) * newQuantity).toFixed(2);
 
           cartItem = await this.cartItemRepo.updateCartItem(existingCartItem.id, {
             quantity: newQuantity,
@@ -43,12 +44,14 @@ class CartItemService {
             updatedAt: new Date(),
           });
         } else {
-          const total = (parseFloat(cartItemData.price) * cartItemData.quantity!).toFixed(2);
+          const total = (parseFloat(cartItemData.price.toString()) * cartItemData.quantity!).toFixed(2);
 
           cartItem = await this.cartItemRepo.createCartItem({
             cartId: cart.id,
             productId: cartItemData.productId,
-            price: cartItemData.price,
+            price: cartItemData.price.toString(),
+            productName: cartItemData.productName || '',
+            productImage: cartItemData.productImage || '',
             quantity: cartItemData.quantity,
             total,
           });
@@ -127,7 +130,7 @@ class CartItemService {
     userId: string | undefined,
     sessionId: string | undefined,
     cartItemId: string
-  ): Promise<ServiceResponse<null>> {
+  ): Promise<ServiceResponse<boolean>> {
     return executeWithErrorHandling(
       'removeCartItem',
       async () => {
@@ -159,7 +162,7 @@ class CartItemService {
           updatedAt: new Date(),
         });
 
-        return ServiceResponse.success('Cart item removed successfully', null, HTTP_STATUS_CODES.OK);
+        return ServiceResponse.success('Cart item removed successfully', true, HTTP_STATUS_CODES.OK);
       },
       logger
     );

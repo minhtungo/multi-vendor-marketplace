@@ -13,7 +13,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <div className='group relative'>
       <Image
-        alt={product.images[0]}
+        alt={product.name}
         src={product.images[0] || '/placeholder.svg'}
         width={400}
         height={400}

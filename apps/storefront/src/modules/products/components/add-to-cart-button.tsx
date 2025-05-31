@@ -15,6 +15,9 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       productId: product.id,
       quantity: 1,
       price: product.price,
+      productName: product.name,
+      productImage: product.images[0] || 'asd',
+      total: product.price,
     });
     console.log('response', response);
   };
