@@ -16,6 +16,7 @@
     "@t3-oss/env-nextjs": "^0.13.6",
     "class-variance-authority": "^0.7.1",
     "next": "15.3.3",
+    "posthog-js": "^1.249.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.4",
