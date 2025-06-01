@@ -3,7 +3,6 @@ import {
   createProductRequestSchema,
   getProductQuerySchema,
   getProductsQuerySchema,
-  productListResponseSchema,
   productResponseSchema,
   updateProductRequestSchema,
 } from '@/models/product.model';

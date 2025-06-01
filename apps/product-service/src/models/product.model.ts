@@ -1,36 +1,43 @@
-import { productSchema } from '@/db/schemas';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 
 extendZodWithOpenApi(z);
 
-export const productResponseSchema = productSchema.extend({
-  categories: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      handle: z.string(),
-    })
-  ),
+export const productResponseSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  handle: z.string(),
+  description: z.string().optional(),
+  sku: z.string(),
+  price: z.number(),
+  compareAtPrice: z.number().optional(),
+  categories: z.array(z.string()),
+  vendorId: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  stock: z.number(),
+  status: z.enum(['draft', 'published', 'archived']),
+  type: z.enum(['physical', 'digital']),
+  images: z.array(z.string()),
+  tags: z.array(z.string()),
 });
 
-export const createProductRequestSchema = productSchema
-  .omit({
-    id: true,
-    createdAt: true,
-    updatedAt: true,
-    vendorId: true,
-  })
-  .extend({
-    categories: z.array(z.string()),
-    price: z.coerce.number().min(0),
-    compareAtPrice: z.coerce.number().min(0).optional(),
-  });
+export const createProductRequestSchema = productResponseSchema.omit({
+  id: true,
+  vendorId: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
-export const updateProductRequestSchema = createProductRequestSchema.partial();
+export const updateProductRequestSchema = productResponseSchema.partial().omit({
+  id: true,
+  vendorId: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 export const productListResponseSchema = z.object({
-  products: z.array(productSchema),
+  products: z.array(productResponseSchema),
   count: z.number(),
 });
 
@@ -51,7 +58,7 @@ export const getProductQuerySchema = z
 
 // Type exports
 export type ProductResponse = z.infer<typeof productResponseSchema>;
-export type CreateProduct = z.infer<typeof createProductRequestSchema>;
-export type UpdateProduct = z.infer<typeof updateProductRequestSchema>;
 export type ProductListResponse = z.infer<typeof productListResponseSchema>;
 export type GetProductQuery = z.infer<typeof getProductQuerySchema>;
+export type CreateProductRequest = z.infer<typeof createProductRequestSchema>;
+export type UpdateProductRequest = z.infer<typeof updateProductRequestSchema>;

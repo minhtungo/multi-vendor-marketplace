@@ -27,6 +27,7 @@ class ProductController {
   public createProduct = async (req: Request, res: Response) => {
     const vendorId = req.user?.id;
     const data = createProductRequestSchema.parse(req.body);
+    console.log(data);
     const serviceResponse = await productService.createProduct(data, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };

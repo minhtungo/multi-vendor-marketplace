@@ -11,7 +11,8 @@ class CartService {
     return executeWithErrorHandling(
       'updateCart',
       async () => {
-        const existingCart = await this.cartRepo.getCartByUserId(cartId);
+        const existingCart = await this.cartRepo.getCartById(cartId);
+
         if (!existingCart) {
           return ServiceResponse.failure('Cart not found', null, HTTP_STATUS_CODES.NOT_FOUND);
         }

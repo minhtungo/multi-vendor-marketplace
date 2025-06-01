@@ -12,7 +12,7 @@ export async function CartTemplate() {
   const cart = await retrieveCart();
   const cartItems = cart.items;
 
-  if (cartItems.length === 0) {
+  if (cartItems && cartItems.length === 0) {
     return <div>No items in cart</div>;
   }
 
@@ -35,7 +35,7 @@ export async function CartTemplate() {
                   <div className='flex items-start gap-4'>
                     <div className='flex-shrink-0'>
                       <Image
-                        src={item.productImage || '/placeholder.svg'}
+                        src={'/placeholder.svg'}
                         alt={item.productName}
                         width={120}
                         height={120}

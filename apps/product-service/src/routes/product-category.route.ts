@@ -1,11 +1,10 @@
 import { productCategoryController } from '@/controllers/product-category.controller';
-import { insertCategorySchema, categorySchema } from '@/db/schemas/categories';
-import { createApiResponse } from '@repo/server/docs';
+import { categoryResponseSchema, createCategorySchema, updateCategorySchema } from '@/models/product-categories.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
+import { createApiResponse } from '@repo/server/docs';
+import { validateRequest } from '@repo/server/middlewares';
 import { Router } from 'express';
 import { z } from 'zod';
-import { validateRequest } from '@repo/server/middlewares';
-import { CreateCategorySchema } from '@/models/product-categories.model';
 
 export const productCategoryRegistry = new OpenAPIRegistry();
 export const productCategoryRouter: Router = Router();
@@ -15,7 +14,7 @@ productCategoryRegistry.registerPath({
   method: 'get',
   path: '/product-categories',
   tags: ['Product Categories'],
-  responses: createApiResponse(z.array(categorySchema), 'Product categories retrieved successfully'),
+  responses: createApiResponse(categoryResponseSchema, 'Product categories retrieved successfully'),
 });
 
 productCategoryRouter.get('/', productCategoryController.getAllProductCategories);
@@ -30,7 +29,7 @@ productCategoryRegistry.registerPath({
       id: z.string().uuid(),
     }),
   },
-  responses: createApiResponse(categorySchema, 'Product category retrieved successfully'),
+  responses: createApiResponse(categoryResponseSchema, 'Product category retrieved successfully'),
 });
 
 productCategoryRouter.get(`/:id`, productCategoryController.getProductCategory);
@@ -44,17 +43,17 @@ productCategoryRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: CreateCategorySchema,
+          schema: createCategorySchema,
         },
       },
     },
   },
-  responses: createApiResponse(z.array(categorySchema), 'Product category created successfully'),
+  responses: createApiResponse(categoryResponseSchema, 'Product category created successfully'),
 });
 
 productCategoryRouter.post(
   '/',
-  validateRequest(z.object({ body: CreateCategorySchema })),
+  validateRequest(z.object({ body: createCategorySchema })),
   productCategoryController.createProductCategory
 );
 
@@ -70,15 +69,19 @@ productCategoryRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: insertCategorySchema.partial(),
+          schema: updateCategorySchema,
         },
       },
     },
   },
-  responses: createApiResponse(categorySchema, 'Product category updated successfully'),
+  responses: createApiResponse(categoryResponseSchema, 'Product category updated successfully'),
 });
 
-productCategoryRouter.put(`/:id`, productCategoryController.updateProductCategory);
+productCategoryRouter.put(
+  `/:id`,
+  validateRequest(z.object({ body: updateCategorySchema })),
+  productCategoryController.updateProductCategory
+);
 
 // Delete Product Category Route
 productCategoryRegistry.registerPath({
@@ -90,17 +93,21 @@ productCategoryRegistry.registerPath({
       id: z.string().uuid(),
     }),
   },
-  responses: createApiResponse(categorySchema, 'Product category deleted successfully'),
+  responses: createApiResponse(categoryResponseSchema, 'Product category deleted successfully'),
 });
 
-productCategoryRouter.delete(`/:id`, productCategoryController.deleteProductCategory);
+productCategoryRouter.delete(
+  `/:id`,
+  validateRequest(z.object({ params: z.object({ id: z.string().uuid() }) })),
+  productCategoryController.deleteProductCategory
+);
 
 // Delete All Product Categories Route
 productCategoryRegistry.registerPath({
   method: 'delete',
   path: '/product-categories',
   tags: ['Product Categories'],
-  responses: createApiResponse(categorySchema, 'All product categories deleted successfully'),
+  responses: createApiResponse(categoryResponseSchema, 'All product categories deleted successfully'),
 });
 
 productCategoryRouter.delete('/all', productCategoryController.deleteAllProductCategories);

@@ -39,6 +39,7 @@ class ProductCategoryService {
       'createProductCategory',
       async () => {
         const category = await this.categoryRepo.createCategory(data);
+
         return ServiceResponse.success('Product category created successfully', category, HTTP_STATUS_CODES.CREATED);
       },
       logger

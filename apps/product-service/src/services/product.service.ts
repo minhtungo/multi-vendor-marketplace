@@ -1,6 +1,5 @@
 import { Product } from '@/db/schemas/products';
-import { CreateProduct, GetProductQuery, ProductResponse, UpdateProduct } from '@/models/product.model';
-import { productCategoryRepository } from '@/repositories/product-category.repository';
+import { CreateProductRequest, GetProductQuery, ProductResponse, UpdateProductRequest } from '@/models/product.model';
 import { productToCategoryRepository } from '@/repositories/product-to-category.repository';
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
@@ -60,7 +59,7 @@ class ProductService {
     );
   }
 
-  public async createProduct(data: CreateProduct, vendorId: string): Promise<ServiceResponse<Product | null>> {
+  public async createProduct(data: CreateProductRequest, vendorId: string): Promise<ServiceResponse<Product | null>> {
     return executeWithErrorHandling(
       'createProduct',
       async () => {
@@ -71,6 +70,7 @@ class ProductService {
           price: productData.price.toString(),
           compareAtPrice: productData.compareAtPrice?.toString(),
           vendorId,
+          stock: 0,
         });
 
         if (categories) {
@@ -88,7 +88,7 @@ class ProductService {
 
   public async updateProduct(
     productId: string,
-    data: UpdateProduct,
+    data: UpdateProductRequest,
     vendorId: string
   ): Promise<ServiceResponse<Product | null>> {
     return executeWithErrorHandling(

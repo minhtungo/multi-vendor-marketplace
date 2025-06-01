@@ -23,6 +23,7 @@ class CartItemService {
       'addItemToCart',
       async () => {
         const cartResponse = await cartService.getOrCreateCart(userId, sessionId);
+        console.log('cartResponse', cartResponse.data);
 
         if (!cartResponse.success || !cartResponse.data) {
           return ServiceResponse.failure('Failed to get or create cart', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
@@ -30,9 +31,7 @@ class CartItemService {
 
         const cart = cartResponse.data;
 
-        const existingCartItem = await this.cartItemRepo.getCartItemByProductAndCart(cart.id, cartItemData.productId);
-
-        let cartItem: CartItem;
+        const cartItem = cart.items;
 
         if (existingCartItem) {
           const newQuantity = existingCartItem.quantity + cartItemData.quantity!;

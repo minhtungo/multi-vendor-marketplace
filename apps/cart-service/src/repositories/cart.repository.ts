@@ -1,7 +1,7 @@
 import { db } from '@/db';
 import { cart, cartItems } from '@/db/schemas';
-import { eq, and } from 'drizzle-orm';
 import type { InsertCart } from '@/db/schemas/cart/validation';
+import { eq } from 'drizzle-orm';
 
 export class CartRepository {
   constructor(private readonly dbInstance = db) {}
@@ -19,6 +19,17 @@ export class CartRepository {
   async getCartByUserId(userId: string) {
     const result = await this.dbInstance.query.cart.findFirst({
       where: eq(cart.userId, userId),
+      with: {
+        items: true,
+      },
+    });
+
+    return result;
+  }
+
+  async getCartById(cartId: string) {
+    const result = await this.dbInstance.query.cart.findFirst({
+      where: eq(cart.id, cartId),
       with: {
         items: true,
       },

@@ -18,6 +18,7 @@ type ProductQuickViewProps = {
 };
 
 export function ProductQuickView({ triggerButton, product }: ProductQuickViewProps) {
+  if (!product) return null;
   return (
     <Dialog>
       <DialogTrigger asChild>{triggerButton}</DialogTrigger>
@@ -40,7 +41,7 @@ export function ProductQuickView({ triggerButton, product }: ProductQuickViewPro
           <div className='space-y-6'>
             <div>
               <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2 capitalize'>
-                <span>{product.categories[0].name}</span>
+                <span>{product.categories[0]?.name}</span>
               </div>
               <h1 className='text-3xl font-bold mb-4'>{product.name}</h1>
 

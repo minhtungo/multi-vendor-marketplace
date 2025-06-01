@@ -12,9 +12,9 @@ class CartController {
   };
 
   public updateCart = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id: cardId } = req.params;
     const cartData = req.body;
-    const serviceResponse = await cartService.updateCart(id, cartData);
+    const serviceResponse = await cartService.updateCart(cardId, cartData);
     handleServiceResponse(serviceResponse, res);
   };
 
