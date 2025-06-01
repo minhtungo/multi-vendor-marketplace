@@ -6,6 +6,7 @@ import { Button } from '@repo/ui/components/button';
 import { ShoppingBag, User } from '@repo/ui/icons';
 import { cn } from '@repo/ui/lib/utils';
 import Link from 'next/link';
+import { CartButton } from '@/modules/layout/components/cart-button';
 
 type HeaderProps = React.ComponentProps<'div'>;
 
@@ -32,14 +33,7 @@ export function Header({ className }: HeaderProps) {
                 <User className='size-5' />
               </Link>
             </Button>
-            <Button size='icon' variant='ghost' asChild>
-              <Link href={clientPaths.shop.cart} className='relative'>
-                <ShoppingBag className='size-5' />
-                <span className='absolute right-0 top-0 rounded-full bg-primary text-xs text-primary-foreground w-4 h-4 flex items-center justify-center'>
-                  0
-                </span>
-              </Link>
-            </Button>
+            <CartButton />
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
 import { getOrCreateSessionId } from '@/lib/session';
 import { type Cart } from '@repo/types/cart';
+import { revalidateTag } from 'next/cache';
 
 interface AddToCartData {
   productId: string;
@@ -22,6 +23,8 @@ export const addToCart = async (data: AddToCartData) => {
   if (!response.success) {
     throw new Error('Failed to add item to cart');
   }
+
+  revalidateTag('cart');
 
   return response.data;
 };

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { ProductQuickView } from '@/modules/products/templates/product-quick-view';
 import { Button } from '@repo/ui/components/button';
 import { Eye } from '@repo/ui/icons';
+import Link from 'next/link';
 
 type ProductCardProps = {
   product: Product;
@@ -32,10 +33,10 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className='mt-4 flex justify-between'>
         <div>
           <h3 className='text-sm text-foreground/80'>
-            <a href={`/products/${product.handle}`}>
+            <Link href={`/products/${product.handle}`}>
               <span aria-hidden='true' className='absolute inset-0' />
               {product.name}
-            </a>
+            </Link>
           </h3>
         </div>
         <p className='text-sm font-medium text-foreground'>{formatPrice(product.price)}</p>
