@@ -1,4 +1,4 @@
-import { CartItem, CartItemInsert } from '@/models/cart-item.model';
+import { CartItem, CartItemInsert, CartItemUpdate } from '@/models/cart-item.model';
 import { cartItemRepository } from '@/repositories/cart-item.repository';
 import { cartRepository } from '@/repositories/cart.repository';
 import { cartService } from '@/services/cart.service';
@@ -58,14 +58,14 @@ class CartItemService {
     );
   }
 
-  public async updateCartItemQuantity(
+  public async updateCartItem(
     userId: string | undefined,
     sessionId: string | undefined,
     cartItemId: string,
-    quantity: number
+    data: CartItemUpdate
   ): Promise<ServiceResponse<CartItem | null>> {
     return executeWithErrorHandling(
-      'updateCartItemQuantity',
+      'updateCartItem',
       async () => {
         const cartResponse = await cartService.getOrCreateCart(userId, sessionId);
 
@@ -75,16 +75,29 @@ class CartItemService {
 
         const cart = cartResponse.data;
 
+        if (userId && cart.userId !== userId) {
+          return ServiceResponse.failure('Cart item not found', null, HTTP_STATUS_CODES.NOT_FOUND);
+        }
+
+        if (sessionId && cart.sessionId !== sessionId) {
+          return ServiceResponse.failure('Cart item not found', null, HTTP_STATUS_CODES.NOT_FOUND);
+        }
+
         const targetCartItem = await this.cartItemRepo.getCartItemById(cartItemId);
 
         if (!targetCartItem || targetCartItem.cartId !== cart.id) {
           return ServiceResponse.failure('Cart item not found', null, HTTP_STATUS_CODES.NOT_FOUND);
         }
 
-        const newTotal = (parseFloat(targetCartItem.price) * quantity).toFixed(2);
+        if (data.quantity && data.quantity < 0) {
+          return ServiceResponse.failure('Quantity cannot be negative', null, HTTP_STATUS_CODES.BAD_REQUEST);
+        }
+
+        const newTotal = (parseFloat(targetCartItem.price) * (data.quantity || 1)).toFixed(2);
 
         const updatedCartItem = await this.cartItemRepo.updateCartItem(cartItemId, {
-          quantity,
+          ...data,
+          quantity: data.quantity || 1,
         });
 
         const allCartItems = await this.cartItemRepo.getCartItemsByCartId(cart.id);

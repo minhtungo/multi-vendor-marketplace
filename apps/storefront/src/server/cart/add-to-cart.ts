@@ -6,14 +6,14 @@ import { getOrCreateSessionId } from '@/lib/session';
 import { type Cart } from '@repo/types/cart';
 import { revalidateTag } from 'next/cache';
 
-interface AddToCartData {
+type AddToCartData = {
   productId: string;
   productName: string;
   productImage: string;
   quantity: number;
   price: string;
   total: string;
-}
+};
 
 export const addToCart = async (data: AddToCartData) => {
   await getOrCreateSessionId();

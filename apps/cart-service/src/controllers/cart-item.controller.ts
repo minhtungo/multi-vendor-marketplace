@@ -1,4 +1,4 @@
-import { cartItemInsertSchema } from '@/models/cart-item.model';
+import { cartItemInsertSchema, cartItemUpdateSchema } from '@/models/cart-item.model';
 import { cartItemService } from '@/services/cart-item.service';
 import { handleServiceResponse } from '@repo/server/lib';
 import type { Request, Response } from 'express';
@@ -13,13 +13,13 @@ class CartItemController {
     handleServiceResponse(serviceResponse, res);
   };
 
-  public updateCartItemQuantity = async (req: Request, res: Response) => {
+  public updateCartItem = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const sessionId = req.sessionId;
     const cartItemId = req.params.cartItemId;
-    const { quantity } = req.body;
+    const data = cartItemUpdateSchema.parse(req.body);
 
-    const serviceResponse = await cartItemService.updateCartItemQuantity(userId, sessionId, cartItemId, quantity);
+    const serviceResponse = await cartItemService.updateCartItem(userId, sessionId, cartItemId, data);
     handleServiceResponse(serviceResponse, res);
   };
 

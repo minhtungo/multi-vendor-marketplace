@@ -1,6 +1,8 @@
 'use client';
 
-import { QuantityButton } from '@/modules/products/components/quantity-button';
+import { useDebounce } from '@/hooks/use-debounce';
+import { ProductQuantityAction } from '@/modules/products/components/product-quantity-action';
+import { updateCartItem } from '@/server/cart-item/update-cart-item';
 import { type CartItem } from '@repo/types/cart-item';
 import { Button } from '@repo/ui/components/button';
 import { Heading } from '@repo/ui/components/heading';
@@ -14,6 +16,13 @@ type CartItemProps = React.ComponentProps<'div'> & {
 
 export function CartItem({ item }: CartItemProps) {
   const [quantity, setQuantity] = useState(item.quantity);
+
+  const debouncedQuantityChange = useDebounce(updateCartItem, 100);
+
+  const handleQuantityChange = (quantity: number) => {
+    setQuantity(quantity);
+    debouncedQuantityChange(item.id, { quantity });
+  };
 
   return (
     <div key={`cart-item-${item.id}`}>
@@ -33,11 +42,11 @@ export function CartItem({ item }: CartItemProps) {
             <Heading variant='h5' as='h3'>
               {item.productName}
             </Heading>
-            <p className='text-lg font-semibold'>${item.total}</p>
+            <p className='text-lg font-semibold'>${(parseFloat(item.price) * item.quantity).toFixed(2)}</p>
           </div>
 
           <div className='flex items-center justify-between mt-4'>
-            <QuantityButton quantity={quantity} onQuantityChange={setQuantity} />
+            <ProductQuantityAction quantity={quantity} onQuantityChange={handleQuantityChange} />
 
             <div className='flex items-center gap-4'>
               <Button variant='ghost' size='icon'>

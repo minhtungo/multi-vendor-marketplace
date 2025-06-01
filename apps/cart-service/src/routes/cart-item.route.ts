@@ -56,7 +56,7 @@ cartItemRouter.patch(
       body: cartItemUpdateSchema,
     })
   ),
-  cartItemController.updateCartItemQuantity
+  cartItemController.updateCartItem
 );
 
 // Remove cart item

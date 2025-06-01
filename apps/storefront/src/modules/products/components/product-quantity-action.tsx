@@ -3,12 +3,12 @@
 import { Button } from '@repo/ui/components/button';
 import { Minus, Plus } from '@repo/ui/icons';
 
-type QuantityButtonProps = {
+type ProductQuantityActionProps = {
   quantity: number;
   onQuantityChange: (quantity: number) => void;
 };
 
-export function QuantityButton({ quantity, onQuantityChange }: QuantityButtonProps) {
+export function ProductQuantityAction({ quantity, onQuantityChange }: ProductQuantityActionProps) {
   return (
     <div className='flex items-center gap-3'>
       <Button variant='outline' size='icon' onClick={() => onQuantityChange(quantity - 1)} disabled={quantity === 1}>

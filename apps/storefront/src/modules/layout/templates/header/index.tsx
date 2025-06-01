@@ -1,12 +1,12 @@
 import { Logo } from '@/components/common/logo';
+import { clientPaths } from '@/configs/paths';
+import { CartButton } from '@/modules/layout/components/cart-button';
 import { MobileMenu } from '@/modules/layout/components/mobile-menu';
 import { SearchBar } from '@/modules/layout/components/search-bar';
-import { clientPaths } from '@/configs/paths';
 import { Button } from '@repo/ui/components/button';
-import { ShoppingBag, User } from '@repo/ui/icons';
+import { User } from '@repo/ui/icons';
 import { cn } from '@repo/ui/lib/utils';
 import Link from 'next/link';
-import { CartButton } from '@/modules/layout/components/cart-button';
 
 type HeaderProps = React.ComponentProps<'div'>;
 

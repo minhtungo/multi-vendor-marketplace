@@ -27,7 +27,7 @@ export function CartPopup({ cartItems }: CartPopupProps) {
         >
           <Link href={clientPaths.shop.cart} className='relative'>
             <ShoppingBag className='size-5' />
-            <span className='absolute right-0 top-0 rounded-full bg-primary text-xs text-primary-foreground p-[2px] flex items-center justify-center'>
+            <span className='absolute right-0 top-0 rounded-full bg-primary text-xs text-primary-foreground size-4 flex items-center justify-center'>
               {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
             </span>
           </Link>
