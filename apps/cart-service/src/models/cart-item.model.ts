@@ -8,9 +8,8 @@ export const cartItemInsertSchema = z.object({
   productId: z.string(),
   productName: z.string(),
   productImage: z.string(),
-  price: z.coerce.number(),
+  price: z.string(),
   quantity: z.coerce.number(),
-  total: z.coerce.number(),
 });
 
 export const cartItemUpdateSchema = cartItemInsertSchema.partial();

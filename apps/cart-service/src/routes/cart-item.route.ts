@@ -26,7 +26,7 @@ cartItemRegistry.registerPath({
   responses: createApiResponse(z.object({}), 'Cart created successfully'),
 });
 
-cartItemRouter.post('/', validateRequest(z.object({ body: cartItemInsertSchema })), cartItemController.addItemToCart);
+cartItemRouter.post('/', cartItemController.addItemToCart);
 
 // Update cart item quantity
 cartItemRegistry.registerPath({

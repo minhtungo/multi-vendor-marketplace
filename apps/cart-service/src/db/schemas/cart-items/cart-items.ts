@@ -17,7 +17,6 @@ export const cartItems = pgTable(
     productSnapshottedAt: timestamp('product_snapshotted_at').defaultNow(),
     price: decimal('price', { precision: 10, scale: 2 }).notNull(),
     quantity: integer('quantity').notNull().default(1),
-    total: decimal('total', { precision: 10, scale: 2 }).notNull(),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
   },

@@ -2,12 +2,12 @@ import { cartRepository } from '@/repositories/cart.repository';
 import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
 import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
-import type { Cart, InsertCart } from '@/db/schemas/cart/validation';
+import type { Cart, CartUpdate, CartWithItems } from '@/models/cart.model';
 
 class CartService {
   constructor(private readonly cartRepo = cartRepository) {}
 
-  public async updateCart(cartId: string, cartData: Partial<InsertCart>): Promise<ServiceResponse<Cart | null>> {
+  public async updateCart(cartId: string, cartData: CartUpdate): Promise<ServiceResponse<null>> {
     return executeWithErrorHandling(
       'updateCart',
       async () => {
@@ -17,14 +17,14 @@ class CartService {
           return ServiceResponse.failure('Cart not found', null, HTTP_STATUS_CODES.NOT_FOUND);
         }
 
-        const updatedCart = await this.cartRepo.updateCart(cartId, cartData);
-        return ServiceResponse.success('Cart updated successfully', updatedCart, HTTP_STATUS_CODES.OK);
+        await this.cartRepo.updateCart(cartId, cartData);
+        return ServiceResponse.success('Cart updated successfully', null, HTTP_STATUS_CODES.OK);
       },
       logger
     );
   }
 
-  public async getOrCreateCart(userId?: string, sessionId?: string): Promise<ServiceResponse<Cart | null>> {
+  public async getOrCreateCart(userId?: string, sessionId?: string): Promise<ServiceResponse<CartWithItems | null>> {
     return executeWithErrorHandling(
       'getOrCreateCart',
       async () => {
@@ -37,6 +37,7 @@ class CartService {
             userId,
             sessionId: !userId ? sessionId : undefined,
           });
+
           return ServiceResponse.success('Cart created successfully', newCart, HTTP_STATUS_CODES.CREATED);
         }
 

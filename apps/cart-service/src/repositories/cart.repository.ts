@@ -1,19 +1,22 @@
 import { db } from '@/db';
 import { cart, cartItems } from '@/db/schemas';
-import type { InsertCart } from '@/db/schemas/cart/validation';
+import { CartInsert, CartUpdate } from '@/models/cart.model';
 import { eq } from 'drizzle-orm';
 
 export class CartRepository {
   constructor(private readonly dbInstance = db) {}
 
-  async createCart(cartData: InsertCart) {
+  async createCart(cartData: CartInsert) {
     const result = await this.dbInstance.insert(cart).values(cartData).returning();
-    return result[0];
+    return {
+      ...result[0],
+      items: [],
+    };
   }
 
-  async updateCart(cartId: string, cartData: Partial<InsertCart>) {
-    const result = await this.dbInstance.update(cart).set(cartData).where(eq(cart.id, cartId)).returning();
-    return result[0];
+  async updateCart(cartId: string, cartData: CartUpdate) {
+    console.log('cartData', cartData);
+    await this.dbInstance.update(cart).set(cartData).where(eq(cart.id, cartId)).returning();
   }
 
   async getCartByUserId(userId: string) {

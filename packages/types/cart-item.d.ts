@@ -7,5 +7,4 @@ export type CartItem = {
   productSnapshottedAt: Date;
   price: string;
   quantity: number;
-  total: string;
 };

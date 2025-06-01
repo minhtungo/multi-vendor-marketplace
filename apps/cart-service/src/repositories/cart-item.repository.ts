@@ -1,17 +1,17 @@
 import { db } from '@/db';
 import { cartItems } from '@/db/schemas';
+import { CartItemInsert, CartItemUpdate } from '@/models/cart-item.model';
 import { eq, and } from 'drizzle-orm';
-import type { InsertCartItem } from '@/db/schemas/cart-items/validation';
 
 export class CartItemRepository {
   constructor(private readonly dbInstance = db) {}
 
-  async createCartItem(cartItemData: InsertCartItem) {
+  async createCartItem(cartItemData: CartItemInsert & { cartId: string }) {
     const result = await this.dbInstance.insert(cartItems).values(cartItemData).returning();
     return result[0];
   }
 
-  async updateCartItem(cartItemId: string, cartItemData: Partial<InsertCartItem>) {
+  async updateCartItem(cartItemId: string, cartItemData: CartItemUpdate) {
     const result = await this.dbInstance
       .update(cartItems)
       .set(cartItemData)

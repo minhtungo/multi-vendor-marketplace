@@ -7,8 +7,6 @@ class CartItemController {
   public addItemToCart = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const sessionId = req.sessionId;
-    console.log('test', req.body);
-
     const data = cartItemInsertSchema.parse(req.body);
 
     const serviceResponse = await cartItemService.addItemToCart(userId, sessionId, data);

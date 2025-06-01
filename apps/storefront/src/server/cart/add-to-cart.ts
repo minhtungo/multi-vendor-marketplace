@@ -11,8 +11,8 @@ interface AddToCartData {
   productName: string;
   productImage: string;
   quantity: number;
-  price: number;
-  total: number;
+  price: string;
+  total: string;
 }
 
 export const addToCart = async (data: AddToCartData) => {

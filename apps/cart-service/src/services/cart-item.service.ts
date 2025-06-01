@@ -1,4 +1,4 @@
-import { CartItemInsert, CartItemSelect } from '@/models/cart-item.model';
+import { CartItem, CartItemInsert } from '@/models/cart-item.model';
 import { cartItemRepository } from '@/repositories/cart-item.repository';
 import { cartRepository } from '@/repositories/cart.repository';
 import { cartService } from '@/services/cart.service';
@@ -12,12 +12,11 @@ class CartItemService {
     private readonly cartRepo = cartRepository
   ) {}
 
-  //TODO: Improve this
   public async addItemToCart(
     userId: string | undefined,
     sessionId: string | undefined,
     cartItemData: CartItemInsert
-  ): Promise<ServiceResponse<CartItemSelect | null>> {
+  ): Promise<ServiceResponse<CartItem | null>> {
     return executeWithErrorHandling(
       'addItemToCart',
       async () => {
@@ -29,40 +28,31 @@ class CartItemService {
 
         const cart = cartResponse.data;
 
-        let cartItem: CartItemSelect | null = null;
+        let updatedCartItem: CartItem;
 
-        const existingCartItem = cart.items.find((item: any) => item.productId === cartItemData.productId);
+        const existingCartItem = cart?.items?.find((item: any) => item.productId === cartItemData.productId);
 
         if (existingCartItem) {
-          const newQuantity = existingCartItem.quantity + (cartItemData.quantity || 1);
-          const newTotal = (parseFloat(cartItemData.price?.toString() || '0') * newQuantity).toFixed(2);
-
-          cartItem = await this.cartItemRepo.updateCartItem(existingCartItem.id, {
-            quantity: newQuantity,
-            total: newTotal,
-            updatedAt: new Date(),
+          updatedCartItem = await this.cartItemRepo.updateCartItem(existingCartItem.id, {
+            quantity: existingCartItem.quantity + (cartItemData.quantity || 1),
           });
         } else {
-          const total = (parseFloat(cartItemData.price?.toString() || '0') * (cartItemData.quantity || 1)).toFixed(2);
-
-          cartItem = await this.cartItemRepo.createCartItem({
+          updatedCartItem = await this.cartItemRepo.createCartItem({
             ...cartItemData,
             cartId: cart.id,
           });
         }
 
-        const cartItems = await this.cartItemRepo.getCartItemsByCartId(cart.id);
-        const subtotal = cartItems.reduce((sum, item) => sum + parseFloat(item.total), 0).toFixed(2);
-        const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        const total = (parseFloat(cart.total) + parseFloat(cartItemData.price) * cartItemData.quantity).toFixed(2);
+        const itemCount = (cart.itemCount || 0) + cartItemData.quantity;
 
         await this.cartRepo.updateCart(cart.id, {
-          subtotal,
-          total: subtotal,
+          subtotal: total,
+          total,
           itemCount,
-          updatedAt: new Date(),
         });
 
-        return ServiceResponse.success('Item added to cart successfully', cartItem, HTTP_STATUS_CODES.OK);
+        return ServiceResponse.success('Item added to cart successfully', null, HTTP_STATUS_CODES.OK);
       },
       logger
     );
@@ -73,7 +63,7 @@ class CartItemService {
     sessionId: string | undefined,
     cartItemId: string,
     quantity: number
-  ): Promise<ServiceResponse<CartItemSelect | null>> {
+  ): Promise<ServiceResponse<CartItem | null>> {
     return executeWithErrorHandling(
       'updateCartItemQuantity',
       async () => {
@@ -95,19 +85,16 @@ class CartItemService {
 
         const updatedCartItem = await this.cartItemRepo.updateCartItem(cartItemId, {
           quantity,
-          total: newTotal,
-          updatedAt: new Date(),
         });
 
         const allCartItems = await this.cartItemRepo.getCartItemsByCartId(cart.id);
-        const subtotal = allCartItems.reduce((sum, item) => sum + parseFloat(item.total), 0).toFixed(2);
+        const subtotal = allCartItems.reduce((sum, item) => sum + parseFloat(item.price), 0).toFixed(2);
         const itemCount = allCartItems.reduce((sum, item) => sum + item.quantity, 0);
 
         await this.cartRepo.updateCart(cart.id, {
           subtotal,
           total: subtotal,
           itemCount,
-          updatedAt: new Date(),
         });
 
         return ServiceResponse.success(
@@ -146,14 +133,13 @@ class CartItemService {
         await this.cartItemRepo.deleteCartItem(cartItemId);
 
         const remainingCartItems = await this.cartItemRepo.getCartItemsByCartId(cart.id);
-        const subtotal = remainingCartItems.reduce((sum, item) => sum + parseFloat(item.total), 0).toFixed(2);
+        const subtotal = remainingCartItems.reduce((sum, item) => sum + parseFloat(item.price), 0).toFixed(2);
         const itemCount = remainingCartItems.reduce((sum, item) => sum + item.quantity, 0);
 
         await this.cartRepo.updateCart(cart.id, {
           subtotal,
           total: subtotal,
           itemCount,
-          updatedAt: new Date(),
         });
 
         return ServiceResponse.success('Cart item removed successfully', true, HTTP_STATUS_CODES.OK);
