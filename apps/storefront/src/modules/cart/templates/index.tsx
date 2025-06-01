@@ -10,9 +10,9 @@ import Link from 'next/link';
 
 export async function CartTemplate() {
   const cart = await retrieveCart();
-  const cartItems = cart.items;
+  const cartItems = cart?.items;
 
-  if (cartItems && cartItems.length === 0) {
+  if (!cartItems || cartItems.length === 0) {
     return <div>No items in cart</div>;
   }
 

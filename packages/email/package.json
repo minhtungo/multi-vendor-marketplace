@@ -17,7 +17,7 @@
     "nodemailer": "^7.0.3",
     "pino": "9.7.0",
     "pino-http": "10.4.0",
-    "zod": "3.25.41"
+    "zod": "3.25.46"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

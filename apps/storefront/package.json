@@ -15,27 +15,27 @@
     "@repo/ui": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.6",
     "class-variance-authority": "^0.7.1",
-    "next": "15.3.3",
+    "next": "15.4.0",
     "posthog-js": "^1.249.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.4",
     "server-only": "^0.0.1",
-    "sonner": "^2.0.3",
-    "zod": "^3.25.41"
+    "sonner": "^2.0.4",
+    "zod": "^3.25.46"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@repo/types": "workspace:*",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^22.15.26",
+    "@types/node": "^22.15.29",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "eslint-plugin-import": "^2.31.0",
     "tailwindcss": "^4",
-    "tw-animate-css": "^1.3.2",
+    "tw-animate-css": "^1.3.3",
     "typescript": "^5"
   }
 }

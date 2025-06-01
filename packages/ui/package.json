@@ -27,18 +27,18 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.4",
-    "sonner": "^2.0.3",
+    "sonner": "^2.0.4",
     "tailwind-merge": "^3.3.0",
-    "tw-animate-css": "^1.3.2",
+    "tw-animate-css": "^1.3.3",
     "vaul": "^1.1.2",
-    "zod": "^3.25.41"
+    "zod": "^3.25.46"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4.1.8",
-    "@turbo/gen": "^2.5.3",
-    "@types/node": "^22.15.26",
+    "@turbo/gen": "^2.5.4",
+    "@types/node": "^22.15.29",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tailwindcss": "^4.1.8",

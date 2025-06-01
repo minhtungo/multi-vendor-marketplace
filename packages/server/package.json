@@ -35,7 +35,7 @@
     "@asteasolutions/zod-to-openapi": "7.3.2",
     "pino": "9.7.0",
     "pino-http": "10.4.0",
-    "zod": "3.25.41"
+    "zod": "3.25.46"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

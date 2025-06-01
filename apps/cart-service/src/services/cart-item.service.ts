@@ -1,5 +1,4 @@
-import type { CartItem } from '@/db/schemas/cart-items/validation';
-import { AddToCartItem } from '@/models/cart-item.model';
+import { CartItemInsert, CartItemSelect } from '@/models/cart-item.model';
 import { cartItemRepository } from '@/repositories/cart-item.repository';
 import { cartRepository } from '@/repositories/cart.repository';
 import { cartService } from '@/services/cart.service';
@@ -17,13 +16,12 @@ class CartItemService {
   public async addItemToCart(
     userId: string | undefined,
     sessionId: string | undefined,
-    cartItemData: AddToCartItem
-  ): Promise<ServiceResponse<CartItem | null>> {
+    cartItemData: CartItemInsert
+  ): Promise<ServiceResponse<CartItemSelect | null>> {
     return executeWithErrorHandling(
       'addItemToCart',
       async () => {
         const cartResponse = await cartService.getOrCreateCart(userId, sessionId);
-        console.log('cartResponse', cartResponse.data);
 
         if (!cartResponse.success || !cartResponse.data) {
           return ServiceResponse.failure('Failed to get or create cart', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
@@ -31,11 +29,13 @@ class CartItemService {
 
         const cart = cartResponse.data;
 
-        const cartItem = cart.items;
+        let cartItem: CartItemSelect | null = null;
+
+        const existingCartItem = cart.items.find((item: any) => item.productId === cartItemData.productId);
 
         if (existingCartItem) {
-          const newQuantity = existingCartItem.quantity + cartItemData.quantity!;
-          const newTotal = (parseFloat(cartItemData.price.toString()) * newQuantity).toFixed(2);
+          const newQuantity = existingCartItem.quantity + (cartItemData.quantity || 1);
+          const newTotal = (parseFloat(cartItemData.price?.toString() || '0') * newQuantity).toFixed(2);
 
           cartItem = await this.cartItemRepo.updateCartItem(existingCartItem.id, {
             quantity: newQuantity,
@@ -43,16 +43,11 @@ class CartItemService {
             updatedAt: new Date(),
           });
         } else {
-          const total = (parseFloat(cartItemData.price.toString()) * cartItemData.quantity!).toFixed(2);
+          const total = (parseFloat(cartItemData.price?.toString() || '0') * (cartItemData.quantity || 1)).toFixed(2);
 
           cartItem = await this.cartItemRepo.createCartItem({
+            ...cartItemData,
             cartId: cart.id,
-            productId: cartItemData.productId,
-            price: cartItemData.price.toString(),
-            productName: cartItemData.productName || '',
-            productImage: cartItemData.productImage || '',
-            quantity: cartItemData.quantity,
-            total,
           });
         }
 
@@ -78,7 +73,7 @@ class CartItemService {
     sessionId: string | undefined,
     cartItemId: string,
     quantity: number
-  ): Promise<ServiceResponse<CartItem | null>> {
+  ): Promise<ServiceResponse<CartItemSelect | null>> {
     return executeWithErrorHandling(
       'updateCartItemQuantity',
       async () => {

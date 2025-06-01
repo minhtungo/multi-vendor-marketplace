@@ -4,6 +4,6 @@
   "private": true,
   "main": "index.js",
   "devDependencies": {
-    "@types/node": "^22.15.26"
+    "@types/node": "^22.15.29"
   }
 }

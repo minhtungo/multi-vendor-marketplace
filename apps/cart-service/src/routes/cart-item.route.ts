@@ -1,6 +1,5 @@
 import { cartItemController } from '@/controllers/cart-item.controller';
-import { updateCartItemQuantitySchema } from '@/db/schemas/cart-items/validation';
-import { addToCartItemSchema } from '@/models/cart-item.model';
+import { cartItemInsertSchema, cartItemUpdateSchema } from '@/models/cart-item.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/server/docs';
 import { validateRequest } from '@repo/server/middlewares';
@@ -19,7 +18,7 @@ cartItemRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: z.object({}),
+          schema: cartItemInsertSchema,
         },
       },
     },
@@ -27,7 +26,7 @@ cartItemRegistry.registerPath({
   responses: createApiResponse(z.object({}), 'Cart created successfully'),
 });
 
-cartItemRouter.post('/', validateRequest(z.object({ body: addToCartItemSchema })), cartItemController.addItemToCart);
+cartItemRouter.post('/', validateRequest(z.object({ body: cartItemInsertSchema })), cartItemController.addItemToCart);
 
 // Update cart item quantity
 cartItemRegistry.registerPath({
@@ -54,7 +53,7 @@ cartItemRouter.patch(
   validateRequest(
     z.object({
       params: z.object({ cartItemId: z.string() }),
-      body: updateCartItemQuantitySchema,
+      body: cartItemUpdateSchema,
     })
   ),
   cartItemController.updateCartItemQuantity

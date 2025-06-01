@@ -8,21 +8,11 @@ import { z } from 'zod';
 export const cartRegistry = new OpenAPIRegistry();
 export const cartRouter: Router = express.Router();
 
-// Schemas
-const mergeCartSchema = z.object({
-  guestSessionId: z.string().min(1, 'Guest session ID is required'),
-});
-
 // Get cart
 cartRegistry.registerPath({
   method: 'get',
   path: '/cart',
   tags: ['Cart'],
-  // request: {
-  //   params: z.object({
-  //     sessionId: z.string(),
-  //   }),
-  // },
   responses: createApiResponse(z.object({}), 'Cart retrieved successfully'),
 });
 
@@ -33,19 +23,11 @@ cartRegistry.registerPath({
   method: 'post',
   path: '/cart/merge',
   tags: ['Cart'],
-  request: {
-    body: {
-      content: {
-        'application/json': {
-          schema: mergeCartSchema,
-        },
-      },
-    },
-  },
+  request: {},
   responses: createApiResponse(z.object({}), 'Cart merged successfully'),
 });
 
-cartRouter.post('/merge', validateRequest(z.object({ body: mergeCartSchema })), cartController.mergeCart);
+cartRouter.post('/merge', cartController.mergeCart);
 
 // Update cart
 cartRegistry.registerPath({

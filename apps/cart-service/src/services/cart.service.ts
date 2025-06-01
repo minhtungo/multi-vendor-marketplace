@@ -46,10 +46,22 @@ class CartService {
     );
   }
 
-  public async mergeCart(userId: string, guestSessionId: string): Promise<ServiceResponse<Cart | null>> {
+  public async mergeCart(userId?: string, guestSessionId?: string): Promise<ServiceResponse<Cart | null>> {
     return executeWithErrorHandling(
       'mergeCart',
       async () => {
+        if (!userId) {
+          return ServiceResponse.failure(
+            'User must be authenticated to merge cart',
+            null,
+            HTTP_STATUS_CODES.BAD_REQUEST
+          );
+        }
+
+        if (!guestSessionId) {
+          return ServiceResponse.failure('Guest session ID is required', null, HTTP_STATUS_CODES.BAD_REQUEST);
+        }
+
         const userCart = await this.cartRepo.getCartByUserId(userId);
         const guestCart = await this.cartRepo.getCartBySessionId(guestSessionId);
 
