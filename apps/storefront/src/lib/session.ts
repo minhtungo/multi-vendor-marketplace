@@ -1,24 +1,15 @@
 import 'server-only';
+import { generateSessionId, getSessionId, setSessionId } from '@/lib/cookies';
 
-import { getSessionId, setSessionId } from '@/lib/cookies';
-
-export function generateSessionId(): string {
-  const timestamp = Date.now().toString(36);
-  const randomPart = Math.random().toString(36).substring(2, 15);
-  return `guest_${timestamp}_${randomPart}`;
-}
-
-export async function getOrCreateSessionId(): Promise<string> {
+export async function getOrCreateSessionId() {
   const existingSessionId = await getSessionId();
 
   if (existingSessionId) {
-    return existingSessionId;
+    return;
   }
 
   const newSessionId = generateSessionId();
   await setSessionId(newSessionId);
-
-  return newSessionId;
 }
 
 export async function clearSession(): Promise<void> {

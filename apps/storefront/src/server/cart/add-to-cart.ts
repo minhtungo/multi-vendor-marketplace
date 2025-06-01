@@ -2,7 +2,6 @@
 
 import { serverPaths } from '@/configs/paths';
 import { api } from '@/lib/api-client';
-import { getOrCreateSessionId } from '@/lib/session';
 import { type Cart } from '@repo/types/cart';
 import { revalidateTag } from 'next/cache';
 
@@ -16,8 +15,6 @@ type AddToCartData = {
 };
 
 export const addToCart = async (data: AddToCartData) => {
-  await getOrCreateSessionId();
-
   const response = await api.post<Cart>(`${serverPaths.cart.create}/items`, data);
 
   if (!response.success) {

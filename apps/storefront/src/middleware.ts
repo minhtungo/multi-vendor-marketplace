@@ -1,18 +1,22 @@
 import { getAuthToken } from '@/lib/cookies';
+import { getOrCreateSessionId } from '@/lib/session';
 import { NextRequest, NextResponse } from 'next/server';
 
-const publicPages = ['/sign-in', '/sign-up', '/forgot-password', '/reset-password'];
+const authPages = ['/sign-in', '/sign-up', '/forgot-password', '/reset-password'];
 
 export async function middleware(request: NextRequest) {
+  console.log('middleware');
   const { pathname } = request.nextUrl;
 
-  const isPublicPage = publicPages.includes(pathname);
+  const isAuthPage = authPages.includes(pathname);
   const isAccountPage = pathname.startsWith('/account');
 
   const token = await getAuthToken();
   const isAuthenticated = !!token;
 
-  if (isPublicPage && isAuthenticated) {
+  await getOrCreateSessionId();
+
+  if (isAuthPage && isAuthenticated) {
     return NextResponse.redirect(new URL('/account', request.url));
   }
 
@@ -24,5 +28,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/sign-in', '/sign-up', '/forgot-password', '/reset-password', '/account/:path*'],
+  // matcher: ['/sign-in', '/sign-up', '/forgot-password', '/reset-password', '/account/:path*'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

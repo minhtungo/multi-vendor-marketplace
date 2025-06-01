@@ -4,7 +4,7 @@ import { cookies as nextCookies } from 'next/headers';
 import { env } from '@/configs/env';
 import { cookiesConfig } from '@/configs/cookies';
 
-export const getAuthToken = async () => {
+export async function getAuthToken() {
   try {
     const cookieStore = await nextCookies();
     return cookieStore.get(env.ACCESS_TOKEN_COOKIE_NAME)?.value;
@@ -12,21 +12,21 @@ export const getAuthToken = async () => {
     console.error('Failed to access cookies:', error);
     return '';
   }
-};
+}
 
-export const setAuthToken = async (token: string) => {
+export async function setAuthToken(token: string) {
   const cookieStore = await nextCookies();
   cookieStore.set(env.ACCESS_TOKEN_COOKIE_NAME, token, {
     ...cookiesConfig.accessToken,
   });
-};
+}
 
-export const removeAuthToken = async () => {
+export async function removeAuthToken() {
   const cookieStore = await nextCookies();
   cookieStore.delete(env.ACCESS_TOKEN_COOKIE_NAME);
-};
+}
 
-export const getSessionId = async () => {
+export async function getSessionId() {
   try {
     const cookieStore = await nextCookies();
     return cookieStore.get(env.SESSION_ID_COOKIE_NAME)?.value;
@@ -34,16 +34,22 @@ export const getSessionId = async () => {
     console.error('Failed to access cookies:', error);
     return '';
   }
-};
+}
 
-export const setSessionId = async (sessionId: string) => {
+export async function setSessionId(sessionId: string) {
   const cookieStore = await nextCookies();
   cookieStore.set(env.SESSION_ID_COOKIE_NAME, sessionId, {
     ...cookiesConfig.sessionId,
   });
-};
+}
 
-export const removeSessionId = async () => {
+export async function removeSessionId() {
   const cookieStore = await nextCookies();
   cookieStore.delete(env.SESSION_ID_COOKIE_NAME);
-};
+}
+
+export function generateSessionId(): string {
+  const timestamp = Date.now().toString(36);
+  const randomPart = Math.random().toString(36).substring(2, 15);
+  return `guest_${timestamp}_${randomPart}`;
+}
