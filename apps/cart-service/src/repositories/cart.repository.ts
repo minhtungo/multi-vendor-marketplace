@@ -1,6 +1,6 @@
 import { db } from '@/db';
-import { cart } from '@/db/schemas';
-import { eq } from 'drizzle-orm';
+import { cart, cartItems } from '@/db/schemas';
+import { eq, and } from 'drizzle-orm';
 import type { InsertCart } from '@/db/schemas/cart/validation';
 
 export class CartRepository {
@@ -36,6 +36,43 @@ export class CartRepository {
     });
 
     return result;
+  }
+
+  async mergeCartToUser(cartId: string, userId: string) {
+    const result = await this.dbInstance
+      .update(cart)
+      .set({
+        userId,
+        sessionId: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(cart.id, cartId))
+      .returning();
+
+    return result[0];
+  }
+
+  async recalculateCartTotals(cartId: string) {
+    // Get all items in the cart
+    const items = await this.dbInstance.query.cartItems.findMany({
+      where: eq(cartItems.cartId, cartId),
+    });
+
+    const itemCount = items.length;
+    const subtotal = items.reduce((sum, item) => {
+      return sum + parseFloat(item.price.toString()) * item.quantity;
+    }, 0);
+
+    // Update cart totals
+    await this.dbInstance
+      .update(cart)
+      .set({
+        subtotal: subtotal.toFixed(2),
+        total: subtotal.toFixed(2), // In a real app, you'd add taxes, shipping, etc.
+        itemCount,
+        updatedAt: new Date(),
+      })
+      .where(eq(cart.id, cartId));
   }
 
   async deleteCart(cartId: string) {

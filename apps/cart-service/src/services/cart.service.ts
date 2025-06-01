@@ -45,6 +45,35 @@ class CartService {
     );
   }
 
+  public async mergeCart(userId: string, guestSessionId: string): Promise<ServiceResponse<Cart | null>> {
+    return executeWithErrorHandling(
+      'mergeCart',
+      async () => {
+        const userCart = await this.cartRepo.getCartByUserId(userId);
+        const guestCart = await this.cartRepo.getCartBySessionId(guestSessionId);
+
+        if (!guestCart) {
+          if (userCart) {
+            return ServiceResponse.success('No guest cart to merge', userCart, HTTP_STATUS_CODES.OK);
+          } else {
+            const newCart = await this.cartRepo.createCart({ userId });
+            return ServiceResponse.success('New user cart created', newCart, HTTP_STATUS_CODES.CREATED);
+          }
+        }
+
+        if (!userCart) {
+          const mergedCart = await this.cartRepo.mergeCartToUser(guestCart.id, userId);
+          return ServiceResponse.success('Guest cart converted to user cart', mergedCart, HTTP_STATUS_CODES.OK);
+        }
+
+        await this.cartRepo.deleteCart(guestCart.id);
+
+        return ServiceResponse.success('Carts merged successfully', userCart, HTTP_STATUS_CODES.OK);
+      },
+      logger
+    );
+  }
+
   public async deleteCart(cartId: string): Promise<ServiceResponse<null>> {
     return executeWithErrorHandling(
       'deleteCart',
