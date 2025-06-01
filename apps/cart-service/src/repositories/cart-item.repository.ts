@@ -6,17 +6,13 @@ import { eq, and } from 'drizzle-orm';
 export class CartItemRepository {
   constructor(private readonly dbInstance = db) {}
 
-  async createCartItem(cartItemData: CartItemInsert & { cartId: string }) {
-    const result = await this.dbInstance.insert(cartItems).values(cartItemData).returning();
+  async createCartItem(cartItemData: CartItemInsert & { cartId: string }, trx: typeof db = this.dbInstance) {
+    const result = await trx.insert(cartItems).values(cartItemData).returning();
     return result[0];
   }
 
-  async updateCartItem(cartItemId: string, cartItemData: CartItemUpdate) {
-    const result = await this.dbInstance
-      .update(cartItems)
-      .set(cartItemData)
-      .where(eq(cartItems.id, cartItemId))
-      .returning();
+  async updateCartItem(cartItemId: string, cartItemData: CartItemUpdate, trx: typeof db = this.dbInstance) {
+    const result = await trx.update(cartItems).set(cartItemData).where(eq(cartItems.id, cartItemId)).returning();
     return result[0];
   }
 
@@ -41,8 +37,8 @@ export class CartItemRepository {
     return result;
   }
 
-  async deleteCartItem(cartItemId: string) {
-    const result = await this.dbInstance.delete(cartItems).where(eq(cartItems.id, cartItemId)).returning();
+  async deleteCartItem(cartItemId: string, trx: typeof db = this.dbInstance) {
+    const result = await trx.delete(cartItems).where(eq(cartItems.id, cartItemId)).returning();
     return result[0];
   }
 }

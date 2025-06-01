@@ -69,7 +69,7 @@ cartItemRegistry.registerPath({
       cartItemId: z.string(),
     }),
   },
-  responses: createApiResponse(z.object({ success: z.boolean() }), 'Cart item removed successfully'),
+  responses: createApiResponse(z.null(), 'Cart item removed successfully'),
 });
 
 cartItemRouter.delete(

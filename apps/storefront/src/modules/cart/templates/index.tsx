@@ -1,13 +1,8 @@
-import { CartItem } from '@/modules/cart/components/cart-item';
+import { CartItems } from '@/modules/cart/templates/cart-items';
+import { CartSummary } from '@/modules/cart/templates/cart-summary';
 import { retrieveCart } from '@/server/cart/retrieve-cart';
-import { formatPrice } from '@repo/shared/utils';
-import { Button } from '@repo/ui/components/button';
-import { Card, CardContent } from '@repo/ui/components/card';
 import { Heading } from '@repo/ui/components/heading';
-import { Separator } from '@repo/ui/components/separator';
 import { ShoppingBag } from '@repo/ui/icons';
-import Link from 'next/link';
-import React from 'react';
 
 export async function CartTemplate() {
   const cart = await retrieveCart();
@@ -28,65 +23,8 @@ export async function CartTemplate() {
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-        <div className='lg:col-span-2'>
-          <Card>
-            <CardContent>
-              {cartItems.map((item, index) => (
-                <React.Fragment key={`cart-item-${item.id}`}>
-                  <CartItem item={item} />
-                  {index < cartItems.length - 1 && <Separator className='my-6' />}
-                </React.Fragment>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className='lg:col-span-1'>
-          <Card className='sticky top-8'>
-            <CardContent>
-              <Heading variant='h5' as='h3' className='mb-4'>
-                Order Summary
-              </Heading>
-
-              <div className='space-y-3'>
-                <div className='flex justify-between text-sm'>
-                  <span className='text-muted-foreground'>Subtotal</span>
-                  <span className='font-medium'>{formatPrice(parseFloat(cart.subtotal))}</span>
-                </div>
-
-                <div className='flex justify-between text-sm'>
-                  <span className='text-muted-foreground'>Shipping</span>
-                  <span className='font-medium'>{formatPrice(9.99)}</span>
-                </div>
-
-                {/* <div className='flex justify-between text-sm'>
-                  <span className='text-muted-foreground'>Tax</span>
-                  <span className='font-medium'>{formatPrice(parseFloat(cart.))}</span>
-                </div> */}
-
-                <Separator />
-
-                <div className='flex justify-between text-base font-semibold'>
-                  <span>Total</span>
-                  <span>{formatPrice(parseFloat(cart.total))}</span>
-                </div>
-              </div>
-
-              <Button className='w-full mt-6' size='lg' asChild>
-                <Link href='/checkout'>Proceed to Checkout</Link>
-              </Button>
-
-              <Button variant='outline' className='w-full mt-3' asChild>
-                <Link href='/'>Continue Shopping</Link>
-              </Button>
-
-              <div className='mt-6 text-center'>
-                <p className='text-xs text-muted-foreground'>Free shipping on orders over $75</p>
-                <p className='text-xs text-muted-foreground mt-1'>30-day return policy</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <CartItems cartItems={cartItems} className='lg:col-span-2 h-fit' />
+        <CartSummary cart={cart} className='lg:col-span-1 sticky top-8 h-fit' />
       </div>
     </div>
   );

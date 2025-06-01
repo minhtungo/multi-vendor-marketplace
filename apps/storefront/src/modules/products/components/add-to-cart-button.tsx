@@ -1,6 +1,6 @@
 'use client';
 
-import { addToCart } from '@/server/cart/add-to-cart';
+import { addToCart } from '@/server/cart-item/add-to-cart';
 import { Product } from '@repo/types/product';
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { ShoppingCart } from '@repo/ui/icons';

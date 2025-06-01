@@ -14,9 +14,9 @@ export class CartRepository {
     };
   }
 
-  async updateCart(cartId: string, cartData: CartUpdate) {
+  async updateCart(cartId: string, cartData: CartUpdate, trx: typeof db = this.dbInstance) {
     console.log('cartData', cartData);
-    await this.dbInstance.update(cart).set(cartData).where(eq(cart.id, cartId)).returning();
+    await trx.update(cart).set(cartData).where(eq(cart.id, cartId)).returning();
   }
 
   async getCartByUserId(userId: string) {

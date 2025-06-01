@@ -44,6 +44,7 @@ export const serverPaths = {
     retrieve: `${cartPath}`,
     update: `${cartPath}`,
     create: `${cartPath}`,
+    addItem: `${cartPath}/items`,
     updateItem: `${cartPath}/items`,
     removeItem: `${cartPath}/items`,
   },

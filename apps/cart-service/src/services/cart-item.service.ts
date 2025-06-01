@@ -3,6 +3,7 @@ import { cartItemRepository } from '@/repositories/cart-item.repository';
 import { cartRepository } from '@/repositories/cart.repository';
 import { cartService } from '@/services/cart.service';
 import { logger } from '@/utils/logger';
+import { createTransaction } from '@/utils/transaction';
 import { HTTP_STATUS_CODES } from '@repo/server/core';
 import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
 
@@ -93,8 +94,6 @@ class CartItemService {
           return ServiceResponse.failure('Quantity cannot be negative', null, HTTP_STATUS_CODES.BAD_REQUEST);
         }
 
-        const newTotal = (parseFloat(targetCartItem.price) * (data.quantity || 1)).toFixed(2);
-
         const updatedCartItem = await this.cartItemRepo.updateCartItem(cartItemId, {
           ...data,
           quantity: data.quantity || 1,
@@ -136,23 +135,43 @@ class CartItemService {
 
         const cart = cartResponse.data;
 
-        // Get the specific cart item
-        const targetCartItem = await this.cartItemRepo.getCartItemById(cartItemId);
+        if (userId && cart.userId !== userId) {
+          return ServiceResponse.failure('Cart item not found', false, HTTP_STATUS_CODES.NOT_FOUND);
+        }
+
+        if (sessionId && cart.sessionId !== sessionId) {
+          return ServiceResponse.failure('Cart item not found', false, HTTP_STATUS_CODES.NOT_FOUND);
+        }
+
+        const targetCartItem = cart.items?.find((item) => item.id === cartItemId);
 
         if (!targetCartItem || targetCartItem.cartId !== cart.id) {
           return ServiceResponse.failure('Cart item not found', false, HTTP_STATUS_CODES.NOT_FOUND);
         }
 
-        await this.cartItemRepo.deleteCartItem(cartItemId);
+        await createTransaction(async (trx) => {
+          await this.cartItemRepo.deleteCartItem(cartItemId, trx);
 
-        const remainingCartItems = await this.cartItemRepo.getCartItemsByCartId(cart.id);
-        const subtotal = remainingCartItems.reduce((sum, item) => sum + parseFloat(item.price), 0).toFixed(2);
-        const itemCount = remainingCartItems.reduce((sum, item) => sum + item.quantity, 0);
+          const subtotal = (
+            parseFloat(cart.subtotal) -
+            parseFloat(targetCartItem.price) * targetCartItem.quantity
+          ).toFixed(2);
 
-        await this.cartRepo.updateCart(cart.id, {
-          subtotal,
-          total: subtotal,
-          itemCount,
+          const itemCount = cart.itemCount! - targetCartItem.quantity;
+
+          if (itemCount < 0) {
+            throw new Error('Invalid item count');
+          }
+
+          await this.cartRepo.updateCart(
+            cart.id,
+            {
+              subtotal,
+              total: subtotal,
+              itemCount,
+            },
+            trx
+          );
         });
 
         return ServiceResponse.success('Cart item removed successfully', true, HTTP_STATUS_CODES.OK);
