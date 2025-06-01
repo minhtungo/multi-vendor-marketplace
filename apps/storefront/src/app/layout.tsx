@@ -1,5 +1,5 @@
 import { Footer } from '@/components/footer/footer';
-import { Header } from '@/components/header';
+import { Header } from '@/modules/layout/templates/header';
 import { Providers } from '@/components/providers';
 import { siteConfig } from '@/configs/site';
 import { Toaster } from '@repo/ui/components/sonner';

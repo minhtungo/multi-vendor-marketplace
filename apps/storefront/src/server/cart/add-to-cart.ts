@@ -17,9 +17,11 @@ interface AddToCartData {
 export const addToCart = async (data: AddToCartData) => {
   await getOrCreateSessionId();
 
-  const response = await api.post<Cart>(`${serverPaths.cart.create}/items`, {
-    ...data,
-  });
+  const response = await api.post<Cart>(`${serverPaths.cart.create}/items`, data);
+
+  if (!response.success) {
+    throw new Error('Failed to add item to cart');
+  }
 
   return response.data;
 };

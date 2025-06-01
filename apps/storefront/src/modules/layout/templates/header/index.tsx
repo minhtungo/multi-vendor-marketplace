@@ -1,6 +1,6 @@
 import { Logo } from '@/components/common/logo';
-import { MobileMenu } from '@/components/header/mobile-menu';
-import { SearchBar } from '@/components/header/search-bar';
+import { MobileMenu } from '@/modules/layout/components/mobile-menu';
+import { SearchBar } from '@/modules/layout/components/search-bar';
 import { clientPaths } from '@/configs/paths';
 import { Button } from '@repo/ui/components/button';
 import { ShoppingBag, User } from '@repo/ui/icons';

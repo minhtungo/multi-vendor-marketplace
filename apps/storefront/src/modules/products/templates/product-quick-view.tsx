@@ -1,15 +1,6 @@
-import { AddToCartButton } from '@/modules/products/components/add-to-cart-button';
+import { ProductActions } from '@/modules/products/components/product-actions';
 import { Product } from '@repo/types/product';
-import { Button } from '@repo/ui/components/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@repo/ui/components/dialog';
-import { Minus, Plus } from '@repo/ui/icons';
+import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/components/dialog';
 import Image from 'next/image';
 
 type ProductQuickViewProps = {
@@ -19,6 +10,7 @@ type ProductQuickViewProps = {
 
 export function ProductQuickView({ triggerButton, product }: ProductQuickViewProps) {
   if (!product) return null;
+
   return (
     <Dialog>
       <DialogTrigger asChild>{triggerButton}</DialogTrigger>
@@ -52,26 +44,7 @@ export function ProductQuickView({ triggerButton, product }: ProductQuickViewPro
               <p className='text-muted-foreground mb-6'>{product.description}</p>
             </div>
 
-            {/* Quantity */}
-            <div>
-              <h3 className='font-semibold mb-3'>Quantity</h3>
-              <div className='flex items-center gap-3'>
-                <Button variant='outline' size='icon'>
-                  <Minus className='h-4 w-4' />
-                </Button>
-                <span className='w-12 text-center font-semibold'>1</span>
-                <Button variant='outline' size='icon'>
-                  <Plus className='h-4 w-4' />
-                </Button>
-              </div>
-            </div>
-
-            <div className='space-y-3'>
-              <AddToCartButton product={product} />
-              <Button variant='outline' size='lg' className='w-full'>
-                Buy Now
-              </Button>
-            </div>
+            <ProductActions product={product} />
           </div>
         </div>
       </DialogContent>

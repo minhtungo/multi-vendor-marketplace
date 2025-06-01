@@ -1,7 +1,7 @@
 import { type Product } from '@repo/types/product';
 import { formatPrice } from '@repo/shared/utils';
 import Image from 'next/image';
-import { ProductQuickView } from '@/modules/products/components/product-quick-view';
+import { ProductQuickView } from '@/modules/products/templates/product-quick-view';
 import { Button } from '@repo/ui/components/button';
 import { Eye } from '@repo/ui/icons';
 
