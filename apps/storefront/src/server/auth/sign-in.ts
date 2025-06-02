@@ -1,7 +1,7 @@
 'use server';
 
-import { clientPaths } from '@/configs/paths';
-import { serverPaths } from '@/configs/paths';
+import { clientPaths } from '@/config/paths';
+import { serverPaths } from '@/config/paths';
 import { api } from '@/lib/api-client';
 import { setAuthToken } from '@/lib/cookies';
 import { ApiError } from '@/lib/core/http/error';

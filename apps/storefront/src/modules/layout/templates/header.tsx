@@ -1,5 +1,5 @@
-import { Logo } from '@/components/common/logo';
-import { clientPaths } from '@/configs/paths';
+import { Logo } from '@/modules/common/components/logo';
+import { clientPaths } from '@/config/paths';
 import { CartButton } from '@/modules/layout/components/cart-button';
 import { MobileMenu } from '@/modules/layout/components/mobile-menu';
 import { SearchBar } from '@/modules/layout/components/search-bar';

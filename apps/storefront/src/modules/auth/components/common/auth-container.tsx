@@ -1,4 +1,4 @@
-import { Logo } from '@/components/common/logo';
+import { Logo } from '@/modules/common/components/logo';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@repo/ui/components/card';
 import Link from 'next/link';
 

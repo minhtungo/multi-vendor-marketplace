@@ -1,7 +1,7 @@
 'use client';
 
-import { SubmitButton } from '@/components/common/submit-button';
-import { clientPaths } from '@/configs/paths';
+import { SubmitButton } from '@/modules/common/components/submit-button';
+import { clientPaths } from '@/config/paths';
 import { forgotPassword } from '@/server/auth/forgot-password';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { Input } from '@repo/ui/components/input';

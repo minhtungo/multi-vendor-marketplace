@@ -1,4 +1,4 @@
-import { menu } from '@/configs/menu';
+import { menu } from '@/config/menu';
 import { buttonVariants } from '@repo/ui/components/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@repo/ui/components/popover';
 import { cn } from '@repo/ui/lib/utils';

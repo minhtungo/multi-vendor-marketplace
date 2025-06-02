@@ -1,7 +1,7 @@
 'use client';
 
-import { SubmitButton } from '@/components/common/submit-button';
-import { FormItem } from '@/components/form/form-item';
+import { SubmitButton } from '@/modules/common/components/submit-button';
+import { FormItem } from '@/modules/common/components/form-item';
 import { updateProfile } from '@/server/account/update-profile';
 import { type User } from '@repo/types/user';
 import { FormResponse } from '@repo/ui/components/form-response';

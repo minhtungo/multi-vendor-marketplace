@@ -1,4 +1,4 @@
-import { SkeletonCartPage } from '@/components/skeletons/skeleton-cart-page';
+import { SkeletonCartPage } from '@/modules/skeletons/templates/skeleton-cart-page';
 import { CartTemplate } from '@/modules/cart/templates';
 import { Suspense } from 'react';
 

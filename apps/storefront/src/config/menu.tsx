@@ -1,4 +1,4 @@
-import { clientPaths } from '@/configs/paths';
+import { clientPaths } from '@/config/paths';
 import { CreditCard, Heart, MapPin, Settings, ShoppingBag, User } from '@repo/ui/icons';
 
 export const menu = {

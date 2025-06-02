@@ -1,6 +1,6 @@
 'use client';
 
-import { clientPaths } from '@/configs/paths';
+import { clientPaths } from '@/config/paths';
 import { CartItem } from '@repo/types/cart-item';
 import { Button } from '@repo/ui/components/button';
 import { ShoppingBag } from '@repo/ui/icons';

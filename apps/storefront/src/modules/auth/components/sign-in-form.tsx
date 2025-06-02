@@ -1,6 +1,6 @@
 'use client';
 
-import { SubmitButton } from '@/components/common/submit-button';
+import { SubmitButton } from '@/modules/common/components/submit-button';
 import { signIn } from '@/server/auth/sign-in';
 import { OAuthActions } from '@/modules/auth/components/common/oauth-actions';
 import { FormResponse } from '@repo/ui/components/form-response';

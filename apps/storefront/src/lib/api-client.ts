@@ -1,4 +1,4 @@
-import { env } from '@/configs/env';
+import { env } from '@/config/env';
 import { getAuthToken } from '@/lib/cookies';
 import { ApiError } from '@/lib/core/http/error';
 import { buildUrlWithParams } from '@/utils/url';

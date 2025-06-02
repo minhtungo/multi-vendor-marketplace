@@ -1,5 +1,5 @@
 import { getCustomer } from '@/server/customer/get-customer';
-import { clientPaths } from '@/configs/paths';
+import { clientPaths } from '@/config/paths';
 import { Button } from '@repo/ui/components/button';
 import { User } from '@repo/ui/icons';
 import Link from 'next/link';

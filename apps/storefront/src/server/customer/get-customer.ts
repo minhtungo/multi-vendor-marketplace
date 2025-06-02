@@ -1,4 +1,4 @@
-import { serverPaths } from '@/configs/paths';
+import { serverPaths } from '@/config/paths';
 import { api } from '@/lib/api-client';
 import { type User } from '@repo/types/user';
 

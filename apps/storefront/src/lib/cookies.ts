@@ -1,8 +1,8 @@
 import 'server-only';
 import { cookies as nextCookies } from 'next/headers';
 
-import { env } from '@/configs/env';
-import { cookiesConfig } from '@/configs/cookies';
+import { env } from '@/config/env';
+import { cookiesConfig } from '@/config/cookies';
 
 export async function getAuthToken() {
   try {

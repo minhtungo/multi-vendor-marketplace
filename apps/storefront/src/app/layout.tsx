@@ -1,7 +1,7 @@
-import { Footer } from '@/components/footer/footer';
+import { Footer } from '@/modules/layout/templates/footer';
 import { Header } from '@/modules/layout/templates/header';
-import { Providers } from '@/components/providers';
-import { siteConfig } from '@/configs/site';
+import { Providers } from '@/providers';
+import { siteConfig } from '@/config/site';
 import { Toaster } from '@repo/ui/components/sonner';
 import '@repo/ui/globals.css';
 import type { Metadata } from 'next';

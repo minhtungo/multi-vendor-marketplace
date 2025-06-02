@@ -1,9 +1,9 @@
 'use client';
 
-import { SubmitButton } from '@/components/common/submit-button';
-import { ErrorMessage } from '@/components/error-message';
-import { signUp } from '@/server/auth/sign-up';
 import { OAuthActions } from '@/modules/auth/components/common/oauth-actions';
+import { SubmitButton } from '@/modules/common/components/submit-button';
+import { signUp } from '@/server/auth/sign-up';
+import { FormResponse } from '@repo/ui/components/form-response';
 import { Input } from '@repo/ui/components/input';
 import { Label } from '@repo/ui/components/label';
 import { PasswordInput } from '@repo/ui/components/password-input';
@@ -34,7 +34,13 @@ function SignUpForm({ className }: React.ComponentPropsWithoutRef<'div'>) {
             <PasswordInput name='confirm_password' autoComplete='new-password' required />
           </div>
         </div>
-        <ErrorMessage error={state?.success ? undefined : state?.message} />
+        {state && (
+          <FormResponse
+            title={state.success ? 'Success' : 'Error'}
+            variant={state.success ? 'success' : 'destructive'}
+            description={state?.message}
+          />
+        )}
         <SubmitButton className='w-full'>Sign Up</SubmitButton>
       </form>
     </div>

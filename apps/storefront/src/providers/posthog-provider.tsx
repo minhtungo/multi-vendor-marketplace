@@ -1,7 +1,7 @@
 // app/providers.tsx
 'use client';
 
-import { env } from '@/configs/env';
+import { env } from '@/config/env';
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
 import { useEffect } from 'react';

@@ -1,6 +1,6 @@
 'use server';
 
-import { serverPaths } from '@/configs/paths';
+import { serverPaths } from '@/config/paths';
 import { api } from '@/lib/api-client';
 import { ApiError } from '@/lib/core/http/error';
 import { type User } from '@repo/types/user';

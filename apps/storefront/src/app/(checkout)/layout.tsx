@@ -1,4 +1,4 @@
-import { Logo } from '@/components/common/logo';
+import { Logo } from '@/modules/common/components/logo';
 import Link from 'next/link';
 
 export default function CheckoutLayout({ children }: { children: React.ReactNode }) {

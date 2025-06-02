@@ -1,4 +1,4 @@
-import { Footer } from '@/components/footer/footer';
+import { Footer } from '@/modules/layout/templates/footer';
 import { Header } from '@/modules/layout/templates/header';
 import { Toaster } from 'sonner';
 

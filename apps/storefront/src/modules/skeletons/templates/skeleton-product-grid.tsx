@@ -1,4 +1,4 @@
-import { SkeletonProductPreview } from '@/components/skeletons/skeleton-product-preview';
+import { SkeletonProductPreview } from '@/modules/skeletons/templates/skeleton-product-preview';
 import { repeat } from '@/utils/repeat';
 
 type SkeletonProductGridProps = {

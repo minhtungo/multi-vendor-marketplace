@@ -1,6 +1,6 @@
-import HeroSection from '@/components/home/hero-section';
+import HeroSection from '@/modules/home/templates/hero-section';
 import { FeaturedProducts } from '@/modules/home/components/featured-products';
-import { Section, SectionContent, SectionHeader, SectionTitle } from '@/components/section';
+import { Section, SectionContent, SectionHeader, SectionTitle } from '@/modules/layout/components/section';
 
 export default async function Home() {
   return (

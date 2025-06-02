@@ -1,6 +1,6 @@
 'use server';
 
-import { serverPaths } from '@/configs/paths';
+import { serverPaths } from '@/config/paths';
 import { api } from '@/lib/api-client';
 import { CartItem } from '@repo/types/cart-item';
 import { revalidateTag } from 'next/cache';

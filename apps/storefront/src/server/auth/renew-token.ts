@@ -1,5 +1,5 @@
-import { env } from '@/configs/env';
-import { serverPaths } from '@/configs/paths';
+import { env } from '@/config/env';
+import { serverPaths } from '@/config/paths';
 import { setAuthToken } from '@/lib/cookies';
 
 let isRefreshing = false;

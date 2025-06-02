@@ -1,4 +1,4 @@
-import { FormItem } from '@/components/form/form-item';
+import { FormItem } from '@/modules/common/components/form-item';
 import { CheckoutStepContainer } from '@/modules/checkout/components/common/checkout-step-container';
 import { Input } from '@repo/ui/components/input';
 import { Label } from '@repo/ui/components/label';

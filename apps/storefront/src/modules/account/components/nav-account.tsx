@@ -1,6 +1,6 @@
 'use client';
 
-import { menu } from '@/configs/menu';
+import { menu } from '@/config/menu';
 import { buttonVariants } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/utils';
 import Link from 'next/link';

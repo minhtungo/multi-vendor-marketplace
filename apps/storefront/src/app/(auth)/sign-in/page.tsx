@@ -1,6 +1,6 @@
 import { AuthContainer } from '@/modules/auth/components/common/auth-container';
 import { SignInForm } from '@/modules/auth/components/sign-in-form';
-import { clientPaths } from '@/configs/paths';
+import { clientPaths } from '@/config/paths';
 
 const SignIn = () => {
   return (

@@ -1,5 +1,5 @@
-import { menu } from '@/configs/menu';
-import { siteConfig } from '@/configs/site';
+import { menu } from '@/config/menu';
+import { siteConfig } from '@/config/site';
 import Link from 'next/link';
 
 export function Footer() {
