@@ -17,5 +17,4 @@ docker-data
 # Environment
 .env
 .env.*
-!.env.example
-!.env.
+!.env.template
