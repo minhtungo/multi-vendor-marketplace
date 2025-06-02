@@ -8,16 +8,17 @@ import React from 'react';
 type CartItemsProps = {
   cartItems: CartItemType[];
   className?: string;
+  type?: 'preview' | 'full';
 };
 
-export function CartItems({ cartItems, className }: CartItemsProps) {
+export function CartItems({ cartItems, className, type = 'full' }: CartItemsProps) {
   return (
-    <Card className={cn(className)}>
-      <CardContent>
+    <Card className={cn(type === 'preview' && 'py-0 shadow-none border-none', className)}>
+      <CardContent className={cn(type === 'preview' && 'px-0')}>
         {cartItems.map((item, index) => (
           <React.Fragment key={`cart-item-${item.id}`}>
-            <CartItem item={item} />
-            {index < cartItems.length - 1 && <Separator className='my-6' />}
+            <CartItem item={item} type={type} />
+            {index < cartItems.length - 1 && <Separator className={cn(type === 'preview' ? 'my-3' : 'my-6')} />}
           </React.Fragment>
         ))}
       </CardContent>

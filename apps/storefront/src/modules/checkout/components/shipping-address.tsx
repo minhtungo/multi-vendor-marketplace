@@ -1,3 +1,4 @@
+import { FormItem } from '@/components/form/form-item';
 import { CheckoutStepContainer } from '@/modules/checkout/components/common/checkout-step-container';
 import { Input } from '@repo/ui/components/input';
 import { Label } from '@repo/ui/components/label';
@@ -9,33 +10,33 @@ export function ShippingAddress({}: ShippingAddressProps) {
   return (
     <CheckoutStepContainer step={2} title='Shipping Address' className='space-y-4'>
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-        <div className='space-y-2'>
+        <FormItem>
           <Label htmlFor='firstName'>First name</Label>
-          <Input id='firstName' placeholder='John' />
-        </div>
-        <div className='space-y-2'>
+          <Input id='firstName' />
+        </FormItem>
+        <FormItem>
           <Label htmlFor='lastName'>Last name</Label>
-          <Input id='lastName' placeholder='Doe' />
-        </div>
+          <Input id='lastName' />
+        </FormItem>
       </div>
-      <div className='space-y-2'>
+      <FormItem>
         <Label htmlFor='address'>Address</Label>
-        <Input id='address' placeholder='123 Main Street' />
-      </div>
-      <div className='space-y-2'>
+        <Input id='address' />
+      </FormItem>
+      <FormItem>
         <Label htmlFor='apartment'>Apartment, suite, etc. (optional)</Label>
-        <Input id='apartment' placeholder='Apt 4B' />
-      </div>
+        <Input id='apartment' />
+      </FormItem>
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
-        <div className='space-y-2'>
+        <FormItem>
           <Label htmlFor='city'>City</Label>
-          <Input id='city' placeholder='New York' />
-        </div>
-        <div className='space-y-2'>
+          <Input id='city' />
+        </FormItem>
+        <FormItem>
           <Label htmlFor='state'>State</Label>
           <Select>
-            <SelectTrigger>
-              <SelectValue placeholder='Select state' />
+            <SelectTrigger className='w-full'>
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='ny'>New York</SelectItem>
@@ -44,11 +45,11 @@ export function ShippingAddress({}: ShippingAddressProps) {
               <SelectItem value='fl'>Florida</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className='space-y-2'>
+        </FormItem>
+        <FormItem>
           <Label htmlFor='zip'>ZIP code</Label>
-          <Input id='zip' placeholder='10001' />
-        </div>
+          <Input id='zip' />
+        </FormItem>
       </div>
     </CheckoutStepContainer>
   );

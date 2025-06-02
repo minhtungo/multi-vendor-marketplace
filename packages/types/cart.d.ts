@@ -17,5 +17,4 @@ export type Cart = {
   total: string;
   itemCount: number;
   items: CartItem[];
-  status: CART_STATUS;
 };

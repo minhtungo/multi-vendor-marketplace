@@ -10,7 +10,7 @@ type CheckoutStepContainerProps = {
 
 export function CheckoutStepContainer({ step, title, children, className }: CheckoutStepContainerProps) {
   return (
-    <Card>
+    <Card className='h-fit'>
       <CardHeader>
         <CardTitle className='flex items-center gap-2'>
           <div className='flex h-8 w-8 items-center justify-center rounded-full border text-sm font-medium'>{step}</div>
