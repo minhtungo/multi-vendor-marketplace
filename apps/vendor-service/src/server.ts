@@ -3,7 +3,7 @@ import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
 import { vendorRouter } from '@/routes/vendor.route';
 import { createRequestLogger, errorHandler } from '@repo/shared-server/middlewares';
-import { vendorAuthConsumer } from '@/lib/auth.consumer';
+import { vendorAuthConsumer } from '@/events/auth.consumer';
 import { logger } from '@/utils/logger';
 import { healthCheckRouter } from '@repo/shared-server/routes';
 
