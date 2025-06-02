@@ -22,6 +22,9 @@ export const clientPaths = {
     checkout: '/checkout',
     cart: '/cart',
   },
+  products: {
+    root: '/products',
+  },
 } as const;
 
 const authPath = `/auth/user`;
