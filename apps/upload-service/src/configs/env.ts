@@ -29,9 +29,6 @@ const envSchema = z.object({
   AWS_S3_BUCKET_NAME: z.string().min(1),
   AWS_S3_ENDPOINT: z.string().min(1),
   AWS_S3_PORT: z.coerce.number().int().positive().default(9000),
-  // MinIO
-  MINIO_ROOT_USER: z.string().min(1),
-  MINIO_ROOT_PASSWORD: z.string().min(1),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
