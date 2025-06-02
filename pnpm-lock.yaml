@@ -1236,10 +1236,29 @@ importers:
         version: 5.0.2
 
   packages/shared-client:
+    dependencies:
+      react:
+        specifier: 19.1.0
+        version: 19.1.0
+      react-dom:
+        specifier: 19.1.0
+        version: 19.1.0(react@19.1.0)
     devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.15.29
+        version: 22.15.29
+      '@types/react':
+        specifier: ^19
+        version: 19.1.6
+      '@types/react-dom':
+        specifier: ^19
+        version: 19.1.5(@types/react@19.1.6)
 
   packages/shared-server:
     dependencies:

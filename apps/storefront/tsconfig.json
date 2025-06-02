@@ -14,6 +14,12 @@
       "@repo/shared-client/*": ["../../packages/shared/src/*"]
     }
   },
-  "include": ["src", "next.config.ts", "next-env.d.ts", ".next/types/**/*.ts"],
+  "include": [
+    "src",
+    "next.config.ts",
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "../../packages/shared-client/src/hooks/use-debounce.ts"
+  ],
   "exclude": ["node_modules", "dist", "public", ".next"]
 }

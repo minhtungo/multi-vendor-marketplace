@@ -1,6 +1,6 @@
 'use client';
 
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce } from '@repo/shared-client/hooks';
 import { ProductQuantityAction } from '@/modules/products/components/product-quantity-action';
 import { deleteCartItem } from '@/server/cart-item/delete-cart-item';
 import { updateCartItem } from '@/server/cart-item/update-cart-item';

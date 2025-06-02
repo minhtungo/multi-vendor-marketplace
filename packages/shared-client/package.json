@@ -6,10 +6,22 @@
       "types": "./src/utils/index.ts",
       "import": "./src/utils/index.ts",
       "require": "./src/utils/index.ts"
+    },
+    "./hooks": {
+      "types": "./src/hooks/index.ts",
+      "import": "./src/hooks/index.ts",
+      "require": "./src/hooks/index.ts"
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@repo/eslint-config": "workspace:*",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/node": "^22.15.29"
   }
 }
