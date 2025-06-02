@@ -1,4 +1,4 @@
-import { SortOptions } from '@/lib/constants';
+import { SortOptions } from '@/lib/constants/shop';
 import { PaginatedProducts } from '@/modules/products/components/paginated-products';
 import { FilterList } from '@/modules/shop/components/filter-list';
 import { SortingSelection } from '@/modules/shop/components/sorting-selection';

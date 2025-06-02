@@ -1,6 +1,6 @@
 'use client';
 
-import { HERO_RIGHT_BANNERS, HERO_SLIDER_ITEMS } from '@/lib/constants';
+import { HERO_RIGHT_BANNERS, HERO_SLIDER_ITEMS } from '@/lib/constants/shop';
 import { Button } from '@repo/ui/components/button';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@repo/ui/components/carousel';
 import Image from 'next/image';

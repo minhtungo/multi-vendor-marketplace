@@ -1,6 +1,6 @@
 'use client';
 
-import { HERO_SLIDES } from '@/lib/constants';
+import { HERO_SLIDES } from '@/lib/constants/home';
 import { buttonVariants } from '@repo/ui/components/button';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@repo/ui/components/carousel';
 import { Heading } from '@repo/ui/components/heading';

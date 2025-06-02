@@ -1,5 +1,5 @@
 import { api } from '@/lib/api-client';
-import { sortOptions, SortOptions } from '@/lib/constants';
+import { sortOptions, SortOptions } from '@/lib/constants/shop';
 import { type Product } from '@repo/types/product';
 
 type ProductsParams = {

@@ -1,4 +1,4 @@
-import { SortOptions } from '@/lib/constants';
+import { SortOptions } from '@/lib/constants/shop';
 import { ShopTemplate } from '@/modules/shop/templates';
 import { SkeletonProductGrid } from '@/modules/skeletons/templates/skeleton-product-grid';
 import { Metadata } from 'next';

@@ -1,4 +1,4 @@
-import { FEATURES } from '@/lib/constants';
+import { FEATURES } from '@/lib/constants/home';
 import { cn } from '@repo/ui/lib/utils';
 
 export default function Features() {

@@ -1,5 +1,6 @@
 import { CartItems } from '@/modules/cart/templates/cart-items';
 import { CartSummary } from '@/modules/cart/templates/cart-summary';
+import { AcceptedPaymentMethods } from '@/modules/common/components/accepted-payment-methods';
 import { retrieveCart } from '@/server/cart/retrieve-cart';
 import { Heading } from '@repo/ui/components/heading';
 import { ShoppingBag } from '@repo/ui/icons';
