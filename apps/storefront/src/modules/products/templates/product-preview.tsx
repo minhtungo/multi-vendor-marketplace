@@ -1,8 +1,5 @@
-import { AddToCartButton } from '@/modules/products/components/add-to-cart-button';
 import { ProductActions } from '@/modules/products/components/product-actions';
 import { Product } from '@repo/types/product';
-import { Button } from '@repo/ui/components/button';
-import { Minus, Plus } from '@repo/ui/icons';
 import Image from 'next/image';
 
 type ProductPreviewProps = {
@@ -15,20 +12,19 @@ export function ProductPreview({ product }: ProductPreviewProps) {
   }
 
   return (
-    <div className='grid lg:grid-cols-2 gap-12 mt-8'>
+    <div className='flex gap-12'>
       {/* Product Images */}
-      <div className='relative aspect-square bg-gray-50 rounded-lg overflow-hidden'>
-        <Image
-          src={product.images[0] || '/placeholder.svg'}
-          alt={product.name}
-          fill
-          className='object-cover'
-          priority
-        />
-      </div>
+      <Image
+        src={product.images[0] || '/placeholder.svg'}
+        alt={product.name}
+        width={500}
+        height={500}
+        className='object-cover rounded-lg aspect-square'
+        priority
+      />
 
       {/* Product Details */}
-      <div className='space-y-6'>
+      <div className='space-y-6 flex-1'>
         <div>
           <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2 capitalize'>
             <span>{product.categories[0].name}</span>
