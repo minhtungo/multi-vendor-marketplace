@@ -1,5 +1,5 @@
 import { cartService } from '@/services/cart.service';
-import { handleServiceResponse } from '@repo/server/lib';
+import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, Response } from 'express';
 
 class CartController {

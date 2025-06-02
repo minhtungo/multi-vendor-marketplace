@@ -2,7 +2,7 @@ import express, { type Request, type Response, type Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 
 import { vendorRegistry } from '@/routes/vendor.route';
-import { generateOpenAPIDocument } from '@repo/server/docs';
+import { generateOpenAPIDocument } from '@repo/shared-server/docs';
 
 export const openAPIRouter: Router = express.Router();
 const openAPIDocument = generateOpenAPIDocument([vendorRegistry], {

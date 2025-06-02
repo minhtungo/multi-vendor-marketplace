@@ -1,6 +1,6 @@
 import { env } from '@/configs/env';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { ServiceResponse } from '@repo/shared-server/lib';
 import axios from 'axios';
 
 class UserServiceClient {

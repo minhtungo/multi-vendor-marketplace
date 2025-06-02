@@ -21,11 +21,11 @@ Built using a microservices architecture and Turborepo for monorepo management.
 ### Shared Packages (`/packages`)
 
 - **`@repo/ui`**: Shared UI components library with Tailwind CSS
-- **`@repo/server`**: Common server utilities and configurations
+- **`@repo/shared-server`**: Common server utilities and configurations
 - **`@repo/eslint-config`**: Centralized ESLint configurations
 - **`@repo/typescript-config`**: TypeScript configurations for the monorepo
 - **`@repo/types`**: Shared TypeScript type definitions
-- **`@repo/shared`**: Common utilities and helper functions
+- **`@repo/shared-client`**: Common utilities and helper functions
 - **`@repo/messaging`**: RabbitMQ message broker integration
 - **`@repo/redis`**: Redis client configuration and utilities
 - **`@repo/email`**: Email service templates and sending logic

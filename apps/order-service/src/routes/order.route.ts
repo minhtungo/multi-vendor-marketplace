@@ -1,7 +1,7 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';
-import { createApiResponse } from '@repo/server/docs';
+import { createApiResponse } from '@repo/shared-server/docs';
 import { orderSchema, insertOrderSchema } from '@/db/schemas/orders/validation';
 import { orderController } from '@/controllers/order.controller';
 

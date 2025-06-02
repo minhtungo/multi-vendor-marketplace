@@ -1,4 +1,4 @@
-import { passwordRegex } from '@repo/shared/utils';
+import { passwordRegex } from '@repo/shared-client/utils';
 import { z } from 'zod';
 
 export const commonValidations = {

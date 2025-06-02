@@ -1,7 +1,7 @@
 import express, { type Request, type Response, type Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 
-import { generateOpenAPIDocument } from '@repo/server/docs';
+import { generateOpenAPIDocument } from '@repo/shared-server/docs';
 
 export const openAPIRouter: Router = express.Router();
 //TODO: Add all the routes to the registry

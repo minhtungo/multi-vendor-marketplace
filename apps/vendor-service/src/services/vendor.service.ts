@@ -1,6 +1,6 @@
 import { VendorRepository } from '@/repositories/vendor.repository';
-import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
+import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 import { logger } from '@/utils/logger';
 import { verifyPassword } from '@/utils/password';
 

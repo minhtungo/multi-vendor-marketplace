@@ -1,9 +1,9 @@
 import { appConfig } from '@/configs/app';
 import { env } from '@/configs/env';
 import rateLimiter from '@/middlewares/rate-limiter';
-import { healthCheckRouter } from '@repo/server/routes';
+import { healthCheckRouter } from '@repo/shared-server/routes';
 import { serviceRoutes } from '@/routes';
-import { errorHandler } from '@repo/server/middlewares';
+import { errorHandler } from '@repo/shared-server/middlewares';
 import cors from 'cors';
 import express, { type Express } from 'express';
 import helmet from 'helmet';

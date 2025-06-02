@@ -1,4 +1,4 @@
-import { formatPrice } from '@repo/shared/utils';
+import { formatPrice } from '@repo/shared-client/utils';
 import { Cart } from '@repo/types/cart';
 import { Button } from '@repo/ui/components/button';
 import { Card, CardContent } from '@repo/ui/components/card';

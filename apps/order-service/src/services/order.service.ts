@@ -1,8 +1,8 @@
 import { InsertOrder, Order } from '@/db/schemas';
 import { orderRepository } from '@/repositories/order.repository';
 import { logger } from '@/utils/logger';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
 
 class OrderService {
   constructor(private readonly orderRepo = orderRepository) {}

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { NextFunction, Request, Response } from 'express';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 
 import pino from 'pino';
 import pinoHttp from 'pino-http';

@@ -1,5 +1,5 @@
 import { userService } from '@/services/user.service';
-import { handleServiceResponse } from '@repo/server/lib';
+import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, RequestHandler, Response } from 'express';
 
 class UserController {

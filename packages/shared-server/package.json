@@ -1,5 +1,5 @@
 {
-  "name": "@repo/server",
+  "name": "@repo/shared-server",
   "version": "1.0.0",
   "exports": {
     "./routes": {

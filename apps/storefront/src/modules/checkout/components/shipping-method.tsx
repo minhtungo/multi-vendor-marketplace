@@ -1,5 +1,5 @@
 import { CheckoutStepContainer } from '@/modules/checkout/components/common/checkout-step-container';
-import { formatPrice } from '@repo/shared/utils';
+import { formatPrice } from '@repo/shared-client/utils';
 import { Label } from '@repo/ui/components/label';
 import { RadioGroup, RadioGroupItem } from '@repo/ui/components/radio-group';
 

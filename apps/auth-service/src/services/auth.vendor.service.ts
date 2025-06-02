@@ -5,8 +5,8 @@ import type { VendorSignInInput, VendorSignUpInput, VerifyVendorInput } from '@/
 import { RefreshTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import { getRedisClient } from '@repo/redis';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
 import type { NextFunction, Request, Response } from 'express';
 
 import { vendorServiceClient } from '@/lib/vendor-service.client';

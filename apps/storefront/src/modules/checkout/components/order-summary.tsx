@@ -1,5 +1,5 @@
 import { CheckoutStepContainer } from '@/modules/checkout/components/common/checkout-step-container';
-import { formatPrice } from '@repo/shared/utils';
+import { formatPrice } from '@repo/shared-client/utils';
 import { Button } from '@repo/ui/components/button';
 import { Separator } from '@repo/ui/components/separator';
 import { Lock } from '@repo/ui/icons';

@@ -7,8 +7,8 @@ import {
   updateProductRequestSchema,
 } from '@/models/product.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import { createApiResponse } from '@repo/server/docs';
-import { validateRequest } from '@repo/server/middlewares';
+import { createApiResponse } from '@repo/shared-server/docs';
+import { validateRequest } from '@repo/shared-server/middlewares';
 import { Router } from 'express';
 import { z } from 'zod';
 

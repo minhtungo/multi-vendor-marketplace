@@ -1,5 +1,5 @@
-import { createApiResponse } from '@repo/server/docs';
-import { handleServiceResponse, ServiceResponse } from '@repo/server/lib';
+import { createApiResponse } from '@repo/shared-server/docs';
+import { handleServiceResponse, ServiceResponse } from '@repo/shared-server/lib';
 
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { type Request, type Response, type Router } from 'express';

@@ -1,5 +1,5 @@
 import { paymentController } from '@/controllers/payment.controller';
-import { createApiResponse } from '@repo/server/docs';
+import { createApiResponse } from '@repo/shared-server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';

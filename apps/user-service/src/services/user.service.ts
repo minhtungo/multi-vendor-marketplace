@@ -1,7 +1,7 @@
 import { InsertUser } from '@/db/schemas';
 import { UserRepository } from '@/repositories/user.repository';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { ServiceResponse } from '@repo/shared-server/lib';
 import type { Request } from 'express';
 import { verifyPassword } from '@/utils/password';
 

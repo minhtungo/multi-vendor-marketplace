@@ -23,7 +23,7 @@
     "@repo/email": "workspace:*",
     "@repo/messaging": "workspace:*",
     "@repo/redis": "workspace:*",
-    "@repo/server": "workspace:*",
+    "@repo/shared-server": "workspace:*",
     "argon2": "^0.43.0",
     "cookie-parser": "^1.4.7",
     "cors": "2.8.5",

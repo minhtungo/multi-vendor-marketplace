@@ -1,6 +1,6 @@
 import { createCategorySchema } from '@/models/product-categories.model';
 import { productCategoryService } from '@/services/product-category.service';
-import { handleServiceResponse } from '@repo/server/lib';
+import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { NextFunction, Request, Response } from 'express';
 
 class ProductCategoryController {

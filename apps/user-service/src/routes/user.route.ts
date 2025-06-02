@@ -1,6 +1,6 @@
 import { userController } from '@/controllers/user.controller';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import { createApiResponse } from '@repo/server/docs';
+import { createApiResponse } from '@repo/shared-server/docs';
 import express, { type Router } from 'express';
 
 import z from 'zod';

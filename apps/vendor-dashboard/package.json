@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
-    "@repo/shared": "workspace:*",
+    "@repo/shared-client": "workspace:*",
     "@repo/ui": "workspace:*",
     "@t3-oss/env-core": "^0.13.6",
     "@tailwindcss/vite": "^4.1.8",

@@ -4,13 +4,13 @@ import express, { type Express } from 'express';
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
 import { authUserRouter } from '@/routes/auth.user.route';
-import { errorHandler, createRequestLogger } from '@repo/server/middlewares';
+import { errorHandler, createRequestLogger } from '@repo/shared-server/middlewares';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import '@/lib/strategies/jwt';
 import '@/lib/strategies/vendor-jwt';
 import { authVendorRouter } from '@/routes/auth.vendor.route';
-import { healthCheckRouter } from '@repo/server/routes';
+import { healthCheckRouter } from '@repo/shared-server/routes';
 
 const app: Express = express();
 

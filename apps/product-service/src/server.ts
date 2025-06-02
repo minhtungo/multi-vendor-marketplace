@@ -4,8 +4,8 @@ import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
 import { productRouter } from '@/routes/product.route';
 import { productCategoryRouter } from '@/routes/product-category.route';
-import { createRequestLogger, errorHandler, optionalUserContext } from '@repo/server/middlewares';
-import { healthCheckRouter } from '@repo/server/routes';
+import { createRequestLogger, errorHandler, optionalUserContext } from '@repo/shared-server/middlewares';
+import { healthCheckRouter } from '@repo/shared-server/routes';
 
 const app: Express = express();
 

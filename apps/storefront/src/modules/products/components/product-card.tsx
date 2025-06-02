@@ -1,5 +1,5 @@
 import { type Product } from '@repo/types/product';
-import { formatPrice } from '@repo/shared/utils';
+import { formatPrice } from '@repo/shared-client/utils';
 import Image from 'next/image';
 import { ProductQuickView } from '@/modules/products/templates/product-quick-view';
 import { Button } from '@repo/ui/components/button';

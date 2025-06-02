@@ -1,8 +1,8 @@
 import { DiscountCode, InsertDiscountCode } from '@/db/schemas';
 import { discountCodeRepository } from '@/repositories/discount-code.repository';
 import { logger } from '@/utils/logger';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { ServiceResponse } from '@repo/shared-server/lib';
 
 class DiscountCodeService {
   constructor(private readonly discountCodeRepo = discountCodeRepository) {}

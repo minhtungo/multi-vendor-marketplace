@@ -2,7 +2,7 @@ import { cart } from '@/db/schemas';
 import { CART_STATUS } from '@/db/schemas/constants';
 import { CartItem } from '@/models/cart-item.model';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { commonValidations } from '@repo/server/lib';
+import { commonValidations } from '@repo/shared-server/lib';
 import { z } from 'zod';
 
 extendZodWithOpenApi(z);

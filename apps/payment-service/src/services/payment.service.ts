@@ -1,8 +1,8 @@
 import { env } from '@/configs/env';
 import { stripe } from '@/lib/stripe';
 import { paymentRepository } from '@/repositories/payment.repository';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { ServiceResponse } from '@repo/shared-server/lib';
 
 class PaymentService {
   constructor(private readonly paymentRepo = paymentRepository) {}

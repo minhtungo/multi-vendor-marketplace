@@ -1,7 +1,7 @@
 import { createProductRequestSchema, getProductQuerySchema, updateProductRequestSchema } from '@/models/product.model';
 import { productService } from '@/services/product.service';
 import { sortOptions } from '@/utils/constants';
-import { handleServiceResponse } from '@repo/server/lib';
+import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, Response } from 'express';
 
 class ProductController {

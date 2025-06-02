@@ -1,9 +1,9 @@
 import { uploadController } from '@/controllers/upload.controller';
-import { createApiResponse } from '@repo/server/docs';
+import { createApiResponse } from '@repo/shared-server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
 import { z } from 'zod';
-import { validateRequest } from '@repo/server/middlewares';
+import { validateRequest } from '@repo/shared-server/middlewares';
 import { ConfirmUploadSchema, PresignedUrlSchema } from '@/models/upload.model';
 import { uploadSchema } from '@/db/schemas';
 

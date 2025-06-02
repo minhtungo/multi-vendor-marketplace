@@ -1,10 +1,10 @@
 import { vendorPaths } from '@/configs/paths';
 import { authVendorController } from '@/controllers/auth.vendor.controller';
-import { createApiResponse } from '@repo/server/docs';
+import { createApiResponse } from '@repo/shared-server/docs';
 import { assertVendorAuthentication } from '@/middlewares/assertAuthentication';
 import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/auth.vendor.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import { validateRequest } from '@repo/server/middlewares';
+import { validateRequest } from '@repo/shared-server/middlewares';
 import express, { type Router } from 'express';
 import z from 'zod';
 

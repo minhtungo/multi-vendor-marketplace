@@ -1,4 +1,4 @@
-import { commonValidations } from '@repo/server/lib';
+import { commonValidations } from '@repo/shared-server/lib';
 import { z } from 'zod';
 
 export const VendorSignUpSchema = z.object({

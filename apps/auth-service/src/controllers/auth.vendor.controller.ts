@@ -1,6 +1,6 @@
 import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/models/auth.vendor.model';
 import { authVendorService } from '@/services/auth.vendor.service';
-import { handleServiceResponse } from '@repo/server/lib';
+import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 
 class AuthVendorController {

@@ -1,5 +1,5 @@
 import { uploadService } from '@/services/upload.service';
-import { handleServiceResponse } from '@repo/server/lib';
+import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, Response } from 'express';
 
 class UploadController {

@@ -1,5 +1,5 @@
 import { DeleteProductDialog } from '@/features/product/components/product-table/delete-product-dialog';
-import { formatPrice } from '@repo/shared/utils';
+import { formatPrice } from '@repo/shared-client/utils';
 import type { Order } from '@repo/types/order';
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';

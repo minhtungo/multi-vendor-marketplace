@@ -1,6 +1,6 @@
 import { insertOrderSchema } from '@/db/schemas';
 import { orderService } from '@/services/order.service';
-import { handleServiceResponse } from '@repo/server/lib';
+import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { NextFunction, Request, Response } from 'express';
 
 class OrderController {

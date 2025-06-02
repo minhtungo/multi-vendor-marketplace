@@ -1,6 +1,6 @@
 import { insertDiscountCodeSchema } from '@/db/schemas';
 import { discountCodeService } from '@/services/discount-code.service';
-import { handleServiceResponse } from '@repo/server/lib';
+import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { NextFunction, Request, Response } from 'express';
 
 class DiscountCodeController {

@@ -2,8 +2,8 @@ import { tokenConfig } from '@/configs/token';
 import { tokenRepository } from '@/repositories/token.repository';
 import { logger } from '@/utils/logger';
 import { getRedisClient } from '@repo/redis';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { ServiceResponse } from '@repo/shared-server/lib';
 
 class TokenService {
   private redis: ReturnType<typeof getRedisClient>;

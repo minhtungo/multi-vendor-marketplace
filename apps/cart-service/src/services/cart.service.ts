@@ -1,7 +1,7 @@
 import { cartRepository } from '@/repositories/cart.repository';
 import { logger } from '@/utils/logger';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
 import type { Cart, CartUpdate, CartWithItems } from '@/models/cart.model';
 
 class CartService {

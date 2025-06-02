@@ -7,7 +7,7 @@ import {
   VerifyUserSchema,
 } from '@/models/auth.user.model';
 import { authService } from '@/services/auth.service';
-import { handleServiceResponse } from '@repo/server/lib';
+import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { tokenService } from '@/services/token.service';
 

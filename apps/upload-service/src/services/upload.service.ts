@@ -6,8 +6,8 @@ import { getFileUrl } from '@/lib/get-file-url';
 import { s3Client } from '@/lib/s3-client';
 import { UploadRepository } from '@/repositories/upload.repository';
 import { logger } from '@/utils/logger';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
 import { v4 as uuidv4 } from 'uuid';
 
 export const DEFAULT_GET_USER_UPLOADS_OFFSET = 0;

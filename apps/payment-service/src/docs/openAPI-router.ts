@@ -1,5 +1,5 @@
 import { paymentRegistry } from '@/routes/payment.route';
-import { generateOpenAPIDocument } from '@repo/server/docs';
+import { generateOpenAPIDocument } from '@repo/shared-server/docs';
 import express, { type Request, type Response, type Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 

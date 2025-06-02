@@ -11,8 +11,8 @@ import { createTransaction } from '@/utils/transaction';
 import { emailService } from '@repo/email';
 import { userAuthProducer } from '@repo/messaging';
 import { getRedisClient } from '@repo/redis';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { executeWithErrorHandling, ServiceResponse } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { executeWithErrorHandling, ServiceResponse } from '@repo/shared-server/lib';
 import type { NextFunction, Request, Response } from 'express';
 
 import { verify } from 'jsonwebtoken';

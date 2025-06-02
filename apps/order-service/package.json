@@ -21,7 +21,7 @@
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.2",
     "@repo/redis": "workspace:*",
-    "@repo/server": "workspace:*",
+    "@repo/shared-server": "workspace:*",
     "dotenv": "16.5.0",
     "drizzle-orm": "^0.44.1",
     "drizzle-zod": "^0.8.2",

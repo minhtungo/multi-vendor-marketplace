@@ -1,8 +1,8 @@
 import { Category, InsertCategory } from '@/db/schemas';
 import { productCategoryRepository } from '@/repositories/product-category.repository';
 import { logger } from '@/utils/logger';
-import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
+import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 
 class ProductCategoryService {
   constructor(private readonly categoryRepo = productCategoryRepository) {}

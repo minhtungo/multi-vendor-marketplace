@@ -1,7 +1,7 @@
 import { cartController } from '@/controllers/cart.controller';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import { createApiResponse } from '@repo/server/docs';
-import { validateRequest } from '@repo/server/middlewares';
+import { createApiResponse } from '@repo/shared-server/docs';
+import { validateRequest } from '@repo/shared-server/middlewares';
 import express, { type Router } from 'express';
 import { z } from 'zod';
 

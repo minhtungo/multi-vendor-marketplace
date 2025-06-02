@@ -3,8 +3,8 @@ import { CreateProductRequest, GetProductQuery, ProductResponse, UpdateProductRe
 import { productToCategoryRepository } from '@/repositories/product-to-category.repository';
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
-import { ServiceResponse, executeWithErrorHandling } from '@repo/server/lib';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
+import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
 
 class ProductService {
   constructor(

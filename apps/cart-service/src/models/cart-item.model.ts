@@ -1,6 +1,6 @@
 import { cartItems } from '@/db/schemas';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { commonValidations } from '@repo/server/lib';
+import { commonValidations } from '@repo/shared-server/lib';
 import { z } from 'zod';
 
 extendZodWithOpenApi(z);

@@ -1,6 +1,6 @@
 import express, { type Request, type Response, type Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
-import { generateOpenAPIDocument } from '@repo/server/docs';
+import { generateOpenAPIDocument } from '@repo/shared-server/docs';
 import { uploadRegistry } from '@/routes/upload.route';
 
 export const openAPIRouter: Router = express.Router();

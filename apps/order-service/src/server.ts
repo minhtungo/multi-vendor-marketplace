@@ -2,10 +2,10 @@ import express, { RequestHandler, type Express } from 'express';
 
 import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
-import { createRequestLogger, errorHandler, optionalUserContext } from '@repo/server/middlewares';
+import { createRequestLogger, errorHandler, optionalUserContext } from '@repo/shared-server/middlewares';
 import { orderRouter } from '@/routes/order.route';
 import { discountCodeRouter } from '@/routes/discount-code.route';
-import { healthCheckRouter } from '@repo/server/routes';
+import { healthCheckRouter } from '@repo/shared-server/routes';
 
 const app: Express = express();
 

@@ -2,9 +2,9 @@ import type { InsertShop, Shop } from '@/db/schemas/shops';
 import { shopRepository } from '@/repositories/shop.repository';
 import { vendorRepository } from '@/repositories/vendor.repository';
 import { logger } from '@/utils/logger';
-import { ServiceResponse } from '@repo/server/lib';
+import { ServiceResponse } from '@repo/shared-server/lib';
 import type { NextFunction } from 'express';
-import { HTTP_STATUS_CODES } from '@repo/server/core';
+import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 
 class ShopService {
   public async createShop(

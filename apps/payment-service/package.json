@@ -23,7 +23,7 @@
     "@repo/types": "workspace:*",
     "@asteasolutions/zod-to-openapi": "7.3.2",
     "@repo/redis": "workspace:*",
-    "@repo/server": "workspace:*",
+    "@repo/shared-server": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "dotenv": "16.5.0",
     "drizzle-orm": "^0.44.1",
