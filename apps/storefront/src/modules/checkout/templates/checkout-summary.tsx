@@ -14,7 +14,7 @@ type CheckoutSummaryProps = {
 
 export function CheckoutSummary({ cart, className }: CheckoutSummaryProps) {
   return (
-    <Card className={cn('space-y-4', className)}>
+    <Card className={cn('', className)}>
       <CardHeader>
         <CardTitle>Order Summary</CardTitle>
       </CardHeader>

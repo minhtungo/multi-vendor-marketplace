@@ -7,7 +7,7 @@ export default function ShopLayout({ children }: { children: React.ReactNode }) 
     <>
       <div className='grid grid-rows-[auto_1fr_auto] min-h-screen'>
         <Header />
-        <main>{children}</main>
+        {children}
         <Footer />
         <Toaster />
       </div>

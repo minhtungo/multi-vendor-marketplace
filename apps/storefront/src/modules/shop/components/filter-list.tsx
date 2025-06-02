@@ -7,11 +7,11 @@ import { Heading } from '@repo/ui/components/heading';
 import { Label } from '@repo/ui/components/label';
 import { cn } from '@repo/ui/lib/utils';
 
-type FilterSidebarProps = {
+type FilterListProps = {
   className?: string;
 };
 
-export function FilterSidebar({ className }: FilterSidebarProps) {
+export function FilterList({ className }: FilterListProps) {
   return (
     <aside className={cn('w-80 shrink-0', className)}>
       <div className='flex items-center justify-between'>

@@ -10,7 +10,7 @@ import Link from 'next/link';
 export function Header() {
   return (
     <header className='sticky inset-x-0 w-full top-0 z-50 h-14 border-b backdrop-blur-md bg-background'>
-      <div className='flex container flex-wrap items-center justify-between gap-6  h-full'>
+      <div className='flex container flex-wrap items-center justify-between gap-6 h-full'>
         <div className='flex w-full justify-between lg:w-auto'>
           <Link href='/' aria-label='home' className='text-secondary-foreground'>
             <Logo />

@@ -2,6 +2,7 @@ import { getProducts } from '@/server/product/get-products';
 import { ProductCard } from '@/modules/products/components/product-card';
 import { SortOptions } from '@/lib/constants';
 import { cn } from '@repo/ui/lib/utils';
+import { SortingSelection } from '@/modules/shop/components/sorting-selection';
 
 type PaginatedProductsProps = {
   sort: SortOptions;
@@ -17,12 +18,17 @@ export async function PaginatedProducts({ sort, page, className }: PaginatedProd
   }
 
   return (
-    <ul className={cn('grid grid-cols-2 w-full sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-8', className)}>
-      {data.products.map((product) => (
-        <li key={product.id}>
-          <ProductCard product={product} />
-        </li>
-      ))}
-    </ul>
+    <div>
+      <div className='flex items-center justify-end'>
+        <SortingSelection sort={sort} />
+      </div>
+      <ul className={cn('grid grid-cols-2 w-full sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-8', className)}>
+        {data.products.map((product) => (
+          <li key={product.id}>
+            <ProductCard product={product} />
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
