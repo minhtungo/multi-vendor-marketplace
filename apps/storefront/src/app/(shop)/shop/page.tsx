@@ -1,6 +1,6 @@
-import { SkeletonProductGrid } from '@/modules/skeletons/templates/skeleton-product-grid';
 import { SortOptions } from '@/lib/constants';
-import { PaginatedProducts } from '@/modules/products/components/paginated-products';
+import { ShopTemplate } from '@/modules/shop/templates';
+import { SkeletonProductGrid } from '@/modules/skeletons/templates/skeleton-product-grid';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -24,7 +24,7 @@ export default async function ShopPage(props: Params) {
 
   return (
     <Suspense fallback={<SkeletonProductGrid />}>
-      <PaginatedProducts sort={sort} page={pageNumber} />
+      <ShopTemplate sort={sort} page={pageNumber} />
     </Suspense>
   );
 }

@@ -58,26 +58,22 @@ export const HERO_RIGHT_BANNERS = [
 ];
 
 export const sortOptions = ['price_asc', 'price_desc', 'latest_asc', 'latest_desc'] as const;
-export type SortOptions = 'price_asc' | 'price_desc' | 'latest_asc' | 'latest_desc';
 
-// export type SortFilterItem = {
-//   title: string;
-//   slug: string;
-//   sortKey: 'RELEVANCE' | 'BEST_SELLING' | 'CREATED_AT' | 'PRICE';
-//   reverse: boolean;
-// };
+export type SortFilterItem = {
+  title: string;
+  slug: string;
+};
 
-// export const defaultSort: SortFilterItem = {
-//   title: 'Relevance',
-//   slug: 'latest-desc',
-//   sortKey: 'RELEVANCE',
-//   reverse: false,
-// };
+export const defaultSort: SortFilterItem = {
+  title: 'Newest',
+  slug: 'latest_desc',
+};
 
-// export const sorting: SortFilterItem[] = [
-//   defaultSort,
-//   { title: 'Trending', slug: 'trending-desc', sortKey: 'BEST_SELLING', reverse: false }, // asc
-//   { title: 'Latest arrivals', slug: 'latest-desc', sortKey: 'CREATED_AT', reverse: true },
-//   { title: 'Price: Low to high', slug: 'price-asc', sortKey: 'PRICE', reverse: false }, // asc
-//   { title: 'Price: High to low', slug: 'price-desc', sortKey: 'PRICE', reverse: true },
-// ];
+export const sortingOptions: SortFilterItem[] = [
+  defaultSort,
+  { title: 'Oldest', slug: 'latest_asc' },
+  { title: 'Price: Low to high', slug: 'price_asc' },
+  { title: 'Price: High to low', slug: 'price_desc' },
+];
+
+export type SortOptions = (typeof sortingOptions)[number]['slug'];
