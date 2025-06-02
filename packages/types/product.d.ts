@@ -5,8 +5,8 @@ export type Product = {
   handle: string;
   description: string | null;
   sku: string;
-  price: number;
-  compareAtPrice: number | null;
+  price: string;
+  compareAtPrice: string | null;
   stock: number;
   status: 'draft' | 'published';
   type: 'physical' | 'digital';

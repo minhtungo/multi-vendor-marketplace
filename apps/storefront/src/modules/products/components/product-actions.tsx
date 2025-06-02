@@ -2,7 +2,6 @@
 
 import { AddToCartButton } from '@/modules/products/components/add-to-cart-button';
 import { ProductQuantityAction } from '@/modules/products/components/product-quantity-action';
-import { updateCartItem } from '@/server/cart-item/update-cart-item';
 import { Product } from '@repo/types/product';
 import { Button } from '@repo/ui/components/button';
 import { useState } from 'react';

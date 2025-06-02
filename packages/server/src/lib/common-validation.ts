@@ -21,4 +21,9 @@ export const commonValidations = {
     .min(8, 'Password must be at least 8 characters long')
     .max(64, 'Password must be at most 64 characters')
     .regex(passwordRegex, 'Password must contain at least one uppercase letter, one lowercase letter, and one number'),
+  price: z
+    .string()
+    .regex(/^\d+\.?\d{0,2}$/, 'Invalid price format')
+    .transform(String),
+  quantity: z.number().min(1, 'Quantity must be at least 1'),
 };

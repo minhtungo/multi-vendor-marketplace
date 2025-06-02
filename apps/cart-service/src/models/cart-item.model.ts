@@ -1,5 +1,6 @@
 import { cartItems } from '@/db/schemas';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+import { commonValidations } from '@repo/server/lib';
 import { z } from 'zod';
 
 extendZodWithOpenApi(z);
@@ -8,8 +9,8 @@ export const cartItemInsertSchema = z.object({
   productId: z.string(),
   productName: z.string(),
   productImage: z.string(),
-  price: z.string(),
-  quantity: z.coerce.number(),
+  price: commonValidations.price,
+  quantity: commonValidations.quantity,
 });
 
 export const cartItemUpdateSchema = cartItemInsertSchema.partial();

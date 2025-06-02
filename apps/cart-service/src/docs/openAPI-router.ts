@@ -2,11 +2,11 @@ import { generateOpenAPIDocument } from '@repo/server/docs';
 import express, { type Request, type Response, type Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { cartRegistry } from '@/routes/cart.route';
+import { cartItemRegistry } from '@/routes/cart-item.route';
 
 export const openAPIRouter: Router = express.Router();
 
-//TODO: Add all the routes to the registry
-const openAPIDocument = generateOpenAPIDocument([cartRegistry], {
+const openAPIDocument = generateOpenAPIDocument([cartRegistry, cartItemRegistry], {
   title: 'Cart Service API',
   version: '1.0.0',
 });

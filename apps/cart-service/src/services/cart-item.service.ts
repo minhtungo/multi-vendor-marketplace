@@ -29,31 +29,44 @@ class CartItemService {
 
         const cart = cartResponse.data;
 
-        let updatedCartItem: CartItem;
+        let updatedCartItem: CartItem | null = null;
 
-        const existingCartItem = cart?.items?.find((item: any) => item.productId === cartItemData.productId);
+        await createTransaction(async (trx) => {
+          const existingCartItem = cart?.items?.find((item) => item.productId === cartItemData.productId);
 
-        if (existingCartItem) {
-          updatedCartItem = await this.cartItemRepo.updateCartItem(existingCartItem.id, {
-            quantity: existingCartItem.quantity + (cartItemData.quantity || 1),
-          });
-        } else {
-          updatedCartItem = await this.cartItemRepo.createCartItem({
-            ...cartItemData,
-            cartId: cart.id,
-          });
-        }
+          if (existingCartItem) {
+            updatedCartItem = await this.cartItemRepo.updateCartItem(
+              existingCartItem.id,
+              {
+                quantity: existingCartItem.quantity + (cartItemData.quantity || 1),
+              },
+              trx
+            );
+          } else {
+            updatedCartItem = await this.cartItemRepo.createCartItem(
+              {
+                ...cartItemData,
+                cartId: cart.id,
+              },
+              trx
+            );
+          }
 
-        const total = (parseFloat(cart.total) + parseFloat(cartItemData.price) * cartItemData.quantity).toFixed(2);
-        const itemCount = (cart.itemCount || 0) + cartItemData.quantity;
+          const total = (parseFloat(cart.total) + parseFloat(cartItemData.price) * cartItemData.quantity).toFixed(2);
+          const itemCount = (cart.itemCount || 0) + cartItemData.quantity;
 
-        await this.cartRepo.updateCart(cart.id, {
-          subtotal: total,
-          total,
-          itemCount,
+          await this.cartRepo.updateCart(
+            cart.id,
+            {
+              subtotal: total,
+              total,
+              itemCount,
+            },
+            trx
+          );
         });
 
-        return ServiceResponse.success('Item added to cart successfully', null, HTTP_STATUS_CODES.OK);
+        return ServiceResponse.success('Item added to cart successfully', updatedCartItem, HTTP_STATUS_CODES.OK);
       },
       logger
     );
@@ -94,19 +107,34 @@ class CartItemService {
           return ServiceResponse.failure('Quantity cannot be negative', null, HTTP_STATUS_CODES.BAD_REQUEST);
         }
 
-        const updatedCartItem = await this.cartItemRepo.updateCartItem(cartItemId, {
-          ...data,
-          quantity: data.quantity || 1,
-        });
+        let updatedCartItem: CartItem | null = null;
 
-        const allCartItems = await this.cartItemRepo.getCartItemsByCartId(cart.id);
-        const subtotal = allCartItems.reduce((sum, item) => sum + parseFloat(item.price), 0).toFixed(2);
-        const itemCount = allCartItems.reduce((sum, item) => sum + item.quantity, 0);
+        await createTransaction(async (trx) => {
+          updatedCartItem = await this.cartItemRepo.updateCartItem(
+            cartItemId,
+            {
+              ...data,
+              quantity: data.quantity || 1,
+            },
+            trx
+          );
 
-        await this.cartRepo.updateCart(cart.id, {
-          subtotal,
-          total: subtotal,
-          itemCount,
+          const allCartItems = cart.items;
+
+          const subtotal = allCartItems
+            .reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0)
+            .toFixed(2);
+          const itemCount = allCartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+          await this.cartRepo.updateCart(
+            cart.id,
+            {
+              subtotal,
+              total: subtotal,
+              itemCount,
+            },
+            trx
+          );
         });
 
         return ServiceResponse.success(
