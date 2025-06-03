@@ -1,4 +1,5 @@
 import { cartController } from '@/controllers/cart.controller';
+import { cartUpdateSchema } from '@/models/cart.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { validateRequest } from '@repo/shared-server/middlewares';
@@ -32,28 +33,24 @@ cartRouter.post('/merge', cartController.mergeCart);
 // Update cart
 cartRegistry.registerPath({
   method: 'put',
-  path: '/cart/{id}',
+  path: '/cart',
   tags: ['Cart'],
-  // request: {
-  //   params: z.object({
-  //     id: z.string(),
-  //   }),
-  //   body: {
-  //     content: {
-  //       'application/json': {
-  //         schema: updateCartSchema,
-  //       },
-  //     },
-  //   },
-  // },
+  request: {
+    params: z.object({
+      id: z.string(),
+    }),
+    body: {
+      content: {
+        'application/json': {
+          schema: cartUpdateSchema,
+        },
+      },
+    },
+  },
   responses: createApiResponse(z.object({}), 'Cart updated successfully'),
 });
 
-cartRouter.put(
-  '/:id',
-  validateRequest(z.object({ params: z.object({ id: z.string() }), body: z.object({}) })),
-  cartController.updateCart
-);
+cartRouter.put('/', validateRequest(z.object({ body: cartUpdateSchema })), cartController.updateCart);
 
 // Delete cart
 cartRegistry.registerPath({

@@ -24,11 +24,11 @@ export const SHIPPING_METHODS = [
   {
     id: 'standard',
     name: 'Standard Shipping',
-    price: 0,
+    price: '0',
   },
   {
     id: 'express',
     name: 'Express Shipping',
-    price: 19.99,
+    price: '19.99',
   },
 ];

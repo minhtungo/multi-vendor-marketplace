@@ -1,3 +1,4 @@
+import { cartUpdateSchema } from '@/models/cart.model';
 import { cartService } from '@/services/cart.service';
 import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, Response } from 'express';
@@ -12,9 +13,18 @@ class CartController {
   };
 
   public updateCart = async (req: Request, res: Response) => {
-    const { id: cardId } = req.params;
-    const cartData = req.body;
-    const serviceResponse = await cartService.updateCart(cardId, cartData);
+    const cartData = cartUpdateSchema.parse(req.body);
+    const sessionId = req.sessionId;
+    const userId = req.user?.id;
+
+    console.log('============', cartData);
+
+    const serviceResponse = await cartService.updateCart({
+      userId,
+      sessionId,
+      cartData,
+    });
+
     handleServiceResponse(serviceResponse, res);
   };
 

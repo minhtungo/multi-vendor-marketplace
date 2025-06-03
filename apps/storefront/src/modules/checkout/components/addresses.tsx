@@ -6,6 +6,7 @@ import { ShippingAddress } from '@/modules/checkout/components/shipping-address'
 import { FormItem } from '@/modules/common/components/form-item';
 import { SubmitButton } from '@/modules/common/components/submit-button';
 import { setShippingAddress } from '@/server/cart/set-shipping-address';
+import { isObjectEqual } from '@/utils/is-equal';
 import { useToggleState } from '@repo/shared-client/hooks';
 import { Cart } from '@repo/types/cart';
 import { Checkbox } from '@repo/ui/components/checkbox';
@@ -20,7 +21,9 @@ type AddressesProps = {
 };
 
 export function Addresses({ cart }: AddressesProps) {
-  const { state: sameAsBilling, toggle: toggleSameAsBilling } = useToggleState();
+  const { state: sameAsBilling, toggle: toggleSameAsBilling } = useToggleState(
+    cart?.billingAddress && cart?.shippingAddress ? isObjectEqual(cart?.billingAddress, cart?.shippingAddress) : true
+  );
   const [state, formAction] = useActionState(setShippingAddress, null);
 
   return (
@@ -32,12 +35,17 @@ export function Addresses({ cart }: AddressesProps) {
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
           <FormItem>
             <Label htmlFor='email'>Email</Label>
-            <Input id='email' type='email' />
+            <Input id='email' type='email' name='email' defaultValue={cart?.email} />
           </FormItem>
         </div>
         <ShippingAddress cart={cart} />
         <div className='flex items-center gap-3 mt-6'>
-          <Checkbox id='sameAsBilling' name='same_as_billing' onCheckedChange={toggleSameAsBilling} />
+          <Checkbox
+            id='sameAsBilling'
+            name='same_as_billing'
+            onCheckedChange={toggleSameAsBilling}
+            checked={sameAsBilling}
+          />
           <Label htmlFor='sameAsBilling'>Same as billing address</Label>
         </div>
         {!sameAsBilling && <BillingAddress cart={cart} />}

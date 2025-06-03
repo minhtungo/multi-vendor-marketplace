@@ -1,6 +1,7 @@
 import { db } from '@/db';
 import { cart, cartItems } from '@/db/schemas';
 import { CartInsert, CartUpdate } from '@/models/cart.model';
+import { normalizeCartData } from '@/repositories/utils';
 import { eq } from 'drizzle-orm';
 
 export class CartRepository {
@@ -15,8 +16,38 @@ export class CartRepository {
   }
 
   async updateCart(cartId: string, cartData: CartUpdate, trx: typeof db = this.dbInstance) {
-    console.log('cartData', cartData);
-    await trx.update(cart).set(cartData).where(eq(cart.id, cartId)).returning();
+    const shippingAddress = cartData.shippingAddress;
+    const billingAddress = cartData.billingAddress;
+    const shippingMethod = cartData.shippingMethod;
+
+    await trx
+      .update(cart)
+      .set({
+        ...cartData,
+        ...(shippingAddress && {
+          shippingFirstName: shippingAddress.firstName,
+          shippingLastName: shippingAddress.lastName,
+          shippingAddressLine1: shippingAddress.address1,
+          shippingCity: shippingAddress.city,
+          shippingState: shippingAddress.state,
+          shippingPostalCode: shippingAddress.postalCode,
+        }),
+        ...(billingAddress && {
+          billingFirstName: billingAddress.firstName,
+          billingLastName: billingAddress.lastName,
+          billingAddressLine1: billingAddress.address1,
+          billingCity: billingAddress.city,
+          billingState: billingAddress.state,
+          billingPostalCode: billingAddress.postalCode,
+        }),
+        ...(shippingMethod && {
+          shippingMethodName: shippingMethod.name,
+          shippingMethodId: shippingMethod.id,
+          shippingMethodPrice: shippingMethod.price,
+        }),
+      })
+      .where(eq(cart.id, cartId))
+      .returning();
   }
 
   async getCartByUserId(userId: string) {
@@ -27,7 +58,7 @@ export class CartRepository {
       },
     });
 
-    return result;
+    return result ? normalizeCartData(result) : null;
   }
 
   async getCartById(cartId: string) {
@@ -38,7 +69,7 @@ export class CartRepository {
       },
     });
 
-    return result;
+    return result ? normalizeCartData(result) : null;
   }
 
   async getCartBySessionId(sessionId: string) {
@@ -49,7 +80,7 @@ export class CartRepository {
       },
     });
 
-    return result;
+    return result ? normalizeCartData(result) : null;
   }
 
   async mergeCartToUser(cartId: string, userId: string) {

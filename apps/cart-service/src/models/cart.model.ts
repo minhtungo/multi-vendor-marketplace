@@ -14,9 +14,40 @@ export const cartInsertSchema = z.object({
   subtotal: commonValidations.price.optional(),
   total: commonValidations.price.optional(),
   itemCount: commonValidations.quantity.optional(),
+  email: z.string().email().optional(),
 });
 
-export const cartUpdateSchema = cartInsertSchema.partial();
+// TODO: improve validation
+export const cartUpdateSchema = cartInsertSchema.partial().extend({
+  email: z.string().email().optional(),
+  shippingAddress: z
+    .object({
+      firstName: z.string(),
+      lastName: z.string(),
+      address1: z.string(),
+      city: z.string(),
+      state: z.string(),
+      postalCode: z.string(),
+    })
+    .optional(),
+  billingAddress: z
+    .object({
+      firstName: z.string(),
+      lastName: z.string(),
+      address1: z.string(),
+      city: z.string(),
+      state: z.string(),
+      postalCode: z.string(),
+    })
+    .optional(),
+  shippingMethod: z
+    .object({
+      name: z.string(),
+      id: z.string(),
+      price: commonValidations.price,
+    })
+    .optional(),
+});
 
 export type CartInsert = z.infer<typeof cartInsertSchema>;
 export type CartUpdate = z.infer<typeof cartUpdateSchema>;

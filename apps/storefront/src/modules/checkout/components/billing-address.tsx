@@ -12,12 +12,12 @@ type BillingAddressProps = {
 
 export function BillingAddress({ cart }: BillingAddressProps) {
   const [formData, setFormData] = useState<Record<string, any>>({
-    'billing_address.first_name': cart?.billing_address?.first_name || '',
-    'billing_address.last_name': cart?.billing_address?.last_name || '',
-    'billing_address.address_1': cart?.billing_address?.address_1 || '',
-    'billing_address.postal_code': cart?.billing_address?.postal_code || '',
-    'billing_address.city': cart?.billing_address?.city || '',
-    'billing_address.state': cart?.billing_address?.state || '',
+    'billing_address.first_name': cart?.billingAddress?.firstName || '',
+    'billing_address.last_name': cart?.billingAddress?.lastName || '',
+    'billing_address.address_1': cart?.billingAddress?.address1 || '',
+    'billing_address.postal_code': cart?.billingAddress?.postalCode || '',
+    'billing_address.city': cart?.billingAddress?.city || '',
+    'billing_address.state': cart?.billingAddress?.state || '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +82,7 @@ export function BillingAddress({ cart }: BillingAddressProps) {
           <Select
             onValueChange={(value) => setFormData({ ...formData, ['billing_address.state']: value })}
             autoComplete='address-level1'
+            value={formData['billing_address.state']}
             name='billing_address.state'
             required
           >

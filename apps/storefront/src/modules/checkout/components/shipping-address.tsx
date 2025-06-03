@@ -12,13 +12,12 @@ type ShippingAddressProps = {
 
 export function ShippingAddress({ cart }: ShippingAddressProps) {
   const [formData, setFormData] = useState<Record<string, any>>({
-    'shipping_address.first_name': cart?.shipping_address?.first_name || '',
-    'shipping_address.last_name': cart?.shipping_address?.last_name || '',
-    'shipping_address.address_1': cart?.shipping_address?.address_1 || '',
-    'shipping_address.postal_code': cart?.shipping_address?.postal_code || '',
-    'shipping_address.city': cart?.shipping_address?.city || '',
-    'shipping_address.state': cart?.shipping_address?.state || '',
-    'shipping_address.phone': cart?.shipping_address?.phone || '',
+    'shipping_address.first_name': cart?.shippingAddress?.firstName || '',
+    'shipping_address.last_name': cart?.shippingAddress?.lastName || '',
+    'shipping_address.address_1': cart?.shippingAddress?.address1 || '',
+    'shipping_address.postal_code': cart?.shippingAddress?.postalCode || '',
+    'shipping_address.city': cart?.shippingAddress?.city || '',
+    'shipping_address.state': cart?.shippingAddress?.state || '',
     email: cart?.email || '',
   });
 
@@ -84,6 +83,7 @@ export function ShippingAddress({ cart }: ShippingAddressProps) {
           <Select
             onValueChange={(value) => setFormData({ ...formData, ['shipping_address.state']: value })}
             autoComplete='address-level1'
+            value={formData['shipping_address.state']}
             name='shipping_address.state'
             required
           >

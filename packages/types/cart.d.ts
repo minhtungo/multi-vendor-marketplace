@@ -18,21 +18,25 @@ export type Cart = {
   itemCount: number;
   items: CartItem[];
   email: string;
-  shipping_address: {
-    first_name: string;
-    last_name: string;
-    address_1: string;
-    postal_code: string;
+  shippingAddress: {
+    firstName: string;
+    lastName: string;
+    address1: string;
+    postalCode: string;
     city: string;
     state: string;
     phone: string;
   };
-  billing_address: {
-    first_name: string;
-    last_name: string;
-    address_1: string;
-    postal_code: string;
+  billingAddress: {
+    firstName: string;
+    lastName: string;
+    address1: string;
+    postalCode: string;
     city: string;
     state: string;
+  };
+  shippingMethod: {
+    id: string;
+    name: string;
   };
 };

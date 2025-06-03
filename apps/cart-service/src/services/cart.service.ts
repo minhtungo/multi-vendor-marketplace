@@ -7,17 +7,27 @@ import type { Cart, CartUpdate, CartWithItems } from '@/models/cart.model';
 class CartService {
   constructor(private readonly cartRepo = cartRepository) {}
 
-  public async updateCart(cartId: string, cartData: CartUpdate): Promise<ServiceResponse<null>> {
+  public async updateCart({
+    userId,
+    sessionId,
+    cartData,
+  }: {
+    userId?: string;
+    sessionId?: string;
+    cartData: CartUpdate;
+  }): Promise<ServiceResponse<null>> {
     return executeWithErrorHandling(
       'updateCart',
       async () => {
-        const existingCart = await this.cartRepo.getCartById(cartId);
+        const existingCart = userId
+          ? await this.cartRepo.getCartByUserId(userId)
+          : await this.cartRepo.getCartBySessionId(sessionId!);
 
         if (!existingCart) {
           return ServiceResponse.failure('Cart not found', null, HTTP_STATUS_CODES.NOT_FOUND);
         }
 
-        await this.cartRepo.updateCart(cartId, cartData);
+        await this.cartRepo.updateCart(existingCart.id!, cartData);
         return ServiceResponse.success('Cart updated successfully', null, HTTP_STATUS_CODES.OK);
       },
       logger
