@@ -8,7 +8,7 @@ type CartTotalsProps = {
 
 export function CartTotals({ cart }: CartTotalsProps) {
   return (
-    <div className='space-y-2  text-sm'>
+    <div className='space-y-2.5 text-sm'>
       <div className='flex justify-between'>
         <span className='text-muted-foreground'>Subtotal</span>
         <span className='font-medium'>{formatPrice(+cart.subtotal)}</span>
@@ -21,7 +21,7 @@ export function CartTotals({ cart }: CartTotalsProps) {
         <span className='text-muted-foreground'>Tax</span>
         <span className='font-medium'>{formatPrice(0)}</span>
       </div>
-      <Separator />
+      <Separator className='my-3' />
       <div className='flex justify-between font-semibold'>
         <span>Total</span>
         <span>{formatPrice(+cart.total)}</span>

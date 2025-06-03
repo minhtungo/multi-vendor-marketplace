@@ -1,9 +1,9 @@
 import { api } from '@/lib/api-client';
-import { sortOptions, SortOptions } from '@/lib/constants/shop';
+import { sortOptionSlugs, SortOptionSlug } from '@/lib/constants/shop';
 import { type Product } from '@repo/types/product';
 
 type ProductsParams = {
-  sort: SortOptions;
+  sort: SortOptionSlug;
   limit: number;
   page: number;
 };
@@ -13,7 +13,7 @@ type GetProductsProps = {
 };
 
 export async function getProducts({ queryParams }: GetProductsProps) {
-  const sort = sortOptions.find((option) => option === queryParams.sort) || 'latest_desc';
+  const sort = sortOptionSlugs.find((option) => option === queryParams.sort) || 'latest_desc';
   console.log(queryParams);
   const response = await api.get<{
     products: Product[];

@@ -9,8 +9,8 @@ const headingVariants = cva('font-bitter', {
       h2: 'scroll-m-20 text-3xl lg:text-4xl font-medium tracking-normal leading-10',
       h3: 'scroll-m-20 text-2xl font-medium tracking-normal',
       h4: 'scroll-m-20 text-xl font-medium tracking-normal',
-      h5: 'text-lg font-medium',
-      h6: 'text-base font-medium',
+      h5: 'text-lg font-semibold',
+      h6: 'text-base font-semibold',
     },
   },
   defaultVariants: {

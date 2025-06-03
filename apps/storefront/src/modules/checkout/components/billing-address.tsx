@@ -3,14 +3,16 @@ import { Heading } from '@repo/ui/components/heading';
 import { Input } from '@repo/ui/components/input';
 import { Label } from '@repo/ui/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/ui/components/select';
+import { cn } from '@repo/ui/lib/utils';
+type BillingAddressProps = {
+  className?: string;
+};
 
-type ShippingAddressProps = {};
-
-export function ShippingAddress({}: ShippingAddressProps) {
+export function BillingAddress({ className }: BillingAddressProps) {
   return (
-    <div className='space-y-4 mt-6'>
+    <div className={cn('space-y-4', className)}>
       <Heading as='h3' variant='h6'>
-        Shipping Address
+        Billing Address
       </Heading>
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
         <FormItem>

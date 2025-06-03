@@ -1,10 +1,10 @@
-import { SortOptions } from '@/lib/constants/shop';
+import { SortOptionSlug } from '@/lib/constants/shop';
 import { PaginatedProducts } from '@/modules/products/components/paginated-products';
 import { FilterList } from '@/modules/shop/components/filter-list';
 import { SortingSelection } from '@/modules/shop/components/sorting-selection';
 
 type ShopTemplateProps = {
-  sort: SortOptions;
+  sort: SortOptionSlug;
   page: number;
 };
 

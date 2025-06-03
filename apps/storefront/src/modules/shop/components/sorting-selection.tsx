@@ -1,12 +1,12 @@
 'use client';
 
-import { sortingOptions, SortOptions } from '@/lib/constants/shop';
+import { sortingOptions, SortOptionSlug } from '@/lib/constants/shop';
 import { createQueryString } from '@/utils/url';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/ui/components/select';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 type SortingSelectionProps = {
-  sort: SortOptions;
+  sort: SortOptionSlug;
 };
 
 export function SortingSelection({ sort }: SortingSelectionProps) {

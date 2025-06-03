@@ -1,11 +1,11 @@
 import { getProducts } from '@/server/product/get-products';
 import { ProductCard } from '@/modules/products/components/product-card';
-import { SortOptions } from '@/lib/constants/shop';
+import { SortOptionSlug } from '@/lib/constants/shop';
 import { cn } from '@repo/ui/lib/utils';
 import { SortingSelection } from '@/modules/shop/components/sorting-selection';
 
 type PaginatedProductsProps = {
-  sort: SortOptions;
+  sort: SortOptionSlug;
   page: number;
   className?: string;
 };

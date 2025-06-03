@@ -1,4 +1,4 @@
-import { SortOptions } from '@/lib/constants/shop';
+import { SortOptionSlug } from '@/lib/constants/shop';
 import { ShopTemplate } from '@/modules/shop/templates';
 import { SkeletonProductGrid } from '@/modules/skeletons/templates/skeleton-product-grid';
 import { Metadata } from 'next';
@@ -11,13 +11,12 @@ export const metadata: Metadata = {
 
 type Params = {
   searchParams: Promise<{
-    sortBy?: SortOptions;
+    sortBy?: SortOptionSlug;
     page?: string;
   }>;
 };
 
-export default async function ShopPage(props: Params) {
-  const searchParams = props.searchParams;
+export default async function ShopPage({ searchParams }: Params) {
   const { sortBy, page } = await searchParams;
   const sort = sortBy || 'latest_desc';
   const pageNumber = page ? parseInt(page) : 1;

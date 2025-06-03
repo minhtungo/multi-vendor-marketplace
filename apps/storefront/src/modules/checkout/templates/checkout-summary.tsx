@@ -1,3 +1,4 @@
+import { CheckoutStepSlug } from '@/lib/constants/checkout';
 import { CartItems } from '@/modules/cart/templates/cart-items';
 import { CartTotals } from '@/modules/common/components/cart-totals';
 import { Cart } from '@repo/types/cart';
@@ -9,10 +10,11 @@ import { cn } from '@repo/ui/lib/utils';
 
 type CheckoutSummaryProps = {
   cart: Cart;
+  currentStep: CheckoutStepSlug;
   className?: string;
 };
 
-export function CheckoutSummary({ cart, className }: CheckoutSummaryProps) {
+export function CheckoutSummary({ cart, currentStep, className }: CheckoutSummaryProps) {
   return (
     <Card className={cn('', className)}>
       <CardHeader>
@@ -25,10 +27,7 @@ export function CheckoutSummary({ cart, className }: CheckoutSummaryProps) {
 
         <CartTotals cart={cart} />
 
-        <Button className='w-full'>
-          <Lock className=' h-4 w-4' />
-          Complete Order
-        </Button>
+        {currentStep === 'payment' && <Button className='w-full mt-2'>Complete Order</Button>}
 
         <div className='flex items-center justify-center space-x-2 text-xs text-muted-foreground'>
           <Lock className='h-3 w-3' />
