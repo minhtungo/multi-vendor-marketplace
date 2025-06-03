@@ -6,11 +6,11 @@ import { CreditCard } from '@repo/ui/icons';
 import { Cart } from '@repo/types/cart';
 import { FormItem } from '@/modules/common/components/form-item';
 
-type PaymentMethodProps = {
+type PaymentProps = {
   cart: Cart;
 };
 
-export function PaymentMethod({ cart }: PaymentMethodProps) {
+export function Payment({ cart }: PaymentProps) {
   return (
     <CheckoutStepContainer step={3} title='Payment Method' className='space-y-4'>
       <RadioGroup defaultValue='card'>
