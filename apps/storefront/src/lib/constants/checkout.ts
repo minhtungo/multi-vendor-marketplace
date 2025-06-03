@@ -1,13 +1,16 @@
 export const checkoutSteps = [
   {
+    step: 1,
     title: 'Shipping',
     slug: 'shipping',
   },
   {
+    step: 2,
     title: 'Delivery',
     slug: 'delivery',
   },
   {
+    step: 3,
     title: 'Payment',
     slug: 'payment',
   },

@@ -16,7 +16,7 @@ export default function CheckoutLayout({ children }: { children: React.ReactNode
           </Suspense>
         </header>
       </div>
-      <div className='container py-8'>{children}</div>
+      <div className='pb-8 space-y-6'>{children}</div>
     </div>
   );
 }

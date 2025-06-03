@@ -18,11 +18,11 @@ export async function PaginatedProducts({ sort, page, className }: PaginatedProd
   }
 
   return (
-    <div>
+    <div className={cn(className)}>
       <div className='flex items-center justify-end'>
         <SortingSelection sort={sort} />
       </div>
-      <ul className={cn('grid grid-cols-2 w-full sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-8', className)}>
+      <ul className='grid grid-cols-2 w-full sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-8'>
         {data.products.map((product) => (
           <li key={product.id}>
             <ProductCard product={product} />
