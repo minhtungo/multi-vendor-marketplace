@@ -21,7 +21,7 @@ export default function HeroSection() {
             >
               <div className='grid md:grid-cols-2 gap-8 items-center h-full container'>
                 <div>
-                  <Heading as='h1' variant='h2' className='mb-2'>
+                  <Heading level='h1' size='h2' className='mb-2'>
                     {slide.title}
                   </Heading>
                   <Text className='text-xl md:text-2xl text-muted-foreground mb-6'>{slide.subtitle}</Text>

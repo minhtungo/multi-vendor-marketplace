@@ -28,7 +28,7 @@ export function ShippingAddress({ cart }: ShippingAddressProps) {
 
   return (
     <div className='space-y-4 mt-6'>
-      <Heading as='h3' variant='h6'>
+      <Heading size='h6' level='h3'>
         Shipping Address
       </Heading>
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>

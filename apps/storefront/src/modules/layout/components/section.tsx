@@ -50,7 +50,7 @@ function SectionHeader({ className, children, ...props }: React.ComponentProps<'
 
 function SectionTitle({ className, children, ...props }: React.HTMLAttributes<HTMLElement>) {
   return (
-    <Heading as='h2' className={cn('mb-6', className)} {...props}>
+    <Heading level='h2' className={cn('mb-6', className)} {...props}>
       {children}
     </Heading>
   );
@@ -60,7 +60,10 @@ function SectionSubTitle({ className, children, ...props }: React.HTMLAttributes
   return (
     <Text
       as='span'
-      className={cn('text-sm font-semibold capitalize text-primary mb-2 inline-block', className)}
+      size='small'
+      weight='semibold'
+      leading='compact'
+      className={cn('capitalize text-primary mb-2 inline-block', className)}
       {...props}
     >
       {children}

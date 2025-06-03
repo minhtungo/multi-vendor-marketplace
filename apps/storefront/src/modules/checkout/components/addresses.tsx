@@ -28,7 +28,7 @@ export function Addresses({ cart }: AddressesProps) {
 
   return (
     <CheckoutStepContainer step={1} title='Shipping' className='space-y-4'>
-      <Heading as='h3' variant='h6'>
+      <Heading size='h6' level='h3'>
         Contact Information
       </Heading>
       <form action={formAction} className='space-y-4'>

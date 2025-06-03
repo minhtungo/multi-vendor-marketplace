@@ -18,7 +18,7 @@ export default async function CheckoutPage({ searchParams }: Params) {
     <Suspense fallback={<SkeletonCheckoutPage />}>
       <div className='bg-card'>
         <div className='flex py-4 justify-between container'>
-          <Heading as='h1' variant='h4'>
+          <Heading level='h1' size='h4'>
             Checkout
           </Heading>
           <CheckoutStepper step={step} className='max-w-md' />

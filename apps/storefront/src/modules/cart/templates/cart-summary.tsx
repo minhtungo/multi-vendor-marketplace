@@ -19,7 +19,7 @@ export function CartSummary({ cart, className }: CartSummaryProps) {
     <div className='space-y-6'>
       <Card className={cn(className)}>
         <CardContent>
-          <Heading variant='h5' as='h3' className='mb-4'>
+          <Heading size='h5' level='h3' className='mb-4'>
             Order Summary
           </Heading>
 
@@ -57,7 +57,9 @@ export function CartSummary({ cart, className }: CartSummaryProps) {
         </CardContent>
       </Card>
       <div className='space-y-2'>
-        <Text className='text-sm text-muted-foreground'>Accepted Payment Methods</Text>
+        <Text size='small' weight='semibold' leading='compact' className='text-muted-foreground'>
+          Accepted Payment Methods
+        </Text>
         <AcceptedPaymentMethods />
       </div>
     </div>

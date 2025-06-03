@@ -4,31 +4,42 @@ import { cn } from '@repo/ui/lib/utils';
 
 const textVariants = cva('leading-7', {
   variants: {
-    variant: {
-      default: 'text-base',
+    size: {
       small: 'text-sm',
+      base: 'text-base',
       large: 'text-lg',
-      xl: 'text-xl',
-      muted: 'text-muted-foreground',
-      primary: 'text-primary',
+      xlarge: 'text-xl',
+    },
+    weight: {
+      regular: 'font-normal',
+      medium: 'font-medium',
+      semibold: 'font-semibold',
+    },
+    leading: {
+      normal: 'leading-7',
+      compact: 'leading-5',
     },
   },
   defaultVariants: {
-    variant: 'default',
+    size: 'base',
+    weight: 'regular',
+    leading: 'normal',
   },
 });
 
 type TextVariantProps = VariantProps<typeof textVariants>;
 
 type TextProps = Omit<React.HTMLAttributes<HTMLParagraphElement>, 'color'> & {
-  variant?: TextVariantProps['variant'];
+  size?: TextVariantProps['size'];
+  weight?: TextVariantProps['weight'];
+  leading?: TextVariantProps['leading'];
   as?: 'p' | 'span' | 'div';
 };
 
-function Text({ className, as = 'p', ...props }: TextProps) {
+function Text({ className, as = 'p', size = 'base', weight = 'regular', leading = 'normal', ...props }: TextProps) {
   const Comp = as;
 
-  return <Comp className={cn(textVariants({ variant: as === 'p' ? 'default' : undefined, className }))} {...props} />;
+  return <Comp className={cn(textVariants({ size, weight, leading, className }))} {...props} />;
 }
 
 export { Text, textVariants };

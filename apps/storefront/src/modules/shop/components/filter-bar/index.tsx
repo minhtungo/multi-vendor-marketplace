@@ -11,7 +11,7 @@ export function FilterBar({ className }: FilterBarProps) {
   return (
     <aside className={cn('w-80 shrink-0', className)}>
       <div className='flex items-center justify-between'>
-        <Heading as='h2' variant='h4'>
+        <Heading level='h2' size='h4'>
           Filters
         </Heading>
         <Button variant='ghost' size='sm' className='-mr-2'>
