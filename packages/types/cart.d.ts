@@ -17,4 +17,22 @@ export type Cart = {
   total: string;
   itemCount: number;
   items: CartItem[];
+  email: string;
+  shipping_address: {
+    first_name: string;
+    last_name: string;
+    address_1: string;
+    postal_code: string;
+    city: string;
+    state: string;
+    phone: string;
+  };
+  billing_address: {
+    first_name: string;
+    last_name: string;
+    address_1: string;
+    postal_code: string;
+    city: string;
+    state: string;
+  };
 };

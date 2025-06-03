@@ -1,53 +1,57 @@
 'use client';
 
-import { checkoutSteps } from '@/lib/constants/checkout';
 import { BillingAddress } from '@/modules/checkout/components/billing-address';
 import { CheckoutStepContainer } from '@/modules/checkout/components/common/checkout-step-container';
 import { ShippingAddress } from '@/modules/checkout/components/shipping-address';
 import { FormItem } from '@/modules/common/components/form-item';
+import { SubmitButton } from '@/modules/common/components/submit-button';
+import { setShippingAddress } from '@/server/cart/set-shipping-address';
 import { useToggleState } from '@repo/shared-client/hooks';
 import { Cart } from '@repo/types/cart';
-import { Button } from '@repo/ui/components/button';
 import { Checkbox } from '@repo/ui/components/checkbox';
+import { FormResponse } from '@repo/ui/components/form-response';
 import { Heading } from '@repo/ui/components/heading';
 import { Input } from '@repo/ui/components/input';
 import { Label } from '@repo/ui/components/label';
-import { usePathname, useRouter } from 'next/navigation';
+import { useActionState } from 'react';
 
 type AddressesProps = {
   cart: Cart;
 };
 
 export function Addresses({ cart }: AddressesProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-
   const { state: sameAsBilling, toggle: toggleSameAsBilling } = useToggleState();
-
-  const handleContinue = () => {
-    router.push(pathname + `?step=${checkoutSteps[1].slug}`);
-  };
+  const [state, formAction] = useActionState(setShippingAddress, null);
 
   return (
     <CheckoutStepContainer step={1} title='Shipping' className='space-y-4'>
       <Heading as='h3' variant='h6'>
         Contact Information
       </Heading>
-      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-        <FormItem>
-          <Label htmlFor='email'>Email</Label>
-          <Input id='email' type='email' />
-        </FormItem>
-      </div>
-      <ShippingAddress />
-      <div className='flex items-center gap-3 mt-6'>
-        <Checkbox id='sameAsBilling' onCheckedChange={toggleSameAsBilling} />
-        <Label htmlFor='sameAsBilling'>Same as billing address</Label>
-      </div>
-      {!sameAsBilling && <BillingAddress className='mt-6' />}
-      <Button size='lg' className='mt-4' onClick={handleContinue}>
-        Continue
-      </Button>
+      <form action={formAction} className='space-y-4'>
+        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+          <FormItem>
+            <Label htmlFor='email'>Email</Label>
+            <Input id='email' type='email' />
+          </FormItem>
+        </div>
+        <ShippingAddress cart={cart} />
+        <div className='flex items-center gap-3 mt-6'>
+          <Checkbox id='sameAsBilling' name='same_as_billing' onCheckedChange={toggleSameAsBilling} />
+          <Label htmlFor='sameAsBilling'>Same as billing address</Label>
+        </div>
+        {!sameAsBilling && <BillingAddress cart={cart} />}
+        {state && (
+          <FormResponse
+            title={state.success ? 'Success' : 'Error'}
+            variant={state.success ? 'success' : 'destructive'}
+            description={state?.message}
+          />
+        )}
+        <SubmitButton size='lg' className='mt-4'>
+          Continue
+        </SubmitButton>
+      </form>
     </CheckoutStepContainer>
   );
 }
