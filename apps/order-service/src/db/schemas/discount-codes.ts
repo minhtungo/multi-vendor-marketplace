@@ -1,9 +1,11 @@
-import { pgTable, serial, varchar, timestamp, decimal, text, jsonb, uuid, boolean, integer } from 'drizzle-orm/pg-core';
+import { boolean, decimal, integer, jsonb, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 export const discountCodes = pgTable('discount_codes', {
-  id: serial('id').primaryKey(),
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   code: varchar('code', { length: 50 }).notNull().unique(),
-  vendorId: uuid('vendor_id').notNull(),
+  vendorId: text('vendor_id').notNull(),
   type: varchar('type', { length: 20 }).notNull(), // 'percentage' or 'fixed'
   value: decimal('value', { precision: 10, scale: 2 }).notNull(),
   startDate: timestamp('start_date').notNull(),

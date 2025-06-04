@@ -1,4 +1,4 @@
-import { InsertOrder, Order } from '@/db/schemas';
+import { InsertOrder, Order } from '@/models/order.model';
 import { orderRepository } from '@/repositories/order.repository';
 import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
@@ -45,7 +45,7 @@ class OrderService {
     );
   }
 
-  public async getOrderById(id: number): Promise<ServiceResponse<Order | null>> {
+  public async getOrderById(id: string): Promise<ServiceResponse<Order | null>> {
     return executeWithErrorHandling(
       'getOrderById',
       async () => {

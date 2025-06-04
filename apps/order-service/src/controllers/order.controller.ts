@@ -1,4 +1,4 @@
-import { insertOrderSchema } from '@/db/schemas';
+import { orderInsertSchema } from '@/models/order.model';
 import { orderService } from '@/services/order.service';
 import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { NextFunction, Request, Response } from 'express';
@@ -19,7 +19,7 @@ class OrderController {
   };
 
   public createOrder = async (req: Request, res: Response, next: NextFunction) => {
-    const orderData = insertOrderSchema.parse(req.body);
+    const orderData = orderInsertSchema.parse(req.body);
     const serviceResponse = await orderService.createOrder(orderData);
     handleServiceResponse(serviceResponse, res);
   };

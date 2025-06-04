@@ -1,7 +1,7 @@
 import { db } from '@/db';
 import { orders } from '@/db/schemas';
 import { count, eq } from 'drizzle-orm';
-import type { InsertOrder, Order } from '@/db/schemas';
+import type { InsertOrder } from '@/models/order.model';
 
 export class OrderRepository {
   constructor(private readonly dbInstance = db) {}
@@ -28,7 +28,7 @@ export class OrderRepository {
     };
   }
 
-  public async getOrderById(id: number, trx: typeof db = this.dbInstance) {
+  public async getOrderById(id: string, trx: typeof db = this.dbInstance) {
     const order = await trx.query.orders.findFirst({
       where: eq(orders.id, id),
     });
@@ -36,7 +36,12 @@ export class OrderRepository {
   }
 
   public async createOrder(orderData: InsertOrder, trx: typeof db = this.dbInstance) {
-    const [order] = await trx.insert(orders).values(orderData).returning();
+    const [order] = await trx
+      .insert(orders)
+      .values({
+        ...orderData,
+      })
+      .returning();
     return order;
   }
 }
