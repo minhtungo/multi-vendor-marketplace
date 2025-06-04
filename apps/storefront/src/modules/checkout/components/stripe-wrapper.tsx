@@ -1,3 +1,5 @@
+'use client';
+
 import { Elements } from '@stripe/react-stripe-js';
 import { Stripe, StripeElementsOptions } from '@stripe/stripe-js';
 
@@ -10,6 +12,7 @@ type StripeWrapperProps = {
 const options: StripeElementsOptions = {
   mode: 'payment',
   currency: 'usd',
+  amount: 1000,
 };
 
 export function StripeWrapper({ stripeKey, stripePromise, children }: StripeWrapperProps) {
@@ -22,7 +25,7 @@ export function StripeWrapper({ stripeKey, stripePromise, children }: StripeWrap
   }
 
   return (
-    <Elements options={options} stripe={stripePromise}>
+    <Elements options={{ ...options }} stripe={stripePromise}>
       {children}
     </Elements>
   );

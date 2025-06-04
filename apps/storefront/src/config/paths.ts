@@ -29,6 +29,7 @@ export const clientPaths = {
 
 const authPath = `/auth/user`;
 const cartPath = `/cart`;
+const paymentPath = `/payment`;
 
 export const serverPaths = {
   auth: {
@@ -50,5 +51,10 @@ export const serverPaths = {
     addItem: `${cartPath}/items`,
     updateItem: `${cartPath}/items`,
     removeItem: `${cartPath}/items`,
+    complete: `${cartPath}/complete`,
+    initiatePaymentSession: `${cartPath}/create-payment-intent`,
+  },
+  payment: {
+    initiatePaymentSession: `${paymentPath}/create-payment-intent`,
   },
 } as const;

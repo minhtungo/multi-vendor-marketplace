@@ -1,17 +1,20 @@
 'use client';
 
 import { Button } from '@repo/ui/components/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui/components/card';
 
-export default function Error({ reset }: { reset: () => void }) {
+export default function Error({ error, reset }: { error: Error; reset: () => void }) {
   return (
-    <div className='mx-auto my-4 flex max-w-xl flex-col rounded-lg border p-8 md:p-12'>
-      <h2 className='text-xl font-bold'>Oh no!</h2>
-      <p className='my-2'>
-        There was an issue with our storefront. This could be a temporary issue, please try your action again.
-      </p>
-      <Button className='mx-auto mt-4' onClick={() => reset()}>
-        Try Again
-      </Button>
+    <div className='flex h-screen items-center justify-center container'>
+      <Card className='gap-4 justify-center text-center'>
+        <CardHeader>
+          <CardTitle className='text-2xl font-bold'>Error</CardTitle>
+        </CardHeader>
+        <CardContent className='flex flex-col gap-6'>
+          <p>{process.env.NODE_ENV === 'development' ? error.message : 'An error occurred. Please try again.'}</p>
+          <Button onClick={() => reset()}>Try Again</Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

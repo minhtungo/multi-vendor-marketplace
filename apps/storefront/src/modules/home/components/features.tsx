@@ -6,7 +6,7 @@ export default function Features() {
     <section className='py-12'>
       <div className='grid grid-cols-1 md:grid-cols-4 gap-8 container'>
         {FEATURES.map((feature) => (
-          <div className='flex items-center gap-4'>
+          <div className='flex items-center gap-4' key={`${feature.title}-feature`}>
             <div className={cn('p-3 rounded-full', feature.bgColor)}>
               <feature.icon className={cn('h-6 w-6', feature.iconColor)} />
             </div>

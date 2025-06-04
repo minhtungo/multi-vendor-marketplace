@@ -6,6 +6,7 @@ export const env = createEnv({
     SERVER_URL: z.string().min(1),
     ACCESS_TOKEN_COOKIE_NAME: z.string().min(1),
     SESSION_ID_COOKIE_NAME: z.string().min(1),
+    NODE_ENV: z.enum(['development', 'production']).default('development'),
   },
   client: {
     NEXT_PUBLIC_BASE_URL: z.string().min(1),

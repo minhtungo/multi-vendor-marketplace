@@ -1,4 +1,5 @@
 import { checkoutSteps, CheckoutStepSlug, defaultCheckoutStep } from '@/lib/constants/checkout';
+import { PaymentWrapper } from '@/modules/checkout/components/payment-wrapper';
 import { CheckoutForm } from '@/modules/checkout/templates/checkout-form';
 import { CheckoutSummary } from '@/modules/checkout/templates/checkout-summary';
 import { retrieveCart } from '@/server/cart/retrieve-cart';
@@ -18,9 +19,11 @@ export async function CheckoutTemplate({ step, className }: CheckoutTemplateProp
   const currentStep = checkoutSteps.find((s) => s.slug === step) || defaultCheckoutStep;
 
   return (
-    <div className={cn('grid grid-cols-1 gap-8 lg:grid-cols-3', className)}>
-      <CheckoutForm cart={cart} className='lg:col-span-2 h-fit' currentStep={currentStep.slug} />
-      <CheckoutSummary cart={cart} className='lg:sticky lg:top-8 h-fit' currentStep={currentStep.slug} />
-    </div>
+    <PaymentWrapper cart={cart}>
+      <div className={cn('grid grid-cols-1 gap-8 lg:grid-cols-3', className)}>
+        <CheckoutForm cart={cart} className='lg:col-span-2 h-fit' currentStep={currentStep.slug} />
+        <CheckoutSummary cart={cart} className='lg:sticky lg:top-8 h-fit' />
+      </div>
+    </PaymentWrapper>
   );
 }
