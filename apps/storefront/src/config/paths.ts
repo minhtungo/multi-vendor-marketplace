@@ -52,7 +52,6 @@ export const serverPaths = {
     updateItem: `${cartPath}/items`,
     removeItem: `${cartPath}/items`,
     complete: `${cartPath}/complete`,
-    initiatePaymentSession: `${cartPath}/create-payment-intent`,
   },
   payment: {
     initiatePaymentSession: `${paymentPath}/create-payment-intent`,

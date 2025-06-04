@@ -9,14 +9,15 @@ import { useState } from 'react';
 
 type PaymentButtonProps = {
   cart: Cart;
+  clientSecret: string;
 };
 
-export function PaymentButton({ cart }: PaymentButtonProps) {
+export function PaymentButton({ cart, clientSecret }: PaymentButtonProps) {
   const isReady = cart && cart.shippingAddress && cart.billingAddress && cart.shippingMethod && !!cart.email;
 
   return (
     <div className='flex flex-col gap-4'>
-      <StripePaymentButton cart={cart} isReady={isReady} />
+      <StripePaymentButton cart={cart} isReady={isReady} clientSecret={clientSecret} />
     </div>
   );
 }
@@ -24,9 +25,10 @@ export function PaymentButton({ cart }: PaymentButtonProps) {
 type StripePaymentButtonProps = {
   cart: Cart;
   isReady: boolean;
+  clientSecret: string;
 };
 
-function StripePaymentButton({ cart, isReady }: StripePaymentButtonProps) {
+function StripePaymentButton({ cart, isReady, clientSecret }: StripePaymentButtonProps) {
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -42,23 +44,23 @@ function StripePaymentButton({ cart, isReady }: StripePaymentButtonProps) {
 
   const stripe = useStripe();
   const elements = useElements();
-  const card = elements?.getElement('card');
+  const cardElement = elements?.getElement('card');
 
   const disabled = !stripe || !elements || !isReady;
 
   const handlePayment = async () => {
     setSubmitting(true);
 
-    if (!stripe || !elements || !card) {
+    if (!stripe || !elements || !cardElement) {
       setErrorMessage('Missing payment details');
       setSubmitting(false);
       return;
     }
 
     await stripe
-      .confirmCardPayment('', {
+      .confirmCardPayment(clientSecret, {
         payment_method: {
-          card,
+          card: cardElement,
           billing_details: {
             name: `${cart.billingAddress.firstName} ${cart.billingAddress.lastName}`,
             email: cart.email,

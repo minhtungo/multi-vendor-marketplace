@@ -1,4 +1,4 @@
-import { Payment } from '@/modules/checkout/components/payment';
+import { Payment } from '@/modules/checkout/components/payment/payment';
 import { Addresses } from '@/modules/checkout/components/addresses';
 import { DeliveryOptions } from '@/modules/checkout/components/delivery-options';
 import { Cart } from '@repo/types/cart';

@@ -2,7 +2,6 @@ import { paymentController } from '@/controllers/payment.controller';
 import { createPaymentIntentSchema } from '@/models/payment.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
-import { validateRequest } from '@repo/shared-server/middlewares';
 import { Router } from 'express';
 import { z } from 'zod';
 
@@ -12,7 +11,7 @@ export const paymentRouter: Router = Router();
 // Create a connect link for the vendor to connect their stripe account
 paymentRegistry.registerPath({
   method: 'post',
-  path: `/create-connect-link`,
+  path: '/create-connect-link',
   tags: ['Payment'],
   request: {
     body: {
@@ -36,7 +35,7 @@ paymentRouter.post('/create-connect-link', paymentController.createStripeConnect
 // Create a payment intent
 paymentRegistry.registerPath({
   method: 'post',
-  path: `/create-payment-intent`,
+  path: '/create-payment-intent',
   tags: ['Payment'],
   request: {
     body: {
@@ -56,8 +55,4 @@ paymentRegistry.registerPath({
   ),
 });
 
-paymentRouter.post(
-  '/create-payment-intent',
-  validateRequest(createPaymentIntentSchema),
-  paymentController.createPaymentIntent
-);
+paymentRouter.post('/create-payment-intent', paymentController.createPaymentIntent);

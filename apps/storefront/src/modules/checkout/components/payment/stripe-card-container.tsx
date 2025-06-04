@@ -1,5 +1,7 @@
+'use client';
+
 import { Text } from '@repo/ui/components/text';
-import { CardElement, PaymentElement } from '@stripe/react-stripe-js';
+import { CardElement } from '@stripe/react-stripe-js';
 import { StripeCardElementOptions } from '@stripe/stripe-js';
 
 type StripeCardContainerProps = React.ComponentProps<'div'>;

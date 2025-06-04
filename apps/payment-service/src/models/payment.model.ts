@@ -4,7 +4,7 @@ import { z } from 'zod';
 extendZodWithOpenApi(z);
 
 export const createPaymentIntentSchema = z.object({
-  amount: z.number(),
+  amount: z.string(),
   currency: z.string(),
 });
 

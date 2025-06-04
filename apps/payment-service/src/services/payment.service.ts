@@ -53,7 +53,7 @@ class PaymentService {
   ): Promise<ServiceResponse<{ clientSecret: string; id: string } | null>> {
     try {
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(data.amount * 100),
+        amount: parseFloat(data.amount) * 100,
         currency: data.currency.toLowerCase(),
         automatic_payment_methods: {
           enabled: true,

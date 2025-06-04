@@ -1,5 +1,5 @@
 import { checkoutSteps, CheckoutStepSlug, defaultCheckoutStep } from '@/lib/constants/checkout';
-import { PaymentWrapper } from '@/modules/checkout/components/payment-wrapper';
+import { PaymentWrapper } from '@/modules/checkout/components/payment/payment-wrapper';
 import { CheckoutForm } from '@/modules/checkout/templates/checkout-form';
 import { CheckoutSummary } from '@/modules/checkout/templates/checkout-summary';
 import { retrieveCart } from '@/server/cart/retrieve-cart';

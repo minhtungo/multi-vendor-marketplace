@@ -1,7 +1,7 @@
 import { createPaymentIntentSchema } from '@/models/payment.model';
 import { paymentService } from '@/services/payment.service';
 import { handleServiceResponse } from '@repo/shared-server/lib';
-import type { NextFunction, Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 class PaymentController {
   public createStripeConnectLink = async (req: Request, res: Response) => {

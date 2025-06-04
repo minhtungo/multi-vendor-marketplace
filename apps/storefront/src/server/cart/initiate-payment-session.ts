@@ -2,12 +2,18 @@
 
 import { serverPaths } from '@/config/paths';
 import { api } from '@/lib/api-client';
-import { checkoutSteps } from '@/lib/constants/checkout';
-import { redirect } from 'next/navigation';
 
-export async function initiatePaymentSession() {
+type InitiatePaymentSessionProps = {
+  currency: string;
+  amount: string;
+};
+
+export async function initiatePaymentSession({ currency, amount }: InitiatePaymentSessionProps) {
   try {
-    const response = await api.post<{ clientSecret: string }>(serverPaths.payment.initiatePaymentSession);
+    const response = await api.post<{ clientSecret: string }>(serverPaths.payment.initiatePaymentSession, {
+      currency,
+      amount,
+    });
 
     if (!response.success) {
       throw new Error('Failed to initiate payment session');
@@ -27,6 +33,4 @@ export async function initiatePaymentSession() {
       data: null,
     };
   }
-
-  redirect(`/checkout?step=${checkoutSteps[1].slug}`);
 }

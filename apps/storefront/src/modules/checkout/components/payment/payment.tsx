@@ -1,7 +1,5 @@
-'use client';
-
 import { CheckoutStepContainer } from '@/modules/checkout/components/common/checkout-step-container';
-import { StripeCardContainer } from '@/modules/checkout/components/stripe-card-container';
+import { StripeCardContainer } from '@/modules/checkout/components/payment/stripe-card-container';
 import { Cart } from '@repo/types/cart';
 import { RadioGroup, RadioGroupItem } from '@repo/ui/components/radio-group';
 import { CreditCard } from '@repo/ui/icons';
@@ -10,7 +8,7 @@ type PaymentProps = {
   cart: Cart;
 };
 
-export function Payment({ cart }: PaymentProps) {
+export async function Payment({ cart }: PaymentProps) {
   return (
     <CheckoutStepContainer step={3} title='Payment Method' className='space-y-4'>
       <RadioGroup defaultValue='card'>
