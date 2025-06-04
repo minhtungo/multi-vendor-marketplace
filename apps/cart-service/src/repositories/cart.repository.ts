@@ -1,5 +1,6 @@
 import { db } from '@/db';
 import { cart, cartItems } from '@/db/schemas';
+import { CartItem } from '@/models/cart-item.model';
 import { CartInsert, CartUpdate } from '@/models/cart.model';
 import { normalizeCartData } from '@/repositories/utils';
 import { eq } from 'drizzle-orm';
@@ -11,7 +12,7 @@ export class CartRepository {
     const result = await this.dbInstance.insert(cart).values(cartData).returning();
     return {
       ...result[0],
-      items: [],
+      items: [] as CartItem[],
     };
   }
 
@@ -123,6 +124,10 @@ export class CartRepository {
   async deleteCart(cartId: string) {
     const result = await this.dbInstance.delete(cart).where(eq(cart.id, cartId)).returning();
     return result[0];
+  }
+
+  async clearCartItems(cartId: string, trx: typeof db = this.dbInstance) {
+    await trx.delete(cartItems).where(eq(cartItems.cartId, cartId));
   }
 }
 

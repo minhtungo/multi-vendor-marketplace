@@ -41,6 +41,14 @@ class CartController {
     const serviceResponse = await cartService.deleteCart(id);
     handleServiceResponse(serviceResponse, res);
   };
+
+  public completeCart = async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const sessionId = req.sessionId;
+
+    const serviceResponse = await cartService.clearCart(userId, sessionId);
+    handleServiceResponse(serviceResponse, res);
+  };
 }
 
 export const cartController = new CartController();

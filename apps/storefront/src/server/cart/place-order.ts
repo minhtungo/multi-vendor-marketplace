@@ -7,7 +7,7 @@ import { revalidateTag } from 'next/cache';
 
 export async function placeOrder() {
   try {
-    const response = await api.put<Cart>(`${serverPaths.cart.complete}`);
+    const response = await api.post<Cart>(`${serverPaths.cart.complete}`);
 
     revalidateTag('cart');
 

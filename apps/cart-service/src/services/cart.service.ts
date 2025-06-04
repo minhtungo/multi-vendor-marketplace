@@ -3,6 +3,7 @@ import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
 import type { Cart, CartUpdate, CartWithItems } from '@/models/cart.model';
+import { createTransaction } from '@/utils/transaction';
 
 class CartService {
   constructor(private readonly cartRepo = cartRepository) {}
@@ -109,6 +110,36 @@ class CartService {
 
         await this.cartRepo.deleteCart(cartId);
         return ServiceResponse.success('Cart deleted successfully', null, HTTP_STATUS_CODES.OK);
+      },
+      logger
+    );
+  }
+
+  public async clearCart(userId?: string, sessionId?: string): Promise<ServiceResponse<null>> {
+    return executeWithErrorHandling(
+      'clearCart',
+      async () => {
+        const existingCart = userId
+          ? await this.cartRepo.getCartByUserId(userId)
+          : await this.cartRepo.getCartBySessionId(sessionId!);
+
+        if (!existingCart) {
+          return ServiceResponse.failure('Cart not found', null, HTTP_STATUS_CODES.NOT_FOUND);
+        }
+        await createTransaction(async (trx) => {
+          await this.cartRepo.clearCartItems(existingCart.id, trx);
+          await this.cartRepo.updateCart(
+            existingCart.id,
+            {
+              subtotal: '0.00',
+              total: '0.00',
+              itemCount: 0,
+            },
+            trx
+          );
+        });
+
+        return ServiceResponse.success('Cart cleared successfully', null, HTTP_STATUS_CODES.OK);
       },
       logger
     );
