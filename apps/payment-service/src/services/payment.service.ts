@@ -1,5 +1,6 @@
 import { env } from '@/configs/env';
 import { stripe } from '@/lib/stripe';
+import { CreatePaymentIntent } from '@/models/payment.model';
 import { paymentRepository } from '@/repositories/payment.repository';
 import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 import { ServiceResponse } from '@repo/shared-server/lib';
@@ -39,6 +40,29 @@ class PaymentService {
         {
           url: accountLink.url,
         },
+        HTTP_STATUS_CODES.CREATED
+      );
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      return ServiceResponse.failure(errorMessage, null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async createPaymentIntent(
+    data: CreatePaymentIntent
+  ): Promise<ServiceResponse<{ clientSecret: string; id: string } | null>> {
+    try {
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(data.amount * 100),
+        currency: data.currency.toLowerCase(),
+        automatic_payment_methods: {
+          enabled: true,
+        },
+      });
+
+      return ServiceResponse.success(
+        'Payment intent created successfully',
+        { clientSecret: paymentIntent.client_secret!, id: paymentIntent.id },
         HTTP_STATUS_CODES.CREATED
       );
     } catch (error) {
