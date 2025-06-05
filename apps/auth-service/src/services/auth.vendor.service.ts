@@ -9,7 +9,7 @@ import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
 import type { NextFunction, Request, Response } from 'express';
 
-import { vendorServiceClient } from '@/lib/vendor-service.client';
+import { vendorServiceClient } from '@/services/clients/vendor.service.client';
 import { vendorAuthProducer } from '@repo/messaging';
 import { verify } from 'jsonwebtoken';
 

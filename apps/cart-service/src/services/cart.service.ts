@@ -4,6 +4,8 @@ import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
 import type { Cart, CartUpdate, CartWithItems } from '@/models/cart.model';
 import { createTransaction } from '@/utils/transaction';
+import { orderServiceClient } from '@/services/clients/order.service.client';
+import { type Order } from '@repo/types/order';
 
 class CartService {
   constructor(private readonly cartRepo = cartRepository) {}
@@ -115,9 +117,9 @@ class CartService {
     );
   }
 
-  public async clearCart(userId?: string, sessionId?: string): Promise<ServiceResponse<null>> {
+  public async completeCart(userId?: string, sessionId?: string): Promise<ServiceResponse<Order | null>> {
     return executeWithErrorHandling(
-      'clearCart',
+      'completeCart',
       async () => {
         const existingCart = userId
           ? await this.cartRepo.getCartByUserId(userId)
@@ -126,6 +128,7 @@ class CartService {
         if (!existingCart) {
           return ServiceResponse.failure('Cart not found', null, HTTP_STATUS_CODES.NOT_FOUND);
         }
+
         await createTransaction(async (trx) => {
           await this.cartRepo.clearCartItems(existingCart.id, trx);
           await this.cartRepo.updateCart(
@@ -139,7 +142,34 @@ class CartService {
           );
         });
 
-        return ServiceResponse.success('Cart cleared successfully', null, HTTP_STATUS_CODES.OK);
+        const order = await orderServiceClient.createOrder({
+          shippingAddressLine1: existingCart.shippingAddressLine1!,
+          shippingCity: existingCart.shippingCity!,
+          shippingState: existingCart.shippingState!,
+          shippingPostalCode: existingCart.shippingPostalCode!,
+          billingAddressLine1: existingCart.billingAddressLine1!,
+          billingCity: existingCart.billingCity!,
+          billingState: existingCart.billingState!,
+          billingPostalCode: existingCart.billingPostalCode!,
+          totalAmount: existingCart.total,
+          billingFirstName: existingCart.billingFirstName!,
+          billingLastName: existingCart.billingLastName!,
+          shippingFirstName: existingCart.shippingFirstName!,
+          shippingLastName: existingCart.shippingLastName!,
+          orderNumber: existingCart.id,
+          customerId: userId || sessionId!,
+          vendorId: userId || sessionId!,
+          currency: 'usd',
+          paymentMethod: 'stripe',
+        });
+
+        console.log('============', order);
+
+        if (!order) {
+          return ServiceResponse.failure('Failed to create order', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
+        }
+
+        return ServiceResponse.success('Cart cleared successfully', order.data, HTTP_STATUS_CODES.OK);
       },
       logger
     );

@@ -13,7 +13,7 @@ class OrderController {
   };
 
   public getOrderById = async (req: Request, res: Response, next: NextFunction) => {
-    const id = Number(req.params.id);
+    const id = req.params.id;
     const serviceResponse = await orderService.getOrderById(id);
     handleServiceResponse(serviceResponse, res);
   };

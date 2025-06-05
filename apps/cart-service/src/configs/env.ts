@@ -20,6 +20,8 @@ const envSchema = z.object({
   POSTGRES_PASSWORD: z.string().min(1),
   POSTGRES_DB: z.string().min(1),
   DATABASE_URL: z.string().min(1),
+  // Order Service
+  ORDER_SERVICE_URL: z.string().url().default('http://localhost:3002'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

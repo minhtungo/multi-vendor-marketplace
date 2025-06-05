@@ -2,7 +2,7 @@ import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
 import { generateAccessToken, generateRefreshToken, invalidateRefreshToken, validateRefreshToken } from '@/lib/token';
-import { userServiceClient } from '@/lib/user-service.client';
+import { userServiceClient } from '@/services/clients/user.service.client';
 import type { SignInInput, SignUpInput, VerifyUserInput } from '@/models/auth.user.model';
 import { tokenRepository } from '@/repositories/token.repository';
 import type { RefreshTokenPayload } from '@/types/token';

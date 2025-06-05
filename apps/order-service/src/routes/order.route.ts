@@ -1,10 +1,9 @@
-import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import { Router } from 'express';
-import { z } from 'zod';
-import { createApiResponse } from '@repo/shared-server/docs';
 import { orderController } from '@/controllers/order.controller';
 import { orderInsertSchema } from '@/models/order.model';
-import { validateRequest } from '@repo/shared-server/middlewares';
+import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
+import { createApiResponse } from '@repo/shared-server/docs';
+import { Router } from 'express';
+import { z } from 'zod';
 
 export const orderRegistry = new OpenAPIRegistry();
 export const orderRouter: Router = Router();
@@ -62,4 +61,4 @@ orderRegistry.registerPath({
   responses: createApiResponse(z.object({}), 'Order created successfully'),
 });
 
-orderRouter.post('/', validateRequest(orderInsertSchema), orderController.createOrder);
+orderRouter.post('/', orderController.createOrder);

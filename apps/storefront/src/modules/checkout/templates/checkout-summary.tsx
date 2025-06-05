@@ -14,14 +14,10 @@ type CheckoutSummaryProps = {
 };
 
 export async function CheckoutSummary({ cart, className }: CheckoutSummaryProps) {
-  const { data, success } = await initiatePaymentSession({
+  const { data } = await initiatePaymentSession({
     currency: 'cad',
     amount: cart.total,
   });
-
-  if (!success) {
-    return <div>Something went wrong! Please try again.</div>;
-  }
 
   return (
     <Card className={cn(className)}>

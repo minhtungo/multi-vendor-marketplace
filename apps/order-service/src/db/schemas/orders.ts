@@ -1,4 +1,4 @@
-import { ORDER_STATUS, PAYMENT_STATUS } from '@/db/constants';
+import { ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } from '@/db/constants';
 import { decimal, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 import { discountCodes } from './discount-codes';
 
@@ -7,8 +7,8 @@ export const orders = pgTable('orders', {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   orderNumber: varchar('order_number', { length: 50 }).notNull().unique(),
-  customerId: uuid('customer_id').notNull(),
-  vendorId: uuid('vendor_id').notNull(),
+  customerId: text('customer_id').notNull(),
+  vendorId: text('vendor_id').notNull(),
   orderStatus: text('order_status').default(ORDER_STATUS.PENDING),
   totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
   currency: varchar('currency', { length: 3 }).notNull().default('USD'),
@@ -32,6 +32,7 @@ export const orders = pgTable('orders', {
   billingPostalCode: varchar('billing_postal_code', { length: 20 }).notNull(),
 
   paymentStatus: text('payment_status').default(PAYMENT_STATUS.PENDING),
+  paymentMethod: text('payment_method').default(PAYMENT_METHOD.STRIPE),
   notes: text('notes'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),

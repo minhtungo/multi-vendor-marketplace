@@ -1,5 +1,5 @@
 import { env } from '@/configs/env';
-import { userServiceClient } from '@/lib/user-service.client';
+import { userServiceClient } from '@/services/clients/user.service.client';
 import type { AccessTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import passport from 'passport';

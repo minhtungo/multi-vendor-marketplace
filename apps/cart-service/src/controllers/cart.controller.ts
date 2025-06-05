@@ -46,7 +46,7 @@ class CartController {
     const userId = req.user?.id;
     const sessionId = req.sessionId;
 
-    const serviceResponse = await cartService.clearCart(userId, sessionId);
+    const serviceResponse = await cartService.completeCart(userId, sessionId);
     handleServiceResponse(serviceResponse, res);
   };
 }

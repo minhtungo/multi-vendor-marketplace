@@ -107,35 +107,30 @@ export interface CreateOrderInput {
   status?: OrderStatus;
   totalAmount: string;
   currency?: string;
-  discountCodeId?: number;
+  discountCodeId?: string;
   discountAmount?: string;
 
   // Shipping Address
   shippingFirstName: string;
   shippingLastName: string;
   shippingAddressLine1: string;
-  shippingAddressLine2?: string;
   shippingCity: string;
   shippingState: string;
   shippingPostalCode: string;
-  shippingCountry: string;
   shippingPhone?: string;
 
   // Billing Address
   billingFirstName: string;
   billingLastName: string;
   billingAddressLine1: string;
-  billingAddressLine2?: string;
   billingCity: string;
   billingState: string;
   billingPostalCode: string;
-  billingCountry: string;
   billingPhone?: string;
 
   paymentMethod: PaymentMethod;
   paymentStatus?: PaymentStatus;
   notes?: string;
-  metadata?: Record<string, any>;
   vendorId: string;
 }
 

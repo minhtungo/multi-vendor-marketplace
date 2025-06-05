@@ -1,7 +1,7 @@
 import { db } from '@/db';
 import { orders } from '@/db/schemas';
-import { count, eq } from 'drizzle-orm';
 import type { InsertOrder } from '@/models/order.model';
+import { count, eq } from 'drizzle-orm';
 
 export class OrderRepository {
   constructor(private readonly dbInstance = db) {}

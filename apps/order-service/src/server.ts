@@ -24,7 +24,7 @@ app.use(optionalUserContext as RequestHandler);
 // Routes
 app.use('/api/orders/health-check', healthCheckRouter);
 app.use('/api/orders', orderRouter);
-app.use('/api/orders/discount-codes', discountCodeRouter);
+// app.use('/api/orders/discount-codes', discountCodeRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
