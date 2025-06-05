@@ -4,7 +4,7 @@ import { CheckoutForm } from '@/modules/checkout/templates/checkout-form';
 import { CheckoutSummary } from '@/modules/checkout/templates/checkout-summary';
 import { retrieveCart } from '@/server/cart/retrieve-cart';
 import { cn } from '@repo/ui/lib/utils';
-import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 type CheckoutTemplateProps = {
   step: CheckoutStepSlug;
@@ -14,7 +14,7 @@ type CheckoutTemplateProps = {
 export async function CheckoutTemplate({ step, className }: CheckoutTemplateProps) {
   const cart = await retrieveCart();
 
-  if (!cart) return notFound();
+  if (!cart || cart.items.length === 0) redirect('/cart');
 
   const currentStep = checkoutSteps.find((s) => s.slug === step) || defaultCheckoutStep;
 
