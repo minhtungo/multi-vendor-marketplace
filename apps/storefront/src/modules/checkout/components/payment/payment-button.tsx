@@ -5,7 +5,8 @@ import { Cart } from '@repo/types/cart';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { useElements, useStripe } from '@stripe/react-stripe-js';
-import { useState } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 type PaymentButtonProps = {
   cart: Cart;
@@ -13,24 +14,10 @@ type PaymentButtonProps = {
 };
 
 export function PaymentButton({ cart, clientSecret }: PaymentButtonProps) {
-  const isReady = cart && cart.shippingAddress && cart.billingAddress && cart.shippingMethod && !!cart.email;
-
-  return (
-    <div className='flex flex-col gap-4'>
-      <StripePaymentButton cart={cart} isReady={isReady} clientSecret={clientSecret} />
-    </div>
-  );
-}
-
-type StripePaymentButtonProps = {
-  cart: Cart;
-  isReady: boolean;
-  clientSecret: string;
-};
-
-function StripePaymentButton({ cart, isReady, clientSecret }: StripePaymentButtonProps) {
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const step = searchParams.get('step');
 
   const onPaymentCompleted = async () => {
     await placeOrder()
@@ -46,13 +33,22 @@ function StripePaymentButton({ cart, isReady, clientSecret }: StripePaymentButto
   const elements = useElements();
   const cardElement = elements?.getElement('card');
 
-  const disabled = !stripe || !elements || !isReady;
+  useEffect(() => {
+    console.log('cardElement', cardElement);
+    if (!cardElement) return;
+    console.log('cardElement', cardElement);
+
+    cardElement.on('change', (event) => {
+      setErrorMessage(event.error?.message || null);
+    });
+  }, [cardElement, step]);
+
+  const disabled = !stripe || !elements;
 
   const handlePayment = async () => {
     setSubmitting(true);
 
-    if (!stripe || !elements || !cardElement) {
-      setErrorMessage('Missing payment details');
+    if (!stripe || !elements || !cardElement || !cart) {
       setSubmitting(false);
       return;
     }
@@ -98,7 +94,13 @@ function StripePaymentButton({ cart, isReady, clientSecret }: StripePaymentButto
 
   return (
     <>
-      <LoaderButton isPending={submitting} disabled={disabled} onClick={handlePayment} variant='default'>
+      <LoaderButton
+        isPending={submitting}
+        disabled={disabled}
+        onClick={handlePayment}
+        variant='default'
+        className='w-full'
+      >
         {submitting ? 'Processing...' : 'Place Order'}
       </LoaderButton>
       {errorMessage && <FormResponse title='Error' description={errorMessage} variant='destructive' />}
