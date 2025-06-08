@@ -3,14 +3,15 @@ import {
   createProductRequestSchema,
   getProductQuerySchema,
   getProductsQuerySchema,
-  productResponseSchema,
+  productListResponseSchema,
+  productSchema,
   updateProductRequestSchema,
 } from '@/models/product.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { validateRequest } from '@repo/shared-server/middlewares';
 import { Router } from 'express';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const productRegistry = new OpenAPIRegistry();
 export const productRouter: Router = Router();
@@ -23,7 +24,7 @@ productRegistry.registerPath({
   request: {
     query: getProductQuerySchema,
   },
-  responses: createApiResponse(productResponseSchema, 'Product retrieved successfully'),
+  responses: createApiResponse(productSchema, 'Product retrieved successfully'),
 });
 
 productRouter.get(`/list`, validateRequest(z.object({ query: getProductQuerySchema })), productController.getProduct);
@@ -37,7 +38,7 @@ productRegistry.registerPath({
   request: {
     query: getProductsQuerySchema,
   },
-  responses: createApiResponse(z.array(productResponseSchema), 'Products retrieved successfully'),
+  responses: createApiResponse(productListResponseSchema, 'Products retrieved successfully'),
 });
 
 productRouter.get(
@@ -64,7 +65,7 @@ productRegistry.registerPath({
       },
     },
   },
-  responses: createApiResponse(z.null(), 'Product created successfully'),
+  responses: createApiResponse(productSchema, 'Product created successfully'),
 });
 
 productRouter.post(
@@ -80,7 +81,7 @@ productRegistry.registerPath({
   tags: ['Products'],
   request: {
     params: z.object({
-      id: z.string().uuid(),
+      id: z.uuid(),
     }),
     body: {
       content: {
@@ -121,7 +122,7 @@ productRegistry.registerPath({
   tags: ['Products'],
   request: {
     params: z.object({
-      id: z.string().uuid(),
+      id: z.uuid(),
     }),
   },
   responses: createApiResponse(z.null(), 'Product deleted successfully'),

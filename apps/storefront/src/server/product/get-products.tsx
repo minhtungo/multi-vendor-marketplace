@@ -14,7 +14,6 @@ type GetProductsProps = {
 
 export async function getProducts({ queryParams }: GetProductsProps) {
   const sort = sortOptionSlugs.find((option) => option === queryParams.sort) || 'latest_desc';
-  console.log(queryParams);
   const response = await api.get<{
     products: Product[];
     count: number;

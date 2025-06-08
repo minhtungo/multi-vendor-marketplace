@@ -1,9 +1,10 @@
-import { InsertUser } from '@/db/schemas';
 import { UserRepository } from '@/repositories/user.repository';
 import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
-import { ServiceResponse } from '@repo/shared-server/lib';
+import { normalizeUser, ServiceResponse } from '@repo/shared-server/lib';
 import type { Request } from 'express';
 import { verifyPassword } from '@/utils/password';
+import { InsertUser } from '@/models/user.model';
+import { User } from '@repo/types/user';
 
 export class UserService {
   private userRepository: UserRepository;
@@ -13,7 +14,12 @@ export class UserService {
   }
 
   public async createUser(data: InsertUser) {
-    const user = await this.userRepository.createUser(data);
+    const user = await this.userRepository.createUser({
+      email: data.email,
+      password: data.password!,
+      name: data.name,
+      role: data.role!,
+    });
     return ServiceResponse.success('User created successfully', user, HTTP_STATUS_CODES.CREATED);
   }
 
@@ -27,8 +33,7 @@ export class UserService {
     if (!user) {
       return ServiceResponse.failure('User not found', null, HTTP_STATUS_CODES.NOT_FOUND);
     }
-    const { password, ...userWithoutPassword } = user;
-    return ServiceResponse.success('User fetched successfully', userWithoutPassword, HTTP_STATUS_CODES.OK);
+    return ServiceResponse.success('User fetched successfully', normalizeUser(user as User), HTTP_STATUS_CODES.OK);
   }
 
   public async getUserById(id: string) {

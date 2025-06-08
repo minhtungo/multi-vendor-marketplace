@@ -2,7 +2,7 @@ import { cartRepository } from '@/repositories/cart.repository';
 import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
-import type { Cart, CartUpdate, CartWithItems } from '@/models/cart.model';
+import type { Cart, UpdateCart, CartWithItems } from '@/models/cart.model';
 import { createTransaction } from '@/utils/transaction';
 import { orderServiceClient } from '@/services/clients/order.service.client';
 import { type Order } from '@repo/types/order';
@@ -17,7 +17,7 @@ class CartService {
   }: {
     userId?: string;
     sessionId?: string;
-    cartData: CartUpdate;
+    cartData: UpdateCart;
   }): Promise<ServiceResponse<null>> {
     return executeWithErrorHandling(
       'updateCart',

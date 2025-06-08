@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core';
 import { vendors } from '@/db/schemas/vendors';
-import { shopStatusSchema } from '@/db/schemas/constants';
+import { shopStatusSchema } from '@/db/constants';
 
 export const shops = pgTable('shops', {
   id: text()

@@ -1,7 +1,4 @@
-import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { z } from 'zod';
-
-extendZodWithOpenApi(z);
+import { z } from 'zod/v4';
 
 export const createPaymentIntentSchema = z.object({
   amount: z.string(),

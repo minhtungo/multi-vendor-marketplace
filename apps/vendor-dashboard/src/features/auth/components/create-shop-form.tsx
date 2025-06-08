@@ -7,7 +7,7 @@ import { Input } from '@repo/ui/components/input';
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { useRouter } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
-import type { z } from 'zod';
+import type { z } from 'zod/v4';
 
 export function CreateShopForm({}: React.ComponentPropsWithoutRef<'div'>) {
   const form = useForm<z.infer<typeof createShopSchema>>({

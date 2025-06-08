@@ -2,10 +2,9 @@ import { uploadController } from '@/controllers/upload.controller';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { validateRequest } from '@repo/shared-server/middlewares';
-import { ConfirmUploadSchema, PresignedUrlSchema } from '@/models/upload.model';
-import { uploadSchema } from '@/db/schemas';
+import { confirmUploadSchema, presignedUrlSchema, uploadSchema } from '@/models/upload.model';
 
 export const uploadRegistry = new OpenAPIRegistry();
 export const uploadRouter: Router = Router();
@@ -29,7 +28,7 @@ uploadRegistry.registerPath({
 
 uploadRouter.post(
   '/presigned-url',
-  validateRequest(z.object({ body: PresignedUrlSchema })),
+  validateRequest(z.object({ body: presignedUrlSchema })),
   uploadController.getPresignedUrl
 );
 
@@ -41,7 +40,7 @@ uploadRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: ConfirmUploadSchema,
+          schema: confirmUploadSchema,
         },
       },
     },

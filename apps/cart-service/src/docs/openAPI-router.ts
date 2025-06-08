@@ -6,7 +6,7 @@ import { cartItemRegistry } from '@/routes/cart-item.route';
 
 export const openAPIRouter: Router = express.Router();
 
-const openAPIDocument = generateOpenAPIDocument([cartRegistry, cartItemRegistry], {
+const openAPIDocument = generateOpenAPIDocument([], {
   title: 'Cart Service API',
   version: '1.0.0',
 });

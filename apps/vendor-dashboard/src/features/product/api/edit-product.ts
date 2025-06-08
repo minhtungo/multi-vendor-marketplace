@@ -4,7 +4,7 @@ import { getProductQueryOptions } from '@/features/product/api/get-product';
 import { getProductsQueryOptions } from '@/features/product/api/get-products';
 import type { Product } from '@repo/types/product';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const editProductSchema = z.object({
   name: z.string().min(1, 'Product name is required').max(255, 'Product name too long'),

@@ -3,7 +3,7 @@ import { server } from '@/configs/server';
 import type { ApiResponse } from '@repo/types/api';
 import type { ProductCategory } from '@repo/types/product-category';
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const getProductCategorySchema = z.object({
   id: z.string().uuid(),

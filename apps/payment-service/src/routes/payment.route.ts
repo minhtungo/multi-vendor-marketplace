@@ -2,8 +2,9 @@ import { paymentController } from '@/controllers/payment.controller';
 import { createPaymentIntentSchema } from '@/models/payment.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
+import { validateRequest } from '@repo/shared-server/middlewares';
 import { Router } from 'express';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const paymentRegistry = new OpenAPIRegistry();
 export const paymentRouter: Router = Router();
@@ -55,4 +56,8 @@ paymentRegistry.registerPath({
   ),
 });
 
-paymentRouter.post('/create-payment-intent', paymentController.createPaymentIntent);
+paymentRouter.post(
+  '/create-payment-intent',
+  validateRequest(z.object({ body: createPaymentIntentSchema })),
+  paymentController.createPaymentIntent
+);

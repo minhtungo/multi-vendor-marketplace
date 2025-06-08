@@ -1,43 +1,33 @@
-import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { z } from 'zod';
+import { products } from '@/db/schemas';
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
+import { z } from 'zod/v4';
 
-extendZodWithOpenApi(z);
+export const productSchema = createSelectSchema(products);
 
-export const productResponseSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  handle: z.string(),
-  description: z.string().optional(),
-  sku: z.string(),
-  price: z.number(),
-  compareAtPrice: z.number().optional(),
-  categories: z.array(z.string()),
-  vendorId: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  stock: z.number(),
-  status: z.enum(['draft', 'published', 'archived']),
-  type: z.enum(['physical', 'digital']),
-  images: z.array(z.string()),
-  tags: z.array(z.string()),
-});
+export const createProductRequestSchema = createInsertSchema(products)
+  .omit({
+    id: true,
+    vendorId: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    categories: z.array(z.string()).optional(),
+  });
 
-export const createProductRequestSchema = productResponseSchema.omit({
-  id: true,
-  vendorId: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const updateProductRequestSchema = productResponseSchema.partial().omit({
-  id: true,
-  vendorId: true,
-  createdAt: true,
-  updatedAt: true,
-});
+export const updateProductRequestSchema = createUpdateSchema(products)
+  .omit({
+    id: true,
+    vendorId: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    categories: z.array(z.string()).optional(),
+  });
 
 export const productListResponseSchema = z.object({
-  products: z.array(productResponseSchema),
+  products: z.array(productSchema),
   count: z.number(),
 });
 
@@ -49,7 +39,7 @@ export const getProductsQuerySchema = z.object({
 
 export const getProductQuerySchema = z
   .object({
-    id: z.string().uuid('Invalid product ID').optional(),
+    id: z.uuid('Invalid product ID').optional(),
     handle: z.string().optional(),
   })
   .refine((data) => data.id || data.handle, {
@@ -57,7 +47,7 @@ export const getProductQuerySchema = z
   });
 
 // Type exports
-export type ProductResponse = z.infer<typeof productResponseSchema>;
+export type Product = z.infer<typeof productSchema>;
 export type ProductListResponse = z.infer<typeof productListResponseSchema>;
 export type GetProductQuery = z.infer<typeof getProductQuerySchema>;
 export type CreateProductRequest = z.infer<typeof createProductRequestSchema>;

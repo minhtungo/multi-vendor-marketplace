@@ -1,14 +1,14 @@
 import { db } from '@/db';
 import { cart, cartItems } from '@/db/schemas';
 import { CartItem } from '@/models/cart-item.model';
-import { CartInsert, CartUpdate } from '@/models/cart.model';
+import { InsertCart, UpdateCart } from '@/models/cart.model';
 import { normalizeCartData } from '@/repositories/utils';
 import { eq } from 'drizzle-orm';
 
 export class CartRepository {
   constructor(private readonly dbInstance = db) {}
 
-  async createCart(cartData: CartInsert) {
+  async createCart(cartData: InsertCart) {
     const result = await this.dbInstance.insert(cart).values(cartData).returning();
     return {
       ...result[0],
@@ -16,7 +16,7 @@ export class CartRepository {
     };
   }
 
-  async updateCart(cartId: string, cartData: CartUpdate, trx: typeof db = this.dbInstance) {
+  async updateCart(cartId: string, cartData: UpdateCart, trx: typeof db = this.dbInstance) {
     const shippingAddress = cartData.shippingAddress;
     const billingAddress = cartData.billingAddress;
     const shippingMethod = cartData.shippingMethod;

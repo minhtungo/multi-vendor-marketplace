@@ -1,10 +1,10 @@
 import { cartItemController } from '@/controllers/cart-item.controller';
-import { cartItemInsertSchema, cartItemUpdateSchema } from '@/models/cart-item.model';
+import { cartItemSchema, insertCartItemSchema, updateCartItemSchema } from '@/models/cart-item.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { validateRequest } from '@repo/shared-server/middlewares';
 import express, { Router } from 'express';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const cartItemRegistry = new OpenAPIRegistry();
 export const cartItemRouter: Router = express.Router();
@@ -18,15 +18,15 @@ cartItemRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: cartItemInsertSchema,
+          schema: insertCartItemSchema,
         },
       },
     },
   },
-  responses: createApiResponse(z.object({}), 'Cart created successfully'),
+  responses: createApiResponse(z.array(cartItemSchema), 'Cart created successfully'),
 });
 
-cartItemRouter.post('/', cartItemController.addItemToCart);
+cartItemRouter.post('/', validateRequest(z.object({ body: insertCartItemSchema })), cartItemController.addItemToCart);
 
 // Update cart item quantity
 cartItemRegistry.registerPath({
@@ -40,12 +40,12 @@ cartItemRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: z.object({}),
+          schema: updateCartItemSchema,
         },
       },
     },
   },
-  responses: createApiResponse(z.object({}), 'Cart item quantity updated successfully'),
+  responses: createApiResponse(cartItemSchema, 'Cart item quantity updated successfully'),
 });
 
 cartItemRouter.patch(
@@ -53,7 +53,7 @@ cartItemRouter.patch(
   validateRequest(
     z.object({
       params: z.object({ cartItemId: z.string() }),
-      body: cartItemUpdateSchema,
+      body: updateCartItemSchema,
     })
   ),
   cartItemController.updateCartItem

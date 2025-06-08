@@ -1,18 +1,19 @@
 import { db } from '@/db';
-import { type InsertUser, type User, users } from '@/db/schemas/users';
+import { users } from '@/db/schemas/users';
+import { SelectUser } from '@/models/user.model';
 import { hashPassword } from '@/utils/password';
 import { eq } from 'drizzle-orm';
 
 export class UserRepository {
   constructor(private readonly dbInstance = db) {}
 
-  async getUserByEmail(email: string): Promise<User | undefined> {
+  async getUserByEmail(email: string): Promise<SelectUser | undefined> {
     return this.dbInstance.query.users.findFirst({
       where: eq(users.email, email),
     });
   }
 
-  async getUserById(id: string): Promise<User | undefined> {
+  async getUserById(id: string): Promise<SelectUser | undefined> {
     return this.dbInstance.query.users.findFirst({
       where: eq(users.id, id),
     });

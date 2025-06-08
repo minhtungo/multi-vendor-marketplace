@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { HTTP_STATUS_CODES } from '../core/http-status-codes';
 
 export class ServiceResponse<T = null> {
@@ -27,6 +27,6 @@ export const ServiceResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
   z.object({
     success: z.boolean(),
     message: z.string(),
-    data: dataSchema.optional(),
+    data: z.optional(dataSchema),
     statusCode: z.number(),
   });

@@ -1,3 +1,4 @@
+import { normalizeUser } from '@repo/shared-server/lib';
 import { env } from '@/configs/env';
 import { tokenConfig } from '@/configs/token';
 import { checkOtpRestrictions, sendOtp, setRefreshTokenCookie, trackOtpRequests } from '@/lib/auth';
@@ -16,6 +17,7 @@ import { executeWithErrorHandling, ServiceResponse } from '@repo/shared-server/l
 import type { NextFunction, Request, Response } from 'express';
 
 import { verify } from 'jsonwebtoken';
+import { User } from '@repo/types/user';
 
 export class AuthService {
   async signUp(data: SignUpInput, next: NextFunction): Promise<ServiceResponse> {
@@ -161,7 +163,7 @@ export class AuthService {
   ): Promise<
     ServiceResponse<{
       accessToken: string;
-      userId: string;
+      user: User;
     } | null>
   > {
     const refreshToken = req.cookies[env.REFRESH_TOKEN_COOKIE_NAME];
@@ -196,7 +198,11 @@ export class AuthService {
 
       setRefreshTokenCookie(res, newRefreshToken);
 
-      return ServiceResponse.success('Token refreshed', { accessToken, userId: user.id }, HTTP_STATUS_CODES.OK);
+      return ServiceResponse.success(
+        'Token refreshed',
+        { accessToken, user: normalizeUser(user as unknown as User) },
+        HTTP_STATUS_CODES.OK
+      );
     } catch (ex) {
       // Clear the refresh token cookie on any error
       res.clearCookie(tokenConfig.refreshToken.cookieName);

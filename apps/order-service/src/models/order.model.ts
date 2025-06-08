@@ -1,8 +1,8 @@
 import { orders } from '@/db/schemas';
-import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { z } from 'zod';
+import { createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod/v4';
 
-extendZodWithOpenApi(z);
+export const orderSchema = createSelectSchema(orders);
 
 export const orderInsertSchema = z.object({
   orderNumber: z.string().min(1),
@@ -29,4 +29,4 @@ export const orderInsertSchema = z.object({
 });
 
 export type InsertOrder = z.infer<typeof orderInsertSchema>;
-export type Order = typeof orders.$inferSelect;
+export type Order = z.infer<typeof orderSchema>;

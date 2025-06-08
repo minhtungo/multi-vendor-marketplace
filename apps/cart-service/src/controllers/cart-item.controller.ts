@@ -1,4 +1,4 @@
-import { cartItemInsertSchema, cartItemUpdateSchema } from '@/models/cart-item.model';
+import { insertCartItemSchema, updateCartItemSchema } from '@/models/cart-item.model';
 import { cartItemService } from '@/services/cart-item.service';
 import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, Response } from 'express';
@@ -7,7 +7,7 @@ class CartItemController {
   public addItemToCart = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const sessionId = req.sessionId;
-    const data = cartItemInsertSchema.parse(req.body);
+    const data = insertCartItemSchema.parse(req.body);
 
     const serviceResponse = await cartItemService.addItemToCart(userId, sessionId, data);
     handleServiceResponse(serviceResponse, res);
@@ -17,7 +17,7 @@ class CartItemController {
     const userId = req.user?.id;
     const sessionId = req.sessionId;
     const cartItemId = req.params.cartItemId;
-    const data = cartItemUpdateSchema.parse(req.body);
+    const data = updateCartItemSchema.parse(req.body);
 
     const serviceResponse = await cartItemService.updateCartItem(userId, sessionId, cartItemId, data);
     handleServiceResponse(serviceResponse, res);

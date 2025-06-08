@@ -1,18 +1,19 @@
+import { confirmUploadSchema, presignedUrlSchema } from '@/models/upload.model';
 import { uploadService } from '@/services/upload.service';
 import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, Response } from 'express';
 
 class UploadController {
   public getPresignedUrl = async (req: Request, res: Response) => {
-    const { fileName } = req.body;
-    const serviceResponse = await uploadService.getPresignedUrl(fileName);
+    const data = presignedUrlSchema.parse(req.body);
+    const serviceResponse = await uploadService.getPresignedUrl(data.fileName);
     handleServiceResponse(serviceResponse, res);
   };
 
   public confirmUpload = async (req: Request, res: Response) => {
-    const { key, fileName, mimeType, size } = req.body;
+    const data = confirmUploadSchema.parse(req.body);
     const userId = req.user?.id!;
-    const serviceResponse = await uploadService.confirmUpload({ key, fileName, mimeType, size }, userId);
+    const serviceResponse = await uploadService.confirmUpload(data, userId);
     handleServiceResponse(serviceResponse, res);
   };
 

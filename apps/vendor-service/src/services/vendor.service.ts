@@ -3,6 +3,7 @@ import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/l
 import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 import { logger } from '@/utils/logger';
 import { verifyPassword } from '@/utils/password';
+import { Vendor } from '@/models/vendor.model';
 
 export class VendorService {
   private vendorRepository: VendorRepository;
@@ -11,7 +12,7 @@ export class VendorService {
     this.vendorRepository = repository;
   }
 
-  public async getVendorById(id: string): Promise<ServiceResponse<any>> {
+  public async getVendorById(id: string): Promise<ServiceResponse<Vendor>> {
     return executeWithErrorHandling(
       'getVendorById',
       async () => {

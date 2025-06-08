@@ -1,26 +1,25 @@
 import { cart } from '@/db/schemas';
-import { CART_STATUS } from '@/db/schemas/constants';
+import { CART_STATUS } from '@/db/constants';
 import { CartItem } from '@/models/cart-item.model';
-import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { commonValidations } from '@repo/shared-server/lib';
 import { createSelectSchema } from 'drizzle-zod';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
-extendZodWithOpenApi(z);
+export const cartSchema = createSelectSchema(cart);
 
 export const cartInsertSchema = z.object({
   userId: z.string().optional(),
   sessionId: z.string().optional(),
-  status: z.nativeEnum(CART_STATUS).optional(),
+  status: z.enum(CART_STATUS).optional(),
   subtotal: commonValidations.price.optional(),
   total: commonValidations.price.optional(),
   itemCount: commonValidations.quantity.optional(),
-  email: z.string().email().optional(),
+  email: z.email().optional(),
 });
 
 // TODO: improve validation
 export const cartUpdateSchema = cartInsertSchema.partial().extend({
-  email: z.string().email().optional(),
+  email: commonValidations.email.optional(),
   shippingAddress: z
     .object({
       firstName: z.string(),
@@ -50,7 +49,7 @@ export const cartUpdateSchema = cartInsertSchema.partial().extend({
     .optional(),
 });
 
-export type CartInsert = z.infer<typeof cartInsertSchema>;
-export type CartUpdate = z.infer<typeof cartUpdateSchema>;
+export type InsertCart = z.infer<typeof cartInsertSchema>;
+export type UpdateCart = z.infer<typeof cartUpdateSchema>;
 export type Cart = typeof cart.$inferSelect;
 export type CartWithItems = Cart & { items: CartItem[] };

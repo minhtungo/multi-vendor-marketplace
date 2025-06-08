@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import dotenv from 'dotenv';
 
 dotenv.config();

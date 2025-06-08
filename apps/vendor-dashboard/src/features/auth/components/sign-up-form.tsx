@@ -8,7 +8,7 @@ import { PasswordInput } from '@repo/ui/components/password-input';
 import { cn } from '@repo/ui/lib/utils';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 import { OTPForm } from './otp-form';
 

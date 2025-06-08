@@ -21,7 +21,7 @@
   "dependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/types": "workspace:*",
-    "@asteasolutions/zod-to-openapi": "7.3.2",
+    "@asteasolutions/zod-to-openapi": "8.0.0-beta.3",
     "@repo/redis": "workspace:*",
     "@repo/shared-server": "workspace:*",
     "@repo/typescript-config": "workspace:*",

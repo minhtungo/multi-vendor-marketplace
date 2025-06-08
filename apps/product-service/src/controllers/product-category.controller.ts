@@ -1,4 +1,4 @@
-import { createCategorySchema } from '@/models/product-categories.model';
+import { insertCategorySchema, updateCategorySchema } from '@/models/product-categories.model';
 import { productCategoryService } from '@/services/product-category.service';
 import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { NextFunction, Request, Response } from 'express';
@@ -16,14 +16,14 @@ class ProductCategoryController {
   };
 
   public createProductCategory = async (req: Request, res: Response, next: NextFunction) => {
-    const data = createCategorySchema.parse(req.body);
+    const data = insertCategorySchema.parse(req.body);
     const serviceResponse = await productCategoryService.createProductCategory(data);
     handleServiceResponse(serviceResponse, res);
   };
 
   public updateProductCategory = async (req: Request, res: Response, next: NextFunction) => {
     const categoryId = req.params.id;
-    const data = createCategorySchema.partial().parse(req.body);
+    const data = updateCategorySchema.parse(req.body);
     const serviceResponse = await productCategoryService.updateProductCategory(categoryId, data);
     handleServiceResponse(serviceResponse, res);
   };

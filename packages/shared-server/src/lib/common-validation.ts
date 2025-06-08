@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { passwordRegex } from './regex';
 
 export const commonValidations = {
@@ -7,16 +7,12 @@ export const commonValidations = {
     .refine((data) => !Number.isNaN(Number(data)), 'ID must be a numeric value')
     .transform(Number)
     .refine((num) => num > 0, 'ID must be a positive number'),
-  email: z
-    .string({
-      required_error: 'Email is required',
-    })
-    .email({
-      message: 'Invalid email',
-    }),
+  email: z.email({
+    error: (issue) => (issue.input === undefined ? 'Email is required' : 'Not a valid email'),
+  }),
   password: z
     .string({
-      required_error: 'Password is required',
+      error: (issue) => (issue.input === undefined ? 'Password is required' : 'Not a valid password string'),
     })
     .min(8, 'Password must be at least 8 characters long')
     .max(64, 'Password must be at most 64 characters')

@@ -1,12 +1,11 @@
 import express, { type Request, type Response, type Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 
-import { healthCheckRegistry } from '@repo/shared-server/routes';
-import { authUserRegistry } from '@/routes/auth.user.route';
 import { generateOpenAPIDocument } from '@repo/shared-server/docs';
+import { healthCheckRegistry } from '@repo/shared-server/routes';
 
 export const openAPIRouter: Router = express.Router();
-const openAPIDocument = generateOpenAPIDocument([healthCheckRegistry, authUserRegistry], {
+const openAPIDocument = generateOpenAPIDocument([healthCheckRegistry], {
   title: 'Auth Service API',
   version: '1.0.0',
 });

@@ -1,5 +1,6 @@
 import { db } from '@/db';
 import { categories, type InsertCategory } from '@/db/schemas/categories';
+import { UpdateCategory } from '@/models/product-categories.model';
 import { eq } from 'drizzle-orm';
 
 export class ProductCategoryRepository {
@@ -26,7 +27,7 @@ export class ProductCategoryRepository {
     });
   }
 
-  public async updateCategory(categoryId: string, category: Partial<InsertCategory>, trx: typeof db = this.dbInstance) {
+  public async updateCategory(categoryId: string, category: UpdateCategory, trx: typeof db = this.dbInstance) {
     const [updatedCategory] = await trx
       .update(categories)
       .set({ ...category, updatedAt: new Date() })

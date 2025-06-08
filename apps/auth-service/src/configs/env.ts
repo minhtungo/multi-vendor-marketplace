@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 dotenv.config();
 
@@ -9,7 +9,7 @@ const envSchema = z.object({
   HOST: z.string().min(1).default('localhost'),
   PORT: z.coerce.number().int().positive().default(3001),
   APP_ORIGIN: z.string(),
-  VENDOR_ORIGIN: z.string().url().default('http://localhost:5174'),
+  VENDOR_ORIGIN: z.url().default('http://localhost:5174'),
   COMMON_RATE_LIMIT_MAX_REQUESTS: z.coerce.number().int().positive().default(1000),
   COMMON_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(1000),
   // Cookies
@@ -25,14 +25,14 @@ const envSchema = z.object({
   POSTGRES_DB: z.string().min(1),
   DATABASE_URL: z.string().min(1),
   // Service URLs
-  USER_SERVICE_URL: z.string().url(),
-  VENDOR_SERVICE_URL: z.string().url(),
+  USER_SERVICE_URL: z.url(),
+  VENDOR_SERVICE_URL: z.url(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
-  console.error('❌ Invalid environment variables:', parsedEnv.error.format());
+  console.error('❌ Invalid environment variables:', z.treeifyError(parsedEnv.error));
   throw new Error('Invalid environment variables');
 }
 

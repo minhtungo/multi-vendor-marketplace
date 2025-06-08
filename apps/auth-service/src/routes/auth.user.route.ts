@@ -2,18 +2,19 @@ import { paths } from '@/configs/paths';
 import { authUserController } from '@/controllers/auth.user.controller';
 import { assertUserAuthentication } from '@/middlewares/assertAuthentication';
 import {
-  ForgotPasswordSchema,
-  ResetPasswordSchema,
-  SignInSchema,
-  SignUpSchema,
-  VerifyUserSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  signInSchema,
+  signUpSchema,
+  userSchema,
+  verifyUserSchema,
 } from '@/models/auth.user.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { validateRequest } from '@repo/shared-server/middlewares';
 import express, { type Router } from 'express';
 
-import z from 'zod';
+import z from 'zod/v4';
 
 export const authUserRegistry = new OpenAPIRegistry();
 export const authUserRouter: Router = express.Router();
@@ -26,7 +27,7 @@ authUserRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: SignUpSchema,
+          schema: signUpSchema,
         },
       },
     },
@@ -34,7 +35,7 @@ authUserRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Success'),
 });
 
-authUserRouter.post(paths.signUp, validateRequest(z.object({ body: SignUpSchema })), authUserController.signUp);
+authUserRouter.post(paths.signUp, validateRequest(z.object({ body: signUpSchema })), authUserController.signUp);
 
 authUserRegistry.registerPath({
   method: 'post',
@@ -44,15 +45,15 @@ authUserRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: SignInSchema,
+          schema: signInSchema,
         },
       },
     },
   },
-  responses: createApiResponse(z.null(), 'Success'),
+  responses: createApiResponse(userSchema, 'Success'),
 });
 
-authUserRouter.post(paths.signIn, validateRequest(z.object({ body: SignInSchema })), authUserController.signIn);
+authUserRouter.post(paths.signIn, validateRequest(z.object({ body: signInSchema })), authUserController.signIn);
 
 authUserRegistry.registerPath({
   method: 'post',
@@ -62,7 +63,7 @@ authUserRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: ForgotPasswordSchema,
+          schema: forgotPasswordSchema,
         },
       },
     },
@@ -72,7 +73,7 @@ authUserRegistry.registerPath({
 
 authUserRouter.post(
   paths.forgotPassword,
-  validateRequest(z.object({ body: ForgotPasswordSchema })),
+  validateRequest(z.object({ body: forgotPasswordSchema })),
   authUserController.forgotPassword
 );
 
@@ -84,7 +85,7 @@ authUserRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: VerifyUserSchema,
+          schema: verifyUserSchema,
         },
       },
     },
@@ -94,7 +95,7 @@ authUserRegistry.registerPath({
 
 authUserRouter.put(
   paths.verifyUser,
-  validateRequest(z.object({ body: VerifyUserSchema })),
+  validateRequest(z.object({ body: verifyUserSchema })),
   authUserController.verifyUser
 );
 
@@ -106,7 +107,7 @@ authUserRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: ResetPasswordSchema,
+          schema: resetPasswordSchema,
         },
       },
     },
@@ -116,7 +117,7 @@ authUserRegistry.registerPath({
 
 authUserRouter.post(
   paths.resetPassword,
-  validateRequest(z.object({ body: ResetPasswordSchema })),
+  validateRequest(z.object({ body: resetPasswordSchema })),
   authUserController.resetPassword
 );
 
@@ -124,7 +125,13 @@ authUserRegistry.registerPath({
   method: 'put',
   path: `/auth/${paths.renewToken}`,
   tags: ['Auth'],
-  responses: createApiResponse(z.null(), 'Success'),
+  responses: createApiResponse(
+    z.object({
+      accessToken: z.string(),
+      user: userSchema,
+    }),
+    'Success'
+  ),
 });
 
 authUserRouter.put(paths.renewToken, authUserController.renewToken);
@@ -142,7 +149,7 @@ authUserRegistry.registerPath({
   method: 'get',
   path: `/auth/${paths.me}`,
   tags: ['Auth'],
-  responses: createApiResponse(z.null(), 'Success'),
+  responses: createApiResponse(userSchema, 'Success'),
 });
 
 authUserRouter.get(paths.me, assertUserAuthentication, authUserController.getMe);

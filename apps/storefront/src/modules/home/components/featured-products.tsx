@@ -12,10 +12,12 @@ export async function FeaturedProducts({}: FeaturedProductsProps) {
     },
   });
 
+  if (!data) return <div>Error fetching products</div>;
+
   return (
     <ul className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
-      {data.products.length > 0 ? (
-        data.products.map((product) => (
+      {data?.products?.length > 0 ? (
+        data.products?.map((product) => (
           <li key={product.id}>
             <ProductCard product={product} />
           </li>

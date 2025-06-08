@@ -1,4 +1,4 @@
-import { CartItem, CartItemInsert, CartItemUpdate } from '@/models/cart-item.model';
+import { CartItem, InsertCartItem, UpdateCartItem } from '@/models/cart-item.model';
 import { cartItemRepository } from '@/repositories/cart-item.repository';
 import { cartRepository } from '@/repositories/cart.repository';
 import { cartService } from '@/services/cart.service';
@@ -16,7 +16,7 @@ class CartItemService {
   public async addItemToCart(
     userId: string | undefined,
     sessionId: string | undefined,
-    cartItemData: CartItemInsert
+    cartItemData: InsertCartItem
   ): Promise<ServiceResponse<CartItem | null>> {
     return executeWithErrorHandling(
       'addItemToCart',
@@ -76,7 +76,7 @@ class CartItemService {
     userId: string | undefined,
     sessionId: string | undefined,
     cartItemId: string,
-    data: CartItemUpdate
+    data: UpdateCartItem
   ): Promise<ServiceResponse<CartItem | null>> {
     return executeWithErrorHandling(
       'updateCartItem',
@@ -151,30 +151,30 @@ class CartItemService {
     userId: string | undefined,
     sessionId: string | undefined,
     cartItemId: string
-  ): Promise<ServiceResponse<boolean>> {
+  ): Promise<ServiceResponse<null>> {
     return executeWithErrorHandling(
       'removeCartItem',
       async () => {
         const cartResponse = await cartService.getOrCreateCart(userId, sessionId);
 
         if (!cartResponse.success || !cartResponse.data) {
-          return ServiceResponse.failure('Failed to get cart', false, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
+          return ServiceResponse.failure('Failed to get cart', null, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR);
         }
 
         const cart = cartResponse.data;
 
         if (userId && cart.userId !== userId) {
-          return ServiceResponse.failure('Cart item not found', false, HTTP_STATUS_CODES.NOT_FOUND);
+          return ServiceResponse.failure('Cart item not found', null, HTTP_STATUS_CODES.NOT_FOUND);
         }
 
         if (sessionId && cart.sessionId !== sessionId) {
-          return ServiceResponse.failure('Cart item not found', false, HTTP_STATUS_CODES.NOT_FOUND);
+          return ServiceResponse.failure('Cart item not found', null, HTTP_STATUS_CODES.NOT_FOUND);
         }
 
         const targetCartItem = cart.items?.find((item) => item.id === cartItemId);
 
         if (!targetCartItem || targetCartItem.cartId !== cart.id) {
-          return ServiceResponse.failure('Cart item not found', false, HTTP_STATUS_CODES.NOT_FOUND);
+          return ServiceResponse.failure('Cart item not found', null, HTTP_STATUS_CODES.NOT_FOUND);
         }
 
         await createTransaction(async (trx) => {
@@ -185,10 +185,10 @@ class CartItemService {
             parseFloat(targetCartItem.price) * targetCartItem.quantity
           ).toFixed(2);
 
-          const itemCount = cart.itemCount! - targetCartItem.quantity;
+          let itemCount = cart.itemCount! - targetCartItem.quantity;
 
           if (itemCount < 0) {
-            throw new Error('Invalid item count');
+            itemCount = 0;
           }
 
           await this.cartRepo.updateCart(
@@ -202,7 +202,7 @@ class CartItemService {
           );
         });
 
-        return ServiceResponse.success('Cart item removed successfully', true, HTTP_STATUS_CODES.OK);
+        return ServiceResponse.success('Cart item removed successfully', null, HTTP_STATUS_CODES.OK);
       },
       logger
     );

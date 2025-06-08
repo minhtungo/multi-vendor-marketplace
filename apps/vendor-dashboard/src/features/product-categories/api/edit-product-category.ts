@@ -5,7 +5,7 @@ import { getProductCategoryQueryOptions } from '@/features/product-categories/ap
 import type { ApiResponse } from '@repo/types/api';
 import type { ProductCategory } from '@repo/types/product-category';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const editProductCategorySchema = z.object({
   name: z.string().min(1, 'Product category name is required').max(255, 'Product category name too long').optional(),

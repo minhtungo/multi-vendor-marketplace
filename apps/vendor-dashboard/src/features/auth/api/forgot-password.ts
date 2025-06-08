@@ -4,7 +4,7 @@ import { commonValidations } from '@/lib/commonValidation';
 import type { ApiResponse } from '@repo/types/api';
 import type { Vendor } from '@repo/types/vendor';
 import { useMutation } from '@tanstack/react-query';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const forgotPasswordSchema = z.object({
   email: commonValidations.email,

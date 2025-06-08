@@ -7,7 +7,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@repo/ui/components/input
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { useRouter } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 interface OTPFormProps {
   userInput: z.infer<typeof signUpSchema>;

@@ -3,7 +3,7 @@ import { discountCodeSchema, insertDiscountCodeSchema } from '@/db/schemas';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Router } from 'express';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const discountCodeRegistry = new OpenAPIRegistry();
 export const discountCodeRouter: Router = Router();

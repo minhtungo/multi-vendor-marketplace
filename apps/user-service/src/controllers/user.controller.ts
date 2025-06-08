@@ -1,11 +1,12 @@
+import { insertUserSchema } from '@/models/user.model';
 import { userService } from '@/services/user.service';
 import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, RequestHandler, Response } from 'express';
 
 class UserController {
   public createUser: RequestHandler = async (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
-    const serviceResponse = await userService.createUser({ name, email, password });
+    const data = insertUserSchema.parse(req.body);
+    const serviceResponse = await userService.createUser(data);
     handleServiceResponse(serviceResponse, res);
   };
 

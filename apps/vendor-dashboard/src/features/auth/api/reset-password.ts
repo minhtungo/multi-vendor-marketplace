@@ -3,7 +3,7 @@ import { server } from '@/configs/server';
 import { commonValidations } from '@/lib/commonValidation';
 import type { ApiResponse } from '@repo/types/api';
 import { useMutation } from '@tanstack/react-query';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const resetPasswordSchema = z.object({
   password: commonValidations.password,

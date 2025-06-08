@@ -3,7 +3,7 @@ import { handleServiceResponse, ServiceResponse } from '@repo/shared-server/lib'
 
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { type Request, type Response, type Router } from 'express';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const healthCheckRegistry = new OpenAPIRegistry();
 export const healthCheckRouter: Router = express.Router();

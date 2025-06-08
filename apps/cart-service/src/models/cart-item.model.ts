@@ -1,20 +1,13 @@
 import { cartItems } from '@/db/schemas';
-import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { commonValidations } from '@repo/shared-server/lib';
-import { z } from 'zod';
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
+import { z } from 'zod/v4';
 
-extendZodWithOpenApi(z);
-
-export const cartItemInsertSchema = z.object({
-  productId: z.string(),
-  productName: z.string(),
-  productImage: z.string(),
-  price: commonValidations.price,
-  quantity: commonValidations.quantity,
+export const insertCartItemSchema = createInsertSchema(cartItems).extend({
+  cartId: z.string().optional(),
 });
+export const updateCartItemSchema = createUpdateSchema(cartItems);
+export const cartItemSchema = createSelectSchema(cartItems);
 
-export const cartItemUpdateSchema = cartItemInsertSchema.partial();
-
-export type CartItemInsert = z.infer<typeof cartItemInsertSchema>;
-export type CartItemUpdate = z.infer<typeof cartItemUpdateSchema>;
+export type InsertCartItem = z.infer<typeof insertCartItemSchema>;
+export type UpdateCartItem = z.infer<typeof updateCartItemSchema>;
 export type CartItem = typeof cartItems.$inferSelect;

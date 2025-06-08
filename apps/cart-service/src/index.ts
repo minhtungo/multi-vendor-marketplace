@@ -3,6 +3,11 @@ import { closeRedisConnection, getRedisClient } from '@repo/redis';
 import { app } from '@/server';
 import { logger } from '@/utils/logger';
 
+import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+import { z } from 'zod/v4';
+
+extendZodWithOpenApi(z);
+
 const server = app.listen(env.PORT, () => {
   const { NODE_ENV, HOST, PORT } = env;
   logger.info(`Server (${NODE_ENV}) running on port http://${HOST}:${PORT}`);

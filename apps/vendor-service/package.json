@@ -19,7 +19,7 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
-    "@asteasolutions/zod-to-openapi": "7.3.2",
+    "@asteasolutions/zod-to-openapi": "8.0.0-beta.3",
     "@repo/email": "workspace:*",
     "@repo/messaging": "workspace:*",
     "@repo/redis": "workspace:*",

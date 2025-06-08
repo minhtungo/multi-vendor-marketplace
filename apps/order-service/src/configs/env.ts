@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 dotenv.config();
 
@@ -8,7 +8,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('production'),
   HOST: z.string().min(1).default('localhost'),
   PORT: z.coerce.number().int().positive().default(3001),
-  VENDOR_ORIGIN: z.string().url().default('http://localhost:5174'),
+  VENDOR_ORIGIN: z.url().default('http://localhost:5174'),
   // Redis
   REDIS_HOST: z.string().min(1).default('localhost'),
   REDIS_PORT: z.coerce.number().int().positive().default(6379),
@@ -26,7 +26,7 @@ const envSchema = z.object({
 const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
-  console.error('❌ Invalid environment variables:', parsedEnv.error.format());
+  console.error('❌ Invalid environment variables:', z.treeifyError(parsedEnv.error));
   throw new Error('Invalid environment variables');
 }
 

@@ -14,12 +14,7 @@ class OrderService {
   ): Promise<
     ServiceResponse<{
       orders: Order[];
-      pagination: {
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-      };
+      count: number;
     } | null>
   > {
     return executeWithErrorHandling(
@@ -31,12 +26,7 @@ class OrderService {
           'Orders retrieved successfully',
           {
             orders: result.items,
-            pagination: {
-              total: result.total,
-              page: result.page,
-              limit: result.limit,
-              totalPages: result.totalPages,
-            },
+            count: result.total,
           },
           HTTP_STATUS_CODES.OK
         );

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 dotenv.config();
 
@@ -27,7 +27,7 @@ const envSchema = z.object({
 const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
-  console.error('❌ Invalid environment variables:', parsedEnv.error.format());
+  console.error('❌ Invalid environment variables:', z.treeifyError(parsedEnv.error));
   throw new Error('Invalid environment variables');
 }
 

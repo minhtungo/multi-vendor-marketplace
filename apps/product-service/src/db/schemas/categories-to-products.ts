@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
-import { products } from '../products/products';
-import { categories } from '@/db/schemas/categories/categories';
+import { products } from './products';
+import { categories } from '@/db/schemas/categories';
 
 export const categoriesToProducts = pgTable(
   'categories_to_products',

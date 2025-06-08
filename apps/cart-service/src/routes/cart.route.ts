@@ -1,10 +1,10 @@
 import { cartController } from '@/controllers/cart.controller';
-import { cartUpdateSchema } from '@/models/cart.model';
+import { cartSchema, cartUpdateSchema } from '@/models/cart.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { validateRequest } from '@repo/shared-server/middlewares';
 import express, { type Router } from 'express';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const cartRegistry = new OpenAPIRegistry();
 export const cartRouter: Router = express.Router();
@@ -17,7 +17,7 @@ cartRegistry.registerPath({
   summary: 'Get or create cart',
   description:
     "Retrieves the current user's cart or creates a new one if none exists. For authenticated users, it uses userId, for guests it uses sessionId.",
-  responses: createApiResponse(z.object({}), 'Cart retrieved successfully'),
+  responses: createApiResponse(cartSchema, 'Cart retrieved successfully'),
 });
 
 cartRouter.get('/', cartController.getCart);
@@ -31,7 +31,7 @@ cartRegistry.registerPath({
   description:
     "Merges a guest cart with the authenticated user's cart. Used when a user logs in and has items in their guest cart.",
   request: {},
-  responses: createApiResponse(z.object({}), 'Cart merged successfully'),
+  responses: createApiResponse(cartSchema, 'Cart merged successfully'),
 });
 
 cartRouter.post('/merge', cartController.mergeCart);
@@ -52,11 +52,12 @@ cartRegistry.registerPath({
       },
     },
   },
-  responses: createApiResponse(z.object({}), 'Cart updated successfully'),
+  responses: createApiResponse(cartSchema, 'Cart updated successfully'),
 });
 
 cartRouter.put('/', validateRequest(z.object({ body: cartUpdateSchema })), cartController.updateCart);
 
+//TODO: add validation for complete cart
 // Clear cart
 cartRegistry.registerPath({
   method: 'post',
@@ -79,7 +80,7 @@ cartRegistry.registerPath({
   description: 'Completely removes a cart and all its items.',
   request: {
     params: z.object({
-      id: z.string().openapi({ description: 'Cart ID' }),
+      id: z.string(),
     }),
   },
   responses: createApiResponse(z.null(), 'Cart deleted successfully'),

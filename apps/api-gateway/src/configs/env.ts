@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 dotenv.config();
 
@@ -15,19 +15,19 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(1),
 
   //URLs
-  AUTH_SERVICE_URL: z.string().default('http://localhost:8081'),
-  USER_SERVICE_URL: z.string().default('http://localhost:8086'),
-  PRODUCT_SERVICE_URL: z.string().default('http://localhost:8082'),
-  PAYMENT_SERVICE_URL: z.string().default('http://localhost:8083'),
-  UPLOAD_SERVICE_URL: z.string().default('http://localhost:8084'),
-  ORDER_SERVICE_URL: z.string().default('http://localhost:8085'),
-  CART_SERVICE_URL: z.string().default('http://localhost:8087'),
+  AUTH_SERVICE_URL: z.url().default('http://localhost:8081'),
+  USER_SERVICE_URL: z.url().default('http://localhost:8086'),
+  PRODUCT_SERVICE_URL: z.url().default('http://localhost:8082'),
+  PAYMENT_SERVICE_URL: z.url().default('http://localhost:8083'),
+  UPLOAD_SERVICE_URL: z.url().default('http://localhost:8084'),
+  ORDER_SERVICE_URL: z.url().default('http://localhost:8085'),
+  CART_SERVICE_URL: z.url().default('http://localhost:8087'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
-  console.error('❌ Invalid environment variables:', parsedEnv.error.format());
+  console.error('❌ Invalid environment variables:', z.treeifyError(parsedEnv.error));
   throw new Error('Invalid environment variables');
 }
 

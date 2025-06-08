@@ -2,7 +2,7 @@ import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
 import type { Order } from '@repo/types/order';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const getOrdersSchema = z.object({
   page: z.number().default(1),

@@ -1,4 +1,4 @@
-import { vendorStatusSchema } from '@/db/schemas/constants';
+import { vendorStatusSchema } from '@/db/constants';
 import crypto from 'crypto';
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 

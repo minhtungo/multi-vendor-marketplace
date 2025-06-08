@@ -1,5 +1,4 @@
-import { Product } from '@/db/schemas/products';
-import { CreateProductRequest, GetProductQuery, ProductResponse, UpdateProductRequest } from '@/models/product.model';
+import { CreateProductRequest, GetProductQuery, Product, UpdateProductRequest } from '@/models/product.model';
 import { productToCategoryRepository } from '@/repositories/product-to-category.repository';
 import { productRepository } from '@/repositories/product.repository';
 import { logger } from '@/utils/logger';
@@ -12,7 +11,7 @@ class ProductService {
     private readonly productToCategoryRepo = productToCategoryRepository
   ) {}
 
-  public async getProduct(data: GetProductQuery): Promise<ServiceResponse<ProductResponse | null>> {
+  public async getProduct(data: GetProductQuery): Promise<ServiceResponse<Product | null>> {
     return executeWithErrorHandling(
       'getProduct',
       async () => {
@@ -124,12 +123,12 @@ class ProductService {
     );
   }
 
-  public async deleteAllProducts(vendorId: string): Promise<ServiceResponse<Product[] | null>> {
+  public async deleteAllProducts(vendorId: string): Promise<ServiceResponse<null>> {
     return executeWithErrorHandling(
       'deleteAllProducts',
       async () => {
-        const deletedProducts = await this.productRepo.deleteAllProducts(vendorId);
-        return ServiceResponse.success('All products deleted successfully', deletedProducts, HTTP_STATUS_CODES.OK);
+        await this.productRepo.deleteAllProducts(vendorId);
+        return ServiceResponse.success('All products deleted successfully', null, HTTP_STATUS_CODES.OK);
       },
       logger
     );

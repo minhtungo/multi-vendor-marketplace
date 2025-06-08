@@ -6,7 +6,7 @@ import { VendorSignInSchema, VendorSignUpSchema, VerifyVendorSchema } from '@/mo
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { validateRequest } from '@repo/shared-server/middlewares';
 import express, { type Router } from 'express';
-import z from 'zod';
+import z from 'zod/v4';
 
 export const authVendorRegistry = new OpenAPIRegistry();
 export const authVendorRouter: Router = express.Router();

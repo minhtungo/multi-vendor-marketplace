@@ -8,7 +8,7 @@ import type { ApiResponse } from '@repo/types/api';
 import type { Vendor } from '@repo/types/vendor';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const signInSchema = z.object({
   email: commonValidations.email,

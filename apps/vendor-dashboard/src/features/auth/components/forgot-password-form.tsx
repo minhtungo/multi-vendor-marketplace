@@ -1,23 +1,13 @@
-import {
-  forgotPasswordSchema,
-  useForgotPasswordMutation,
-} from '@/features/auth/api/forgot-password'
-import { client } from '@/configs/client'
-import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@repo/ui/components/form'
-import { FormResponse } from '@repo/ui/components/form-response'
-import { Input } from '@repo/ui/components/input'
-import { LoaderButton } from '@repo/ui/components/loader-button'
-import { Link, useRouter } from '@tanstack/react-router'
-import { useForm } from 'react-hook-form'
-import type { z } from 'zod'
+import { client } from '@/configs/client';
+import { forgotPasswordSchema, useForgotPasswordMutation } from '@/features/auth/api/forgot-password';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/components/form';
+import { FormResponse } from '@repo/ui/components/form-response';
+import { Input } from '@repo/ui/components/input';
+import { LoaderButton } from '@repo/ui/components/loader-button';
+import { Link, useRouter } from '@tanstack/react-router';
+import { useForm } from 'react-hook-form';
+import type { z } from 'zod';
 
 export function ForgotPasswordForm({}: React.ComponentPropsWithoutRef<'div'>) {
   const form = useForm<z.infer<typeof forgotPasswordSchema>>({
@@ -25,32 +15,24 @@ export function ForgotPasswordForm({}: React.ComponentPropsWithoutRef<'div'>) {
     defaultValues: {
       email: '',
     },
-  })
-  const router = useRouter()
+  });
+  const router = useRouter();
 
-  const {
-    mutate: forgotPassword,
-    isPending,
-    isSuccess,
-    isError,
-    error,
-  } = useForgotPasswordMutation()
+  const { mutate: forgotPassword, isPending, isSuccess, isError, error } = useForgotPasswordMutation();
 
   const onSubmit = (data: z.infer<typeof forgotPasswordSchema>) => {
     forgotPassword(data, {
       onSuccess: () => {
-        router.navigate({ to: client.path.signIn })
+        router.navigate({ to: client.path.signIn });
       },
-    })
-  }
+    });
+  };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-          <span className="bg-background text-muted-foreground relative z-10 px-2">
-            or
-          </span>
+          <span className="bg-background text-muted-foreground relative z-10 px-2">or</span>
         </div>
         <div className="space-y-4">
           <FormField
@@ -78,9 +60,7 @@ export function ForgotPasswordForm({}: React.ComponentPropsWithoutRef<'div'>) {
           <FormResponse
             title="Error"
             variant="destructive"
-            description={
-              error?.message || 'An error occurred while signing in.'
-            }
+            description={error?.message || 'An error occurred while signing in.'}
           />
         )}
 
@@ -89,14 +69,11 @@ export function ForgotPasswordForm({}: React.ComponentPropsWithoutRef<'div'>) {
         </LoaderButton>
         <div className="text-muted-foreground text-sm">
           Already have an account?{' '}
-          <Link
-            to={client.path.signIn}
-            className="underline underline-offset-4"
-          >
+          <Link to={client.path.signIn} className="underline underline-offset-4">
             Sign In
           </Link>
         </div>
       </form>
     </Form>
-  )
+  );
 }

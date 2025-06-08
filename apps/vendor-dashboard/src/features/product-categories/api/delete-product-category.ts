@@ -3,7 +3,7 @@ import { server } from '@/configs/server';
 import { getProductCategoriesQueryOptions } from '@/features/product-categories/api/get-product-categories';
 import type { ApiResponse } from '@repo/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const deleteProductCategorySchema = z.object({
   id: z.string().uuid(),

@@ -1,3 +1,4 @@
+import { verifyPasswordSchema } from '@/models/vendor.model';
 import { vendorService } from '@/services/vendor.service';
 import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, RequestHandler, Response } from 'express';
@@ -14,8 +15,8 @@ class VendorController {
   };
 
   public verifyPassword: RequestHandler = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    const serviceResponse = await vendorService.verifyPassword(email, password);
+    const data = verifyPasswordSchema.parse(req.body);
+    const serviceResponse = await vendorService.verifyPassword(data.email, data.password);
 
     handleServiceResponse(serviceResponse, res);
   };
