@@ -31,9 +31,10 @@ export function CartItemAction({ item, className }: CartItemActionProps) {
     toast.success('Item removed from cart');
   };
 
+  // TODO: get stock from product
   return (
     <div className={cn('flex items-center justify-between', className)}>
-      <ProductQuantityAction quantity={quantity} onQuantityChange={handleQuantityChange} />
+      <ProductQuantityAction quantity={quantity} onQuantityChange={handleQuantityChange} stock={10} />
 
       <Button variant='ghost' size='icon' onClick={handleDelete}>
         <Trash2 />

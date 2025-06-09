@@ -21,7 +21,7 @@ export function ProductActions({ product, className }: ProductActionsProps) {
 
   return (
     <div className={cn('max-w-[500px] space-y-6', className)}>
-      <ProductQuantityAction quantity={quantity} onQuantityChange={handleQuantityChange} />
+      <ProductQuantityAction quantity={quantity} onQuantityChange={handleQuantityChange} stock={product.stock} />
       <div className='flex flex-col gap-2'>
         <AddToCartButton product={product} quantity={quantity} />
         <Button variant='outline' size='lg' className='w-full'>

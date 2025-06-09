@@ -88,12 +88,12 @@ function RouteComponent() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div className="space-y-2">
               <Label htmlFor="price">Price</Label>
-              <p className="text-muted-foreground text-sm">{formatPrice(product.price)}</p>
+              <p className="text-muted-foreground text-sm">{formatPrice(Number(product.price))}</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="compareAtPrice">Compare at Price</Label>
               <p className="text-muted-foreground text-sm">
-                {product.compareAtPrice ? formatPrice(product.compareAtPrice) : 'Not set'}
+                {product.compareAtPrice ? formatPrice(Number(product.compareAtPrice)) : 'Not set'}
               </p>
             </div>
             <div className="space-y-2">
