@@ -52,6 +52,13 @@ class ProductController {
     const serviceResponse = await productService.deleteProduct(productId, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };
+
+  public importProducts = async (req: Request, res: Response) => {
+    const files = req.files as Express.Multer.File[];
+    const file = files?.[0];
+    const serviceResponse = await productService.importProductsFromCsv(file, req.user?.id!);
+    handleServiceResponse(serviceResponse, res);
+  };
 }
 
 export const productController = new ProductController();

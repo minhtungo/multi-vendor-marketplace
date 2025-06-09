@@ -1,3 +1,4 @@
+import { csvUpload } from '@/configs/multer';
 import { productController } from '@/controllers/product.controller';
 import {
   createProductRequestSchema,
@@ -129,3 +130,25 @@ productRegistry.registerPath({
 });
 
 productRouter.delete(`/:id`, productController.deleteProduct);
+
+// Import Products Route
+productRegistry.registerPath({
+  method: 'post',
+  path: '/projects/import',
+  tags: ['Projects'],
+  request: {
+    body: {
+      content: {
+        'multipart/form-data': {
+          schema: z.object({
+            file: z.instanceof(File).describe('CSV file to upload'),
+            projectName: z.string().optional().describe('Optional project name'),
+          }),
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.null(), 'Products imported successfully'),
+});
+
+productRouter.post('/import', csvUpload.any(), productController.importProducts);

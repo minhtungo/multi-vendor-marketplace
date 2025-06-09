@@ -1,3 +1,4 @@
+import { parseCsvFromBuffer } from '@/configs/csv';
 import { CreateProductRequest, GetProductQuery, Product, UpdateProductRequest } from '@/models/product.model';
 import { productToCategoryRepository } from '@/repositories/product-to-category.repository';
 import { productRepository } from '@/repositories/product.repository';
@@ -149,6 +150,69 @@ class ProductService {
         }
         await this.productRepo.deleteProduct(productId);
         return ServiceResponse.success('Product deleted successfully', null, HTTP_STATUS_CODES.OK);
+      },
+      logger
+    );
+  }
+
+  public async importProductsFromCsv(file: Express.Multer.File, vendorId: string) {
+    return executeWithErrorHandling(
+      'importProductsFromCsv',
+      async () => {
+        if (!file) {
+          return ServiceResponse.failure('CSV file is required', null, HTTP_STATUS_CODES.BAD_REQUEST);
+        }
+
+        const csvData = await parseCsvFromBuffer(file.buffer);
+
+        if (csvData.length === 0) {
+          return ServiceResponse.failure('CSV file is empty or invalid', null, HTTP_STATUS_CODES.BAD_REQUEST);
+        }
+
+        let successfulProductsCount = 0;
+
+        const productPromises = csvData.map(async (row, index) => {
+          try {
+            const productData = {
+              name: row.name,
+              description: row.description || null,
+              price: row.price?.toString() || '0',
+              compareAtPrice: row.compare_at_price?.toString() || null,
+              stock: parseInt(row.stock) || 0,
+              status: (row.status as 'published' | 'draft') || 'draft',
+              type: (row.type as 'physical' | 'digital') || 'physical',
+              images: Array.isArray(row.images) ? row.images : [],
+              tags: Array.isArray(row.tags) ? row.tags : [],
+              sku: row.sku || `SKU-${Date.now()}-${index}`,
+              handle:
+                row.handle ||
+                row.name
+                  ?.toLowerCase()
+                  .replace(/\s+/g, '-')
+                  .replace(/[^a-z0-9-]/g, ''),
+              vendorId: vendorId,
+            };
+
+            return await this.productRepo.createProduct(productData);
+          } catch (error) {
+            logger.error(`Failed to process row ${index}:`, error);
+            return null;
+          }
+        });
+
+        const productResults = await Promise.all(productPromises);
+        const successfulProducts = productResults.filter((result) => result !== null);
+        const failedProductsCount = productResults.length - successfulProducts.length;
+
+        if (failedProductsCount > 0) {
+          logger.warn(`Failed to create ${failedProductsCount} products out of ${csvData.length}`);
+        }
+
+        return ServiceResponse.success(
+          `Products imported successfully. Created ${successfulProducts.length} products from CSV`,
+          { successfulProductsCount, totalRows: csvData.length },
+          HTTP_STATUS_CODES.CREATED
+        );
       },
       logger
     );
