@@ -5,7 +5,6 @@ import { Cart } from '@repo/types/cart';
 import { FormResponse } from '@repo/ui/components/form-response';
 import { LoaderButton } from '@repo/ui/components/loader-button';
 import { useElements, useStripe } from '@stripe/react-stripe-js';
-import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 type PaymentButtonProps = {
@@ -16,8 +15,7 @@ type PaymentButtonProps = {
 export function PaymentButton({ cart, clientSecret }: PaymentButtonProps) {
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const step = searchParams.get('step');
+  const [cardComplete, setCardComplete] = useState(false);
 
   const onPaymentCompleted = async () => {
     await placeOrder()
@@ -31,22 +29,32 @@ export function PaymentButton({ cart, clientSecret }: PaymentButtonProps) {
 
   const stripe = useStripe();
   const elements = useElements();
-  const cardElement = elements?.getElement('card');
 
   useEffect(() => {
-    console.log('cardElement', cardElement);
+    if (!elements) return;
+
+    const cardElement = elements.getElement('card');
+
     if (!cardElement) return;
-    console.log('cardElement', cardElement);
 
-    cardElement.on('change', (event) => {
+    const handleChange = (event: any) => {
       setErrorMessage(event.error?.message || null);
-    });
-  }, [cardElement, step]);
+      setCardComplete(event.complete);
+    };
 
-  const disabled = !stripe || !elements;
+    cardElement.on('change', handleChange);
+
+    return () => {
+      cardElement.off('change', handleChange);
+    };
+  }, [elements]);
+
+  const disabled = !stripe || !elements || !cardComplete;
 
   const handlePayment = async () => {
     setSubmitting(true);
+
+    const cardElement = elements?.getElement('card');
 
     if (!stripe || !elements || !cardElement || !cart) {
       setSubmitting(false);
