@@ -1,4 +1,3 @@
-import cors from 'cors';
 import express, { type Express } from 'express';
 
 import { env } from '@/configs/env';
@@ -22,19 +21,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(passport.initialize());
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      const allowedOrigins = env.APP_ORIGIN.split(',');
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  })
-);
 
 // Request logging only in production
 env.isProduction && app.use(createRequestLogger(env));

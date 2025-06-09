@@ -3,7 +3,7 @@ import { server } from '@/configs/server';
 import { getProductsQueryOptions } from '@/features/product/api/get-products';
 import type { ApiResponse } from '@repo/types/api';
 import type { Product } from '@repo/types/product';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod/v4';
 
 export const createProductSchema = z.object({
@@ -29,11 +29,12 @@ export async function createProduct(data: CreateProductInput): Promise<ApiRespon
 }
 
 export function useCreateProduct() {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getProductsQueryOptions({ page: 1, limit: 20 }).queryKey });
+    meta: {
+      successMessage: 'Product created successfully',
+      errorMessage: 'Failed to create product',
+      invalidatesQuery: getProductsQueryOptions({ page: 1, limit: 20 }).queryKey,
     },
   });
 }

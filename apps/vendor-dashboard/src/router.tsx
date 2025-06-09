@@ -1,3 +1,5 @@
+import { DefaultCatchBoundary } from '@/components/default-catch-boundary';
+import { NotFound } from '@/components/not-found';
 import * as TanStackQueryProvider from '@/integrations/tanstack-query/provider';
 import type { AuthActions } from '@/store/auth-store';
 import type { QueryClient } from '@tanstack/react-query';
@@ -24,6 +26,8 @@ export const router = createRouter({
   scrollRestoration: true,
   defaultStructuralSharing: true,
   defaultPreloadStaleTime: 0,
+  defaultErrorComponent: DefaultCatchBoundary,
+  defaultNotFoundComponent: () => <NotFound />,
 });
 
 // Register the router instance for type safety

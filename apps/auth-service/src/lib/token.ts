@@ -16,7 +16,7 @@ export const generateToken = async (length = 32): Promise<string> => {
 export const generateAccessToken = (payload: AccessTokenPayload) => {
   return sign(payload, tokenConfig.accessToken.secret, {
     expiresIn: '30m',
-    audience: env.APP_ORIGIN,
+    audience: env.VENDOR_ORIGIN,
   });
 };
 

@@ -2,7 +2,7 @@ import { privateApi } from '@/api/api-client';
 import { server } from '@/configs/server';
 import { getProductCategoriesQueryOptions } from '@/features/product-categories/api/get-product-categories';
 import type { ApiResponse } from '@repo/types/api';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod/v4';
 
 export const deleteProductCategorySchema = z.object({
@@ -16,11 +16,12 @@ export async function deleteProductCategory({ id }: DeleteProductCategoryInput):
 }
 
 export function useDeleteProductCategory() {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteProductCategory,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getProductCategoriesQueryOptions().queryKey });
+    meta: {
+      successMessage: 'Product category deleted successfully',
+      errorMessage: 'Failed to delete product category',
+      invalidatesQuery: getProductCategoriesQueryOptions().queryKey,
     },
   });
 }

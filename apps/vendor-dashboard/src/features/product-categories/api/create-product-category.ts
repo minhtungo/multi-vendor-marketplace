@@ -24,8 +24,10 @@ export async function createProductCategory(data: CreateProductCategoryInput): P
 export function useCreateProductCategory() {
   return useMutation({
     mutationFn: createProductCategory,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: getProductCategoriesQueryOptions().queryKey });
+    meta: {
+      successMessage: 'Product category created successfully',
+      errorMessage: 'Failed to create product category',
+      invalidatesQuery: getProductCategoriesQueryOptions().queryKey,
     },
   });
 }

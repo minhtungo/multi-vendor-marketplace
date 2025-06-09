@@ -1,19 +1,28 @@
-import { siteConfig } from '@/configs/site';
 import type { RouterContext } from '@/router';
+import { seo } from '@/utils/seo';
 import { HeadContent, Outlet, createRootRouteWithContext } from '@tanstack/react-router';
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
-    meta: [
-      {
-        title: siteConfig.name,
-      },
-      {
-        name: 'description',
-        content: siteConfig.name,
-      },
-    ],
+    meta: [...seo({})],
     links: [
+      {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        href: '/apple-touch-icon.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: '/favicon-32x32.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '16x16',
+        href: '/favicon-16x16.png',
+      },
       {
         rel: 'icon',
         href: '/favicon.ico',

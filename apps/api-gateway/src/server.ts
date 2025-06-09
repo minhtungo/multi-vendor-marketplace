@@ -21,11 +21,24 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: (origin, callback) => {
-      const allowedOrigins = env.APP_ORIGIN.split(',');
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Handle missing or empty APP_ORIGIN environment variable
+      if (!env.APP_ORIGIN) {
+        callback(new Error('APP_ORIGIN environment variable is not configured'));
+        return;
+      }
+
+      const allowedOrigins = env.APP_ORIGIN.split(',').map((o) => o.trim().toLowerCase());
+
+      // For development/testing tools (Postman, etc.) - be more restrictive in production
+      if (!origin && env.NODE_ENV === 'development') {
+        callback(null, true);
+        return;
+      }
+
+      if (origin && allowedOrigins.includes(origin.toLowerCase())) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error(`Origin ${origin} is not allowed by CORS policy. Allowed origins: ${env.APP_ORIGIN}`));
       }
     },
     credentials: true,

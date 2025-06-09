@@ -9,6 +9,7 @@ import { logger } from '@/utils/logger';
 import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/lib';
 import { v4 as uuidv4 } from 'uuid';
+import { createS3PresignedUpload } from '@/lib/s3';
 
 export const DEFAULT_GET_USER_UPLOADS_OFFSET = 0;
 export const DEFAULT_GET_USER_UPLOADS_LIMIT = 30;
@@ -24,27 +25,10 @@ export class UploadService {
     return executeWithErrorHandling(
       'getPresignedUrl',
       async () => {
-        let key = uuidv4();
-
-        if (fileName) {
-          const extension = fileName.split('.').pop();
-          if (extension) {
-            key = `${key}.${extension}`;
-          }
-        }
-
-        const { url, fields } = await createPresignedPost(s3Client, {
-          Bucket: env.AWS_S3_BUCKET_NAME!,
-          Key: key,
-          Conditions: [['content-length-range', 0, appConfig.upload.maxFileSize]],
-          Expires: appConfig.upload.presignedUrl.expiresIn,
-        });
-
-        // const finalUrl = env.USE_LOCAL_S3 ? `${env.AWS_S3_ENDPOINT}/${env.AWS_S3_BUCKET_NAME}/` : url;
-        const finalUrl = `${env.AWS_S3_ENDPOINT}/${env.AWS_S3_BUCKET_NAME}/`;
+        const { url, fields, key } = await createS3PresignedUpload(fileName);
 
         return ServiceResponse.success('Presigned URL created successfully', {
-          url: finalUrl,
+          url,
           fields,
           key,
           fileName: fileName || 'unnamed',

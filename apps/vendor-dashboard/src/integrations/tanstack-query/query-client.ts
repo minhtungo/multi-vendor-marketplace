@@ -1,8 +1,4 @@
-import {
-  QueryCache,
-  QueryClient,
-  type QueryClientConfig,
-} from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, type QueryClientConfig } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 const queryConfig: QueryClientConfig = {
@@ -20,6 +16,23 @@ const queryConfig: QueryClientConfig = {
       retry: false,
     },
   },
+  mutationCache: new MutationCache({
+    onSuccess: (_data, _variables, _context, mutation) => {
+      if (mutation.meta?.successMessage) {
+        toast.success(mutation.meta.successMessage);
+      }
+    },
+    onError: (_error, _variables, _context, mutation) => {
+      if (mutation.meta?.errorMessage) {
+        toast.error(mutation.meta.errorMessage);
+      }
+    },
+    onSettled: (_data, _error, _variables, _context, mutation) => {
+      if (mutation.meta?.invalidatesQuery) {
+        queryClient.invalidateQueries({ queryKey: mutation.meta.invalidatesQuery });
+      }
+    },
+  }),
 };
 
 export const queryClient = new QueryClient(queryConfig);

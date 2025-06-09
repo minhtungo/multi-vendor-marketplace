@@ -68,7 +68,6 @@ export class AuthVendorService {
         }
 
         const { token: refreshToken, sessionId } = await generateRefreshToken(vendor.id, 'vendor');
-
         const accessToken = generateAccessToken({
           sub: vendor.id,
           email: vendor.email,
