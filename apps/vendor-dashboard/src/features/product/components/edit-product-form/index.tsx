@@ -25,7 +25,8 @@ export function EditProductForm({ product, ...props }: EditProductFormProps) {
     defaultValues: {
       ...product,
       description: product.description || '',
-      compareAtPrice: product.compareAtPrice || undefined,
+      compareAtPrice: product.compareAtPrice || '',
+      categories: product.categories.map((cat) => cat.name),
     },
   });
 
@@ -204,7 +205,7 @@ export function EditProductForm({ product, ...props }: EditProductFormProps) {
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="quantity"
+                name="stock"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Quantity</FormLabel>

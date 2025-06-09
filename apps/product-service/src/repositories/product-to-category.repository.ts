@@ -5,7 +5,7 @@ class ProductToCategoryRepository {
   constructor(private readonly dbInstance = db) {}
 
   public async createProductToCategory(productId: string, categoryId: string) {
-    return this.dbInstance.insert(categoriesToProducts).values({ productId, categoryId });
+    return this.dbInstance.insert(categoriesToProducts).values({ productId, categoryId }).onConflictDoNothing();
   }
 }
 
