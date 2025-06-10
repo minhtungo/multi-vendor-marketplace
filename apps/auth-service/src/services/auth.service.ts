@@ -10,7 +10,6 @@ import type { RefreshTokenPayload } from '@/types/token';
 import { logger } from '@/utils/logger';
 import { createTransaction } from '@/utils/transaction';
 import { emailService } from '@repo/email';
-import { userAuthProducer } from '@repo/messaging';
 import { getRedisClient } from '@repo/redis';
 import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 import { executeWithErrorHandling, ServiceResponse } from '@repo/shared-server/lib';
@@ -143,11 +142,7 @@ export class AuthService {
         }
 
         await createTransaction(async (trx) => {
-          await userAuthProducer.publishUserPasswordReset({
-            userId: existingToken.userId!,
-            password,
-            timestamp: Date.now(),
-          });
+          //TODO: publishUserPasswordReset
           await tokenRepository.deleteResetPasswordTokenByToken(token, trx);
         });
 
@@ -257,11 +252,7 @@ export class AuthService {
 
         await redis.del(`otp:${email}`, failedAttemptsKey);
 
-        await userAuthProducer.publishUserRegistered({
-          email,
-          password,
-          timestamp: Date.now(),
-        });
+        //TODO: publishUserRegistered
 
         return ServiceResponse.success('User created successfully', null, HTTP_STATUS_CODES.CREATED);
       },

@@ -1,4 +1,3 @@
-import { ErrorAlert } from '@/components/errors/error-alert';
 import { DataTable } from '@/components/table/data-table';
 import { getOrdersQueryOptions, useGetOrders } from '@/features/orders/api/get-orders';
 import { orderTableColumns } from '@/features/orders/components/orders-table/order-columns';
@@ -19,7 +18,6 @@ export const Route = createFileRoute('/(dashboard)/orders/')({
       },
     ],
   }),
-  errorComponent: ({ error, reset }) => <ErrorAlert message={error.message} reset={reset} />,
 });
 
 function RouteComponent() {

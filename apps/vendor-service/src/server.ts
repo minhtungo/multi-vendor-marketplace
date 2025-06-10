@@ -3,8 +3,6 @@ import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
 import { vendorRouter } from '@/routes/vendor.route';
 import { createRequestLogger, errorHandler } from '@repo/shared-server/middlewares';
-import { vendorAuthConsumer } from '@/events/auth.consumer';
-import { logger } from '@/utils/logger';
 import { healthCheckRouter } from '@repo/shared-server/routes';
 
 const app: Express = express();
@@ -28,19 +26,5 @@ app.use('/api-docs', openAPIRouter);
 
 // Error handlers
 app.use(errorHandler());
-
-// Initialize message consumer
-const initializeConsumer = async () => {
-  try {
-    await vendorAuthConsumer.initialize();
-    logger.info('Vendor auth consumer initialized successfully');
-    await vendorAuthConsumer.start();
-    logger.info('Vendor auth consumer started successfully');
-  } catch (error: unknown) {
-    logger.error('Failed to initialize vendor auth consumer:', error instanceof Error ? error.message : String(error));
-  }
-};
-
-initializeConsumer();
 
 export { app };

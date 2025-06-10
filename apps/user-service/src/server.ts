@@ -4,7 +4,6 @@ import { env } from '@/configs/env';
 import { openAPIRouter } from '@/docs/openAPI-router';
 import { userRouter } from '@/routes/user.route';
 import { createRequestLogger, errorHandler } from '@repo/shared-server/middlewares';
-import { userAuthConsumer } from '@/lib/auth.consumer';
 import { logger } from '@/utils/logger';
 import { healthCheckRouter } from '@repo/shared-server/routes';
 
@@ -29,19 +28,5 @@ app.use('/api-docs', openAPIRouter);
 
 // Error handlers
 app.use(errorHandler());
-
-// Initialize message consumer
-const initializeConsumer = async () => {
-  try {
-    await userAuthConsumer.initialize();
-    logger.info('Auth consumer initialized successfully');
-    await userAuthConsumer.start();
-    logger.info('Auth consumer started successfully');
-  } catch (error: unknown) {
-    logger.error('Failed to initialize auth consumer:', error instanceof Error ? error.message : String(error));
-  }
-};
-
-initializeConsumer();
 
 export { app };

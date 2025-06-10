@@ -10,7 +10,6 @@ import { ServiceResponse, executeWithErrorHandling } from '@repo/shared-server/l
 import type { NextFunction, Request, Response } from 'express';
 
 import { vendorServiceClient } from '@/services/clients/vendor.service.client';
-import { vendorAuthProducer } from '@repo/messaging';
 import { verify } from 'jsonwebtoken';
 
 export class AuthVendorService {
@@ -124,11 +123,7 @@ export class AuthVendorService {
 
         await redis.del(`otp:${email}`, failedAttemptsKey);
 
-        await vendorAuthProducer.publishVendorRegistered({
-          email,
-          password,
-          timestamp: Date.now(),
-        });
+        //TODO: publishVendorRegistered
 
         return ServiceResponse.success('Vendor account created successfully', null, HTTP_STATUS_CODES.CREATED);
       },
