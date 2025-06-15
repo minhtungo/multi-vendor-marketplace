@@ -2,6 +2,7 @@ import { env } from '@/configs/env';
 import { closeRedisConnection, getRedisClient } from '@repo/redis';
 import { app } from '@/server';
 import { logger } from '@/utils/logger';
+import { userMessagingService } from '@/services/messaging.service';
 
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod/v4';
@@ -14,10 +15,26 @@ const server = app.listen(env.PORT, async () => {
 
   // Initialize Redis connection
   getRedisClient();
+
+  // Initialize messaging service
+  try {
+    await userMessagingService.connect();
+    await userMessagingService.setupConsumers();
+    logger.info('Messaging service initialized successfully');
+  } catch (error) {
+    logger.error('Failed to initialize messaging service', error);
+  }
 });
 
 const onCloseSignal = async () => {
   logger.info('sigint received, shutting down');
+
+  try {
+    await userMessagingService.disconnect();
+    logger.info('Messaging service disconnected');
+  } catch (error) {
+    logger.error('Error disconnecting messaging service', error);
+  }
 
   await closeRedisConnection();
   server.close(() => {

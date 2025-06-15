@@ -26,6 +26,9 @@ const envSchema = z.object({
   // Service URLs
   USER_SERVICE_URL: z.url(),
   VENDOR_SERVICE_URL: z.url(),
+  // RabbitMQ
+  RABBITMQ_URL: z.string().min(1).default('amqp://admin:password@localhost:5672'),
+  RABBITMQ_EXCHANGE: z.string().min(1).default('default'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

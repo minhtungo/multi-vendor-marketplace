@@ -19,6 +19,18 @@ export class MessageConsumer {
     const exchange = options.exchange || 'default';
 
     try {
+      if (exchange !== 'default') {
+        await channel.assertExchange(exchange, 'topic', {
+          durable: true,
+        });
+      }
+
+      if (options.deadLetterExchange && options.deadLetterExchange !== 'default') {
+        await channel.assertExchange(options.deadLetterExchange, 'topic', {
+          durable: true,
+        });
+      }
+
       // Assert queue
       const queueResult = await channel.assertQueue(options.queue, {
         durable: options.durable ?? true,

@@ -44,6 +44,7 @@ export class UserMessagingService {
 
     try {
       await this.messageBroker.publish(payload, {
+        exchange: 'user-events',
         routingKey,
         persistent: true,
         headers: {

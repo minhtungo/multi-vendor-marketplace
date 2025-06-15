@@ -27,6 +27,13 @@ export class MessagePublisher {
     try {
       const exchange = options.exchange || 'default';
 
+      // Assert exchange if different from default
+      if (exchange !== 'default') {
+        await channel.assertExchange(exchange, 'topic', {
+          durable: true,
+        });
+      }
+
       const success = channel.publish(exchange, options.routingKey, messageBuffer, {
         persistent: options.persistent ?? true,
         expiration: options.expiration,

@@ -20,6 +20,9 @@ const envSchema = z.object({
   REDIS_PASSWORD: z.string().min(1).default(''),
   REDIS_DB_NUMBER: z.coerce.number().int().positive().default(0),
   REDIS_TLS_ENABLED: z.boolean().default(false),
+  // RabbitMQ
+  RABBITMQ_URL: z.string().min(1).default('amqp://admin:password@localhost:5672'),
+  RABBITMQ_EXCHANGE: z.string().min(1).default('default'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
