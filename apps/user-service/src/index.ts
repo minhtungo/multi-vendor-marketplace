@@ -8,9 +8,10 @@ import { z } from 'zod/v4';
 
 extendZodWithOpenApi(z);
 
-const server = app.listen(env.PORT, () => {
+const server = app.listen(env.PORT, async () => {
   const { NODE_ENV, HOST, PORT } = env;
   logger.info(`Server (${NODE_ENV}) running on port http://${HOST}:${PORT}`);
+
   // Initialize Redis connection
   getRedisClient();
 });

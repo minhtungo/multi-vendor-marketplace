@@ -17,6 +17,8 @@ import type { NextFunction, Request, Response } from 'express';
 
 import { verify } from 'jsonwebtoken';
 import { User } from '@repo/types/user';
+import { UserRegisteredEventPayload } from '@/events/user.events';
+import { userMessagingService } from '@/services/messaging.service';
 
 export class AuthService {
   async signUp(data: SignUpInput, next: NextFunction): Promise<ServiceResponse> {
@@ -252,7 +254,25 @@ export class AuthService {
 
         await redis.del(`otp:${email}`, failedAttemptsKey);
 
-        //TODO: publishUserRegistered
+        // Publish user registered event
+        try {
+          const eventPayload: UserRegisteredEventPayload = {
+            email: email,
+            name: email,
+            password: password,
+            role: 'user',
+          };
+
+          // TODO:use a background job queue for reliability
+          userMessagingService.publishUserRegistered(eventPayload).catch((error) => {
+            console.error('Failed to publish user registered event:', error);
+            // 1. Log to error monitoring service
+            // 2. Queue for retry
+            // 3. Store in outbox pattern
+          });
+        } catch (error) {
+          logger.error('Error preparing user registered event:', error);
+        }
 
         return ServiceResponse.success('User created successfully', null, HTTP_STATUS_CODES.CREATED);
       },

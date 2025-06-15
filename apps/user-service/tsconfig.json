@@ -6,6 +6,10 @@
       "@/*": ["*"]
     }
   },
-  "include": ["src/**/*", "../../packages/server/src/docs/openAPIResponseBuilders.ts"],
+  "include": [
+    "src/**/*",
+    "../../packages/server/src/docs/openAPIResponseBuilders.ts",
+    "../auth-service/src/services/messaging.service.ts"
+  ],
   "exclude": ["node_modules"]
 }

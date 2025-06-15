@@ -2,6 +2,7 @@ export { MessageBroker } from './message-broker';
 export { ConnectionManager } from './connection';
 export { MessagePublisher } from './publisher';
 export { MessageConsumer } from './consumer';
+export { MessageBrokerFactory } from './factory';
 
 export * from './types';
 export * from './errors';

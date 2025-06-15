@@ -1,10 +1,10 @@
+import { InsertUser } from '@/models/user.model';
 import { UserRepository } from '@/repositories/user.repository';
+import { verifyPassword } from '@/utils/password';
 import { HTTP_STATUS_CODES } from '@repo/shared-server/core';
 import { normalizeUser, ServiceResponse } from '@repo/shared-server/lib';
-import type { Request } from 'express';
-import { verifyPassword } from '@/utils/password';
-import { InsertUser } from '@/models/user.model';
 import { User } from '@repo/types/user';
+import type { Request } from 'express';
 
 export class UserService {
   private userRepository: UserRepository;
@@ -20,6 +20,7 @@ export class UserService {
       name: data.name,
       role: data.role!,
     });
+
     return ServiceResponse.success('User created successfully', user, HTTP_STATUS_CODES.CREATED);
   }
 
