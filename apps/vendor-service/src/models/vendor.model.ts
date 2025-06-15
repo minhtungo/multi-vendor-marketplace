@@ -33,3 +33,25 @@ export type SelectVendor = z.infer<typeof selectVendorSchema>;
 export type VendorSignUpInput = z.infer<typeof VendorSignUpSchema>;
 export type VendorSignInInput = z.infer<typeof VendorSignInSchema>;
 export type VerifyVendorInput = z.infer<typeof VerifyVendorSchema>;
+
+// Params validation schemas
+export const GetVendorByIdSchema = z.object({
+  params: z.object({
+    id: z.string(),
+  }),
+});
+
+export const GetVendorByEmailSchema = z.object({
+  params: z.object({
+    email: z.string().email(),
+  }),
+});
+
+export const VerifyPasswordRequestSchema = z.object({
+  body: verifyPasswordSchema,
+});
+
+// Params validation schemas type
+export type GetVendorByIdInput = z.infer<typeof GetVendorByIdSchema>;
+export type GetVendorByEmailInput = z.infer<typeof GetVendorByEmailSchema>;
+export type VerifyPasswordRequest = z.infer<typeof VerifyPasswordRequestSchema>;

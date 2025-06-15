@@ -1,4 +1,4 @@
-import { cartUpdateSchema } from '@/models/cart.model';
+import { DeleteCartSchema, UpdateCartSchema } from '@/models/cart.model';
 import { cartService } from '@/services/cart.service';
 import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, Response } from 'express';
@@ -13,16 +13,16 @@ class CartController {
   };
 
   public updateCart = async (req: Request, res: Response) => {
-    const cartData = cartUpdateSchema.parse(req.body);
+    const { body } = UpdateCartSchema.parse(req);
     const sessionId = req.sessionId;
     const userId = req.user?.id;
 
-    console.log('============', cartData);
+    console.log('============', body);
 
     const serviceResponse = await cartService.updateCart({
       userId,
       sessionId,
-      cartData,
+      cartData: body,
     });
 
     handleServiceResponse(serviceResponse, res);
@@ -37,8 +37,8 @@ class CartController {
   };
 
   public deleteCart = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const serviceResponse = await cartService.deleteCart(id);
+    const { params } = DeleteCartSchema.parse(req);
+    const serviceResponse = await cartService.deleteCart(params.id);
     handleServiceResponse(serviceResponse, res);
   };
 

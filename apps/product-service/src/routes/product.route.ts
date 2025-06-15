@@ -1,12 +1,13 @@
 import { csvUpload } from '@/configs/multer';
 import { productController } from '@/controllers/product.controller';
 import {
-  createProductRequestSchema,
-  getProductQuerySchema,
-  getProductsQuerySchema,
+  CreateProductSchema,
+  DeleteProductSchema,
+  GetProductSchema,
+  GetProductsSchema,
   productListResponseSchema,
   productSchema,
-  updateProductRequestSchema,
+  UpdateProductSchema,
 } from '@/models/product.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
@@ -17,42 +18,34 @@ import { z } from 'zod/v4';
 export const productRegistry = new OpenAPIRegistry();
 export const productRouter: Router = Router();
 
-// Get Single Product Route
-productRegistry.registerPath({
-  method: 'get',
-  path: `/products`,
-  tags: ['Products'],
-  request: {
-    query: getProductQuerySchema,
-  },
-  responses: createApiResponse(productSchema, 'Product retrieved successfully'),
-});
-
-productRouter.get(`/list`, validateRequest(z.object({ query: getProductQuerySchema })), productController.getProduct);
-
+// GET: Retrieve all products with pagination
 //TODO: separate get products for vendor and public
-// Get All Products Route with Pagination
 productRegistry.registerPath({
   method: 'get',
   path: '/products',
   tags: ['Products'],
   request: {
-    query: getProductsQuerySchema,
+    query: GetProductsSchema.shape.query?.unwrap(),
   },
   responses: createApiResponse(productListResponseSchema, 'Products retrieved successfully'),
 });
 
-productRouter.get(
-  '/',
-  validateRequest(
-    z.object({
-      query: getProductsQuerySchema.optional(),
-    })
-  ),
-  productController.getProducts
-);
+productRouter.get('/', validateRequest(GetProductsSchema), productController.getProducts);
 
-// Create Product Route
+// GET: Retrieve single product by query parameters
+productRegistry.registerPath({
+  method: 'get',
+  path: `/products`,
+  tags: ['Products'],
+  request: {
+    query: GetProductSchema.shape.query,
+  },
+  responses: createApiResponse(productSchema, 'Product retrieved successfully'),
+});
+
+productRouter.get(`/list`, validateRequest(GetProductSchema), productController.getProduct);
+
+// POST: Create new product
 productRegistry.registerPath({
   method: 'post',
   path: '/products',
@@ -61,7 +54,7 @@ productRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: createProductRequestSchema,
+          schema: CreateProductSchema.shape.body,
         },
       },
     },
@@ -69,69 +62,9 @@ productRegistry.registerPath({
   responses: createApiResponse(productSchema, 'Product created successfully'),
 });
 
-productRouter.post(
-  '/',
-  validateRequest(z.object({ body: createProductRequestSchema })),
-  productController.createProduct
-);
+productRouter.post('/', validateRequest(CreateProductSchema), productController.createProduct);
 
-// Update Product Route
-productRegistry.registerPath({
-  method: 'put',
-  path: `/products/{id}`,
-  tags: ['Products'],
-  request: {
-    params: z.object({
-      id: z.uuid(),
-    }),
-    body: {
-      content: {
-        'application/json': {
-          schema: updateProductRequestSchema,
-        },
-      },
-    },
-  },
-  responses: createApiResponse(z.null(), 'Product updated successfully'),
-});
-
-productRouter.put(
-  `/:id`,
-  validateRequest(
-    z.object({
-      params: z.object({ id: z.string().uuid() }),
-      body: updateProductRequestSchema,
-    })
-  ),
-  productController.updateProduct
-);
-
-// Delete All Products Route
-productRegistry.registerPath({
-  method: 'delete',
-  path: `/products/all`,
-  tags: ['Products'],
-  responses: createApiResponse(z.null(), 'All products deleted successfully'),
-});
-
-productRouter.delete(`/all`, productController.deleteAllProducts);
-
-// Delete Product Route
-productRegistry.registerPath({
-  method: 'delete',
-  path: `/products/{id}`,
-  tags: ['Products'],
-  request: {
-    params: z.object({
-      id: z.uuid(),
-    }),
-  },
-  responses: createApiResponse(z.null(), 'Product deleted successfully'),
-});
-
-productRouter.delete(`/:id`, productController.deleteProduct);
-
-// Import Products Route
+// POST: Import products from CSV file
 productRegistry.registerPath({
   method: 'post',
   path: '/projects/import',
@@ -152,3 +85,46 @@ productRegistry.registerPath({
 });
 
 productRouter.post('/import', csvUpload.any(), productController.importProducts);
+
+// PUT: Update existing product
+productRegistry.registerPath({
+  method: 'put',
+  path: `/products/{id}`,
+  tags: ['Products'],
+  request: {
+    params: UpdateProductSchema.shape.params,
+    body: {
+      content: {
+        'application/json': {
+          schema: UpdateProductSchema.shape.body,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(z.null(), 'Product updated successfully'),
+});
+
+productRouter.put(`/:id`, validateRequest(UpdateProductSchema), productController.updateProduct);
+
+// DELETE: Remove all products
+productRegistry.registerPath({
+  method: 'delete',
+  path: `/products/all`,
+  tags: ['Products'],
+  responses: createApiResponse(z.null(), 'All products deleted successfully'),
+});
+
+productRouter.delete(`/all`, productController.deleteAllProducts);
+
+// DELETE: Remove specific product by ID
+productRegistry.registerPath({
+  method: 'delete',
+  path: `/products/{id}`,
+  tags: ['Products'],
+  request: {
+    params: DeleteProductSchema.shape.params,
+  },
+  responses: createApiResponse(z.null(), 'Product deleted successfully'),
+});
+
+productRouter.delete(`/:id`, validateRequest(DeleteProductSchema), productController.deleteProduct);

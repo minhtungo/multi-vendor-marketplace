@@ -1,5 +1,10 @@
 import { cartItemController } from '@/controllers/cart-item.controller';
-import { cartItemSchema, insertCartItemSchema, updateCartItemSchema } from '@/models/cart-item.model';
+import {
+  AddItemToCartSchema,
+  cartItemSchema,
+  RemoveCartItemSchema,
+  UpdateCartItemSchema,
+} from '@/models/cart-item.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { validateRequest } from '@repo/shared-server/middlewares';
@@ -9,7 +14,7 @@ import { z } from 'zod/v4';
 export const cartItemRegistry = new OpenAPIRegistry();
 export const cartItemRouter: Router = express.Router();
 
-// Add item to cart
+// POST: Add new item to cart
 cartItemRegistry.registerPath({
   method: 'post',
   path: '/cart/items',
@@ -18,7 +23,7 @@ cartItemRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: insertCartItemSchema,
+          schema: AddItemToCartSchema.shape.body,
         },
       },
     },
@@ -26,21 +31,19 @@ cartItemRegistry.registerPath({
   responses: createApiResponse(z.array(cartItemSchema), 'Cart created successfully'),
 });
 
-cartItemRouter.post('/', validateRequest(z.object({ body: insertCartItemSchema })), cartItemController.addItemToCart);
+cartItemRouter.post('/', validateRequest(AddItemToCartSchema), cartItemController.addItemToCart);
 
-// Update cart item quantity
+// PUT: Update cart item quantity
 cartItemRegistry.registerPath({
-  method: 'patch',
+  method: 'put',
   path: '/cart/items/{cartItemId}',
   tags: ['Cart'],
   request: {
-    params: z.object({
-      cartItemId: z.string(),
-    }),
+    params: UpdateCartItemSchema.shape.params,
     body: {
       content: {
         'application/json': {
-          schema: updateCartItemSchema,
+          schema: UpdateCartItemSchema.shape.body,
         },
       },
     },
@@ -48,32 +51,17 @@ cartItemRegistry.registerPath({
   responses: createApiResponse(cartItemSchema, 'Cart item quantity updated successfully'),
 });
 
-cartItemRouter.patch(
-  '/:cartItemId',
-  validateRequest(
-    z.object({
-      params: z.object({ cartItemId: z.string() }),
-      body: updateCartItemSchema,
-    })
-  ),
-  cartItemController.updateCartItem
-);
+cartItemRouter.put('/:cartItemId', validateRequest(UpdateCartItemSchema), cartItemController.updateCartItem);
 
-// Remove cart item
+// DELETE: Remove item from cart
 cartItemRegistry.registerPath({
   method: 'delete',
   path: '/cart/items/{cartItemId}',
   tags: ['Cart'],
   request: {
-    params: z.object({
-      cartItemId: z.string(),
-    }),
+    params: RemoveCartItemSchema.shape.params,
   },
   responses: createApiResponse(z.null(), 'Cart item removed successfully'),
 });
 
-cartItemRouter.delete(
-  '/:cartItemId',
-  validateRequest(z.object({ params: z.object({ cartItemId: z.string() }) })),
-  cartItemController.removeCartItem
-);
+cartItemRouter.delete('/:cartItemId', validateRequest(RemoveCartItemSchema), cartItemController.removeCartItem);

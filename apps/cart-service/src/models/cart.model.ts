@@ -49,7 +49,20 @@ export const cartUpdateSchema = cartInsertSchema.partial().extend({
     .optional(),
 });
 
+// Request validation schemas
+export const UpdateCartSchema = z.object({
+  body: cartUpdateSchema,
+});
+
+export const DeleteCartSchema = z.object({
+  params: z.object({
+    id: z.string(),
+  }),
+});
+
 export type InsertCart = z.infer<typeof cartInsertSchema>;
 export type UpdateCart = z.infer<typeof cartUpdateSchema>;
 export type Cart = typeof cart.$inferSelect;
 export type CartWithItems = Cart & { items: CartItem[] };
+export type UpdateCartInput = z.infer<typeof UpdateCartSchema>;
+export type DeleteCartInput = z.infer<typeof DeleteCartSchema>;

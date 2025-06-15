@@ -1,5 +1,5 @@
 import { orderController } from '@/controllers/order.controller';
-import { orderInsertSchema, orderSchema } from '@/models/order.model';
+import { CreateOrderSchema, GetAllOrdersSchema, GetOrderByIdSchema, orderSchema } from '@/models/order.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { validateRequest } from '@repo/shared-server/middlewares';
@@ -9,16 +9,13 @@ import { z } from 'zod/v4';
 export const orderRegistry = new OpenAPIRegistry();
 export const orderRouter: Router = Router();
 
-// Get All Orders Route with Pagination
+// GET: Retrieve all orders with pagination
 orderRegistry.registerPath({
   method: 'get',
   path: '/',
   tags: ['Orders'],
   request: {
-    query: z.object({
-      page: z.string().transform(Number).default(1),
-      limit: z.string().transform(Number).default(20),
-    }),
+    query: GetAllOrdersSchema.shape.query,
   },
   responses: createApiResponse(
     z.object({
@@ -29,39 +26,22 @@ orderRegistry.registerPath({
   ),
 });
 
-orderRouter.get(
-  '/',
-  validateRequest(
-    z.object({
-      query: z.object({
-        page: z.string().transform(Number).default(1),
-        limit: z.string().transform(Number).default(20),
-      }),
-    })
-  ),
-  orderController.getAllOrders
-);
+orderRouter.get('/', validateRequest(GetAllOrdersSchema), orderController.getAllOrders);
 
-// Get Order by ID Route
+// GET: Retrieve specific order by ID
 orderRegistry.registerPath({
   method: 'get',
   path: '/orders/:id',
   tags: ['Orders'],
   request: {
-    params: z.object({
-      id: z.uuid(),
-    }),
+    params: GetOrderByIdSchema.shape.params,
   },
   responses: createApiResponse(orderSchema, 'Order retrieved successfully'),
 });
 
-orderRouter.get(
-  '/:id',
-  validateRequest(z.object({ params: z.object({ id: z.uuid() }) })),
-  orderController.getOrderById
-);
+orderRouter.get('/:id', validateRequest(GetOrderByIdSchema), orderController.getOrderById);
 
-// Create Order Route
+// POST: Create new order from cart
 orderRegistry.registerPath({
   method: 'post',
   path: '/orders',
@@ -70,7 +50,7 @@ orderRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: orderInsertSchema,
+          schema: CreateOrderSchema.shape.body,
         },
       },
     },
@@ -78,4 +58,4 @@ orderRegistry.registerPath({
   responses: createApiResponse(orderSchema, 'Order created successfully'),
 });
 
-orderRouter.post('/', validateRequest(z.object({ body: orderInsertSchema })), orderController.createOrder);
+orderRouter.post('/', validateRequest(CreateOrderSchema), orderController.createOrder);

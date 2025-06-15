@@ -6,18 +6,22 @@ import { count, eq } from 'drizzle-orm';
 export class OrderRepository {
   constructor(private readonly dbInstance = db) {}
 
-  public async getPaginatedOrders(page: number, limit: number, vendorId: string, trx: typeof db = this.dbInstance) {
+  public async getPaginatedOrders(page: number, limit: number, vendorId?: string, trx: typeof db = this.dbInstance) {
     const offset = (page - 1) * limit;
 
-    const [{ value: total }] = await trx.select({ value: count() }).from(orders);
+    // Build base query for counting
+    const countQuery = trx.select({ value: count() }).from(orders);
+    const selectQuery = trx.select().from(orders);
 
-    const items = await trx
-      .select()
-      .from(orders)
-      .where(eq(orders.vendorId, vendorId))
-      .limit(limit)
-      .offset(offset)
-      .orderBy(orders.createdAt);
+    // Apply vendor filter if vendorId is provided
+    if (vendorId) {
+      countQuery.where(eq(orders.vendorId, vendorId));
+      selectQuery.where(eq(orders.vendorId, vendorId));
+    }
+
+    const [{ value: total }] = await countQuery;
+
+    const items = await selectQuery.limit(limit).offset(offset).orderBy(orders.createdAt);
 
     return {
       items,

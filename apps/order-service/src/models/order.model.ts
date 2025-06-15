@@ -1,32 +1,32 @@
 import { orders } from '@/db/schemas';
-import { createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
 import { z } from 'zod/v4';
 
 export const orderSchema = createSelectSchema(orders);
+export const orderInsertSchema = createInsertSchema(orders);
+export const orderUpdateSchema = createUpdateSchema(orders);
 
-export const orderInsertSchema = z.object({
-  orderNumber: z.string().min(1),
-  customerId: z.string().min(1),
-  vendorId: z.string().min(1),
-  totalAmount: z.string().min(1),
-  currency: z.string().min(1),
-  discountCodeId: z.string().min(1).optional(),
-  discountAmount: z.string().min(1).optional(),
-  shippingFirstName: z.string().min(1),
-  shippingLastName: z.string().min(1),
-  shippingAddressLine1: z.string().min(1),
-  shippingCity: z.string().min(1),
-  shippingState: z.string().min(1),
-  shippingPostalCode: z.string().min(1),
-  billingFirstName: z.string().min(1),
-  billingLastName: z.string().min(1),
-  billingAddressLine1: z.string().min(1),
-  billingCity: z.string().min(1),
-  billingState: z.string().min(1),
-  billingPostalCode: z.string().min(1),
-  notes: z.string().min(1).optional(),
-  paymentMethod: z.string().min(1),
+// Request validation schemas
+export const GetAllOrdersSchema = z.object({
+  query: z.object({
+    page: z.coerce.number().int().positive().default(1),
+    limit: z.coerce.number().int().positive().max(100).default(20),
+    vendorId: z.string().optional(),
+  }),
+});
+
+export const GetOrderByIdSchema = z.object({
+  params: z.object({
+    id: z.uuid(),
+  }),
+});
+
+export const CreateOrderSchema = z.object({
+  body: orderInsertSchema,
 });
 
 export type InsertOrder = z.infer<typeof orderInsertSchema>;
 export type Order = z.infer<typeof orderSchema>;
+export type GetAllOrdersInput = z.infer<typeof GetAllOrdersSchema>;
+export type GetOrderByIdInput = z.infer<typeof GetOrderByIdSchema>;
+export type CreateOrderInput = z.infer<typeof CreateOrderSchema>;

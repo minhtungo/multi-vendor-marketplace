@@ -1,5 +1,10 @@
 import { vendorController } from '@/controllers/vendor.controller';
-import { vendorSchema, verifyPasswordSchema } from '@/models/vendor.model';
+import {
+  GetVendorByEmailSchema,
+  GetVendorByIdSchema,
+  vendorSchema,
+  VerifyPasswordRequestSchema,
+} from '@/models/vendor.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { validateRequest } from '@repo/shared-server/middlewares';
@@ -9,35 +14,33 @@ import z from 'zod/v4';
 export const vendorRegistry = new OpenAPIRegistry();
 export const vendorRouter: Router = express.Router();
 
-// Get vendor by ID
+// GET: Retrieve vendor information by ID
 vendorRegistry.registerPath({
   method: 'get',
   path: '/{id}',
   tags: ['Vendor'],
+  request: {
+    params: GetVendorByIdSchema.shape.params,
+  },
   responses: createApiResponse(vendorSchema, 'Success'),
 });
 
-vendorRouter.get(
-  '/:id',
-  validateRequest(z.object({ params: z.object({ id: z.string() }) })),
-  vendorController.getVendorById
-);
+vendorRouter.get('/:id', validateRequest(GetVendorByIdSchema), vendorController.getVendorById);
 
-// Get vendor by email
+// GET: Retrieve vendor information by email address
 vendorRegistry.registerPath({
   method: 'get',
   path: '/email/{email}',
   tags: ['Vendor'],
+  request: {
+    params: GetVendorByEmailSchema.shape.params,
+  },
   responses: createApiResponse(vendorSchema, 'Success'),
 });
 
-vendorRouter.get(
-  '/email/:email',
-  validateRequest(z.object({ params: z.object({ email: z.email() }) })),
-  vendorController.getVendorByEmail
-);
+vendorRouter.get('/email/:email', validateRequest(GetVendorByEmailSchema), vendorController.getVendorByEmail);
 
-// Verify vendor password
+// POST: Verify vendor password for authentication
 vendorRegistry.registerPath({
   method: 'post',
   path: '/verify-password',
@@ -46,7 +49,7 @@ vendorRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: verifyPasswordSchema,
+          schema: VerifyPasswordRequestSchema.shape.body,
         },
       },
     },
@@ -59,12 +62,4 @@ vendorRegistry.registerPath({
   ),
 });
 
-vendorRouter.post(
-  '/verify-password',
-  validateRequest(
-    z.object({
-      body: verifyPasswordSchema,
-    })
-  ),
-  vendorController.verifyPassword
-);
+vendorRouter.post('/verify-password', validateRequest(VerifyPasswordRequestSchema), vendorController.verifyPassword);

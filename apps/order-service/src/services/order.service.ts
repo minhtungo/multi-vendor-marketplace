@@ -10,7 +10,7 @@ class OrderService {
   public async getAllOrders(
     page: number,
     limit: number,
-    vendorId: string
+    vendorId?: string
   ): Promise<
     ServiceResponse<{
       orders: Order[];

@@ -1,4 +1,10 @@
-import { createProductRequestSchema, getProductQuerySchema, updateProductRequestSchema } from '@/models/product.model';
+import {
+  CreateProductSchema,
+  DeleteProductSchema,
+  GetProductSchema,
+  GetProductsSchema,
+  UpdateProductSchema,
+} from '@/models/product.model';
 import { productService } from '@/services/product.service';
 import { sortOptions } from '@/utils/constants';
 import { handleServiceResponse } from '@repo/shared-server/lib';
@@ -6,16 +12,17 @@ import type { Request, Response } from 'express';
 
 class ProductController {
   public getProduct = async (req: Request, res: Response) => {
-    const data = getProductQuerySchema.parse(req.query);
-    const serviceResponse = await productService.getProduct(data);
+    const { query } = GetProductSchema.parse(req);
+    const serviceResponse = await productService.getProduct(query);
     handleServiceResponse(serviceResponse, res);
   };
 
   public getProducts = async (req: Request, res: Response) => {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 20;
+    const { query } = GetProductsSchema.parse(req);
 
-    const sortQuery = req.query.sort as 'price_asc' | 'price_desc' | 'latest_desc' | 'latest_asc' | undefined;
+    const page = query?.page || 1;
+    const limit = query?.limit || 20;
+    const sortQuery = query?.sort;
     const sort = sortOptions.find((option) => option === sortQuery) || 'latest_desc';
 
     const vendorId = req.user?.role === 'vendor' ? req.user?.id : undefined;
@@ -26,16 +33,15 @@ class ProductController {
 
   public createProduct = async (req: Request, res: Response) => {
     const vendorId = req.user?.id;
-    const data = createProductRequestSchema.parse(req.body);
-    const serviceResponse = await productService.createProduct(data, vendorId!);
+    const { body } = CreateProductSchema.parse(req);
+    const serviceResponse = await productService.createProduct(body, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };
 
   public updateProduct = async (req: Request, res: Response) => {
     const vendorId = req.user?.id;
-    const productId = req.params.id;
-    const data = updateProductRequestSchema.parse(req.body);
-    const serviceResponse = await productService.updateProduct(productId, data, vendorId!);
+    const { params, body } = UpdateProductSchema.parse(req);
+    const serviceResponse = await productService.updateProduct(params.id, body, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };
 
@@ -46,10 +52,10 @@ class ProductController {
   };
 
   public deleteProduct = async (req: Request, res: Response) => {
-    const productId = req.params.id;
+    const { params } = DeleteProductSchema.parse(req);
     const vendorId = req.user?.id;
 
-    const serviceResponse = await productService.deleteProduct(productId, vendorId!);
+    const serviceResponse = await productService.deleteProduct(params.id, vendorId!);
     handleServiceResponse(serviceResponse, res);
   };
 

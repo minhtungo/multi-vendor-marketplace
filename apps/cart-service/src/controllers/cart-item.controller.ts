@@ -1,4 +1,4 @@
-import { insertCartItemSchema, updateCartItemSchema } from '@/models/cart-item.model';
+import { AddItemToCartSchema, RemoveCartItemSchema, UpdateCartItemSchema } from '@/models/cart-item.model';
 import { cartItemService } from '@/services/cart-item.service';
 import { handleServiceResponse } from '@repo/shared-server/lib';
 import type { Request, Response } from 'express';
@@ -7,28 +7,27 @@ class CartItemController {
   public addItemToCart = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const sessionId = req.sessionId;
-    const data = insertCartItemSchema.parse(req.body);
+    const { body } = AddItemToCartSchema.parse(req);
 
-    const serviceResponse = await cartItemService.addItemToCart(userId, sessionId, data);
+    const serviceResponse = await cartItemService.addItemToCart(userId, sessionId, body);
     handleServiceResponse(serviceResponse, res);
   };
 
   public updateCartItem = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const sessionId = req.sessionId;
-    const cartItemId = req.params.cartItemId;
-    const data = updateCartItemSchema.parse(req.body);
+    const { params, body } = UpdateCartItemSchema.parse(req);
 
-    const serviceResponse = await cartItemService.updateCartItem(userId, sessionId, cartItemId, data);
+    const serviceResponse = await cartItemService.updateCartItem(userId, sessionId, params.cartItemId, body);
     handleServiceResponse(serviceResponse, res);
   };
 
   public removeCartItem = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const sessionId = req.sessionId;
-    const cartItemId = req.params.cartItemId;
+    const { params } = RemoveCartItemSchema.parse(req);
 
-    const serviceResponse = await cartItemService.removeCartItem(userId, sessionId, cartItemId);
+    const serviceResponse = await cartItemService.removeCartItem(userId, sessionId, params.cartItemId);
     handleServiceResponse(serviceResponse, res);
   };
 }

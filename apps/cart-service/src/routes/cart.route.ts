@@ -1,5 +1,5 @@
 import { cartController } from '@/controllers/cart.controller';
-import { cartSchema, cartUpdateSchema } from '@/models/cart.model';
+import { cartSchema, DeleteCartSchema, UpdateCartSchema } from '@/models/cart.model';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { createApiResponse } from '@repo/shared-server/docs';
 import { validateRequest } from '@repo/shared-server/middlewares';
@@ -9,7 +9,7 @@ import { z } from 'zod/v4';
 export const cartRegistry = new OpenAPIRegistry();
 export const cartRouter: Router = express.Router();
 
-// Get cart - Returns current user's cart or creates a new one
+// GET: Retrieve current user's cart or create a new one
 cartRegistry.registerPath({
   method: 'get',
   path: '/cart',
@@ -22,7 +22,7 @@ cartRegistry.registerPath({
 
 cartRouter.get('/', cartController.getCart);
 
-// Merge cart - Merges guest cart with user cart when user logs in
+// POST: Merge guest cart with user cart when user logs in
 cartRegistry.registerPath({
   method: 'post',
   path: '/cart/merge',
@@ -36,29 +36,8 @@ cartRegistry.registerPath({
 
 cartRouter.post('/merge', cartController.mergeCart);
 
-// Update cart - Updates cart information (shipping, billing, etc.)
-cartRegistry.registerPath({
-  method: 'put',
-  path: '/cart',
-  tags: ['Cart'],
-  summary: 'Update cart information',
-  description: 'Updates cart information such as email, shipping address, billing address, and shipping method.',
-  request: {
-    body: {
-      content: {
-        'application/json': {
-          schema: cartUpdateSchema,
-        },
-      },
-    },
-  },
-  responses: createApiResponse(cartSchema, 'Cart updated successfully'),
-});
-
-cartRouter.put('/', validateRequest(z.object({ body: cartUpdateSchema })), cartController.updateCart);
-
+// POST: Clear all items from cart after order completion
 //TODO: add validation for complete cart
-// Clear cart
 cartRegistry.registerPath({
   method: 'post',
   path: '/cart/complete',
@@ -71,7 +50,28 @@ cartRegistry.registerPath({
 
 cartRouter.post('/complete', cartController.completeCart);
 
-// Delete cart
+// PUT: Update cart information (shipping, billing, etc.)
+cartRegistry.registerPath({
+  method: 'put',
+  path: '/cart',
+  tags: ['Cart'],
+  summary: 'Update cart information',
+  description: 'Updates cart information such as email, shipping address, billing address, and shipping method.',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: UpdateCartSchema.shape.body,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(cartSchema, 'Cart updated successfully'),
+});
+
+cartRouter.put('/', validateRequest(UpdateCartSchema), cartController.updateCart);
+
+// DELETE: Remove cart and all its items completely
 cartRegistry.registerPath({
   method: 'delete',
   path: '/cart/{id}',
@@ -79,15 +79,9 @@ cartRegistry.registerPath({
   summary: 'Delete cart',
   description: 'Completely removes a cart and all its items.',
   request: {
-    params: z.object({
-      id: z.string(),
-    }),
+    params: DeleteCartSchema.shape.params,
   },
   responses: createApiResponse(z.null(), 'Cart deleted successfully'),
 });
 
-cartRouter.delete(
-  '/:id',
-  validateRequest(z.object({ params: z.object({ id: z.string() }) })),
-  cartController.deleteCart
-);
+cartRouter.delete('/:id', validateRequest(DeleteCartSchema), cartController.deleteCart);

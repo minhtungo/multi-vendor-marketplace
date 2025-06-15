@@ -46,9 +46,40 @@ export const getProductQuerySchema = z
     message: "Either 'id' or 'handle' must be provided",
   });
 
+// Request validation schemas
+export const GetProductSchema = z.object({
+  query: getProductQuerySchema,
+});
+
+export const GetProductsSchema = z.object({
+  query: getProductsQuerySchema.optional(),
+});
+
+export const CreateProductSchema = z.object({
+  body: createProductRequestSchema,
+});
+
+export const UpdateProductSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+  }),
+  body: updateProductRequestSchema,
+});
+
+export const DeleteProductSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+  }),
+});
+
 // Type exports
 export type Product = z.infer<typeof productSchema>;
 export type ProductListResponse = z.infer<typeof productListResponseSchema>;
 export type GetProductQuery = z.infer<typeof getProductQuerySchema>;
 export type CreateProductRequest = z.infer<typeof createProductRequestSchema>;
 export type UpdateProductRequest = z.infer<typeof updateProductRequestSchema>;
+export type GetProductInput = z.infer<typeof GetProductSchema>;
+export type GetProductsInput = z.infer<typeof GetProductsSchema>;
+export type CreateProductInput = z.infer<typeof CreateProductSchema>;
+export type UpdateProductInput = z.infer<typeof UpdateProductSchema>;
+export type DeleteProductInput = z.infer<typeof DeleteProductSchema>;
