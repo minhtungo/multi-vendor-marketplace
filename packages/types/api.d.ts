@@ -11,6 +11,8 @@ export type ApiResponse<T> = BaseEntity & {
 
 export type PaginatedData<T> = T & {
   count: number;
+  limit: number;
+  offset: number;
 };
 
 export type PaginatedApiResponse<T> = BaseEntity & {

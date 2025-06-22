@@ -5,10 +5,12 @@ import { cn } from '@repo/ui/lib/utils';
 import {
   type ColumnDef,
   type ColumnFiltersState,
+  type SortingState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
 import { useState } from 'react';
@@ -17,9 +19,10 @@ type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   tableActions?: React.ReactElement;
-  onRowClick: (row: TData) => void;
+  onRowClick?: (row: TData) => void;
   enablePagination?: boolean;
   enableSearch?: boolean;
+  searchColumn?: string;
   searchPlaceholder?: string;
   noResultsText?: string;
 };
@@ -31,20 +34,35 @@ export function DataTable<TData, TValue>({
   onRowClick,
   enablePagination = true,
   enableSearch = true,
+  searchColumn = 'name',
   searchPlaceholder = 'Search...',
   noResultsText = 'No results.',
 }: DataTableProps<TData, TValue>) {
+  'use no memo';
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [rowSelection, setRowSelection] = useState({});
+
+  const hasRowSelectionColumn = columns.some((column) => column.id === 'select');
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
+    ...(enablePagination && { getPaginationRowModel: getPaginationRowModel() }),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    ...(enableSearch && {
+      onColumnFiltersChange: setColumnFilters,
+      getFilteredRowModel: getFilteredRowModel(),
+    }),
+    ...(hasRowSelectionColumn && {
+      onRowSelectionChange: setRowSelection,
+    }),
     state: {
-      columnFilters,
+      sorting,
+      ...(enableSearch && { columnFilters }),
+      ...(hasRowSelectionColumn && { rowSelection }),
     },
   });
 
@@ -54,8 +72,8 @@ export function DataTable<TData, TValue>({
         {enableSearch && (
           <Input
             placeholder={searchPlaceholder}
-            value={(table.getColumn('product')?.getFilterValue() as string) ?? ''}
-            onChange={(event) => table.getColumn('product')?.setFilterValue(event.target.value)}
+            value={(table.getColumn(searchColumn)?.getFilterValue() as string) ?? ''}
+            onChange={(event) => table.getColumn(searchColumn)?.setFilterValue(event.target.value)}
             className="max-w-sm"
           />
         )}
@@ -82,8 +100,9 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className="cursor-pointer"
+                  className={cn(onRowClick && 'cursor-pointer')}
                   onClick={(e) => {
+                    if (!onRowClick) return;
                     e.stopPropagation();
                     onRowClick(row.original);
                   }}
