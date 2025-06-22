@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { ApiResponse } from '@repo/types/api';
 import type { ProductCategory } from '@repo/types/product-category';
 import { queryOptions, useQuery } from '@tanstack/react-query';
@@ -12,7 +12,7 @@ export const getProductCategorySchema = z.object({
 export type GetProductCategoryInput = z.infer<typeof getProductCategorySchema>;
 
 export async function getProductCategory({ id }: GetProductCategoryInput): Promise<ApiResponse<ProductCategory>> {
-  return privateApi.get(`${server.path.productCategory.root}/${id}`);
+  return privateApi.get(api.productCategories.single(id));
 }
 
 export function getProductCategoryQueryOptions(id: string) {

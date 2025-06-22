@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import { getProductCategoriesQueryOptions } from '@/features/product-categories/api/get-product-categories';
 import { getProductCategoryQueryOptions } from '@/features/product-categories/api/get-product-category';
 import type { ApiResponse } from '@repo/types/api';
@@ -21,7 +21,7 @@ export async function editProductCategory(
   data: EditProductCategoryInput,
 ): Promise<ApiResponse<ProductCategory>> {
   const parsedData = editProductCategorySchema.parse(data);
-  return privateApi.put(`${server.path.productCategory.root}/${id}`, parsedData);
+  return privateApi.put(api.productCategories.single(id), parsedData);
 }
 
 export function useEditProductCategory(id: string) {

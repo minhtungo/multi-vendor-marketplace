@@ -1,7 +1,7 @@
 import { publicApi } from '@/api/api-client';
 import { getVendorQueryOptions } from '@/api/user/get-vendor';
 import { client } from '@/configs/client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import { commonValidations } from '@/lib/commonValidation';
 import { useAuthActions } from '@/store/auth-store';
 import type { ApiResponse } from '@repo/types/api';
@@ -23,7 +23,7 @@ export async function signInWithEmailAndPassWord(data: SignInInput): Promise<
     vendor: Vendor;
   }>
 > {
-  return publicApi.post(server.path.auth.signIn, data);
+  return publicApi.post(api.auth.signIn, data);
 }
 
 export function useSignInMutation() {

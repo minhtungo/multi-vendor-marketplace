@@ -1,10 +1,10 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { Vendor } from '@repo/types/vendor';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
 export async function getVendor(): Promise<Vendor> {
-  const response = await privateApi.get(server.path.auth.me);
+  const response = await privateApi.get(api.auth.me);
   return response.data;
 }
 

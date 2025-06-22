@@ -1,5 +1,5 @@
 import { publicApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { ApiResponse } from '@repo/types/api';
 import type { Shop } from '@repo/types/shop';
 import { useMutation } from '@tanstack/react-query';
@@ -28,7 +28,7 @@ export async function createShop(data: CreateShopInput): Promise<
   }>
 > {
   const createShopData = createShopSchema.parse(data);
-  return publicApi.post(server.path.shop.root, createShopData);
+  return publicApi.post(api.shop.root, createShopData);
 }
 
 export function useCreateShopMutation() {

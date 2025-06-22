@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { ApiResponse } from '@repo/types/api';
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod/v4';
@@ -14,7 +14,7 @@ export async function connectPayment(data: ConnectPaymentInput): Promise<
   }>
 > {
   const connectPaymentData = connectPaymentSchema.parse(data);
-  return privateApi.post(server.path.payment.connect, connectPaymentData);
+  return privateApi.post(api.payment.connect, connectPaymentData);
 }
 
 export function useConnectPaymentMutation() {

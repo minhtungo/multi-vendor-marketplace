@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { Order } from '@repo/types/order';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { z } from 'zod/v4';
@@ -22,7 +22,7 @@ export type GetOrdersResponse = {
 };
 
 export async function getOrders(params: GetOrdersInput): Promise<GetOrdersResponse> {
-  const response = await privateApi.get(server.path.order.root, { params });
+  const response = await privateApi.get(api.orders.all, { params });
   return response.data;
 }
 

@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { ApiResponse } from '@repo/types/api';
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod/v4';
@@ -11,7 +11,7 @@ export const deleteProductSchema = z.object({
 export type DeleteProductInput = z.infer<typeof deleteProductSchema>;
 
 export async function deleteProduct({ id }: DeleteProductInput): Promise<ApiResponse<null>> {
-  return privateApi.delete(`${server.path.product.root}/${id}`);
+  return privateApi.delete(api.products.single(id));
 }
 
 export function useDeleteProduct() {

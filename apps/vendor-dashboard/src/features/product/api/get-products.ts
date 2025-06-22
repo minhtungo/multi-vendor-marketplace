@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { Product } from '@repo/types/product';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod/v4';
@@ -22,7 +22,7 @@ export type GetProductsResponse = {
 };
 
 export async function getProducts(params: GetProductsInput): Promise<GetProductsResponse> {
-  const response = await privateApi.get(server.path.product.getAll, { params });
+  const response = await privateApi.get(api.products.all, { params });
   return response.data;
 }
 

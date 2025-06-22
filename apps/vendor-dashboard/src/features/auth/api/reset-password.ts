@@ -1,5 +1,5 @@
 import { publicApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import { commonValidations } from '@/lib/commonValidation';
 import type { ApiResponse } from '@repo/types/api';
 import { useMutation } from '@tanstack/react-query';
@@ -17,7 +17,7 @@ export async function resetPassword(data: ResetPasswordInput): Promise<
   }>
 > {
   const resetPasswordData = resetPasswordSchema.parse(data);
-  return publicApi.post(server.path.auth.resetPassword, resetPasswordData);
+  return publicApi.post(api.auth.resetPassword, resetPasswordData);
 }
 
 export function useResetPasswordMutation() {

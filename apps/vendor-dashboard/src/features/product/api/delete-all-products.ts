@@ -1,10 +1,10 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { ApiResponse } from '@repo/types/api';
 import { useMutation } from '@tanstack/react-query';
 
 export async function deleteAllProducts(): Promise<ApiResponse<null>> {
-  return privateApi.delete(`${server.path.product.root}/all`);
+  return privateApi.delete(`${api.products.all}/all`);
 }
 
 export function useDeleteAllProductsMutation() {

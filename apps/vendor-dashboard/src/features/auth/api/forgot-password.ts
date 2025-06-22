@@ -1,5 +1,5 @@
 import { publicApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import { commonValidations } from '@/lib/commonValidation';
 import type { ApiResponse } from '@repo/types/api';
 import type { Vendor } from '@repo/types/vendor';
@@ -18,7 +18,7 @@ export async function forgotPassword(data: ForgotPasswordInput): Promise<
     vendor: Vendor;
   }>
 > {
-  return publicApi.post(server.path.auth.forgotPassword, data);
+  return publicApi.post(api.auth.forgotPassword, data);
 }
 
 export function useForgotPasswordMutation() {

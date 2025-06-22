@@ -1,5 +1,5 @@
 import { publicApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import { commonValidations } from '@/lib/commonValidation';
 import type { ApiResponse } from '@repo/types/api';
 import type { Vendor } from '@repo/types/vendor';
@@ -21,7 +21,7 @@ export async function signUpWithEmailAndPassWord(data: SignUpInput): Promise<
   }>
 > {
   const parsedData = signUpSchema.parse(data);
-  return publicApi.post(server.path.auth.signUp, parsedData);
+  return publicApi.post(api.auth.signUp, parsedData);
 }
 
 export function useSignUpMutation() {

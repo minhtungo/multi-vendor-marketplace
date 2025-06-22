@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { ApiResponse } from '@repo/types/api';
 
 type GetPresignedUrlInput = string;
@@ -12,7 +12,7 @@ export async function getPresignedUrl(fileName: GetPresignedUrlInput): Promise<
     fileName: string;
   }>
 > {
-  return privateApi.post(server.path.upload.presignedUrl, {
+  return privateApi.post(api.uploads.presignedUrl, {
     fileName,
   });
 }

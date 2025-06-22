@@ -1,5 +1,5 @@
 import { publicApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import { commonValidations } from '@/lib/commonValidation';
 import type { ApiResponse } from '@repo/types/api';
 import { useMutation } from '@tanstack/react-query';
@@ -15,7 +15,7 @@ export const verifyUserSchema = z.object({
 export type VerifyUserInput = z.infer<typeof verifyUserSchema>;
 
 async function verifyUserWithOTP(data: VerifyUserInput): Promise<ApiResponse<null>> {
-  return publicApi.post(server.path.auth.verifyUser, data);
+  return publicApi.post(api.auth.verifyUser, data);
 }
 
 export function useVerifyUserMutation() {

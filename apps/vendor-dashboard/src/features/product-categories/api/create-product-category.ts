@@ -1,7 +1,6 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import { getProductCategoriesQueryOptions } from '@/features/product-categories/api/get-product-categories';
-import { queryClient } from '@/integrations/tanstack-query/query-client';
 import type { ApiResponse } from '@repo/types/api';
 import type { ProductCategory } from '@repo/types/product-category';
 import { useMutation } from '@tanstack/react-query';
@@ -18,7 +17,7 @@ export type CreateProductCategoryInput = z.infer<typeof createProductCategorySch
 
 export async function createProductCategory(data: CreateProductCategoryInput): Promise<ApiResponse<ProductCategory>> {
   const createProductCategoryData = createProductCategorySchema.parse(data);
-  return privateApi.post(server.path.productCategory.root, createProductCategoryData);
+  return privateApi.post(api.productCategories.all, createProductCategoryData);
 }
 
 export function useCreateProductCategory() {

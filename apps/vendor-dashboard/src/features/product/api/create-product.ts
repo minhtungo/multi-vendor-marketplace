@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import { getProductsQueryOptions } from '@/features/product/api/get-products';
 import type { ApiResponse } from '@repo/types/api';
 import type { Product } from '@repo/types/product';
@@ -25,7 +25,7 @@ export type CreateProductInput = z.infer<typeof createProductSchema>;
 
 export async function createProduct(data: CreateProductInput): Promise<ApiResponse<Product>> {
   const createProductData = createProductSchema.parse(data);
-  return privateApi.post(server.path.product.create, createProductData);
+  return privateApi.post(api.products.all, createProductData);
 }
 
 export function useCreateProduct() {

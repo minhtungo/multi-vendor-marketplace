@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { Product } from '@repo/types/product';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod/v4';
@@ -11,7 +11,7 @@ export const getProductSchema = z.object({
 export type GetProductInput = z.infer<typeof getProductSchema>;
 
 export async function getProduct({ handle }: GetProductInput): Promise<Product> {
-  const response = await privateApi.get(`${server.path.product.root}/list`, {
+  const response = await privateApi.get(`${api.products.all}/list`, {
     params: {
       handle,
     },

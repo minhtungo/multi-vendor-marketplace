@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { ApiResponse } from '@repo/types/api';
 import type { Upload } from '@repo/types/upload';
 
@@ -16,7 +16,7 @@ export async function confirmUpload({
   mimeType,
   size,
 }: ConfirmUploadInput): Promise<ApiResponse<Upload>> {
-  return privateApi.post(server.path.upload.confirmUpload, {
+  return privateApi.post(api.uploads.confirmUpload, {
     fileName,
     key,
     mimeType,

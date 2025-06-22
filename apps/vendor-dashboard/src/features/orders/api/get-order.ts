@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { Order } from '@repo/types/order';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod/v4';
@@ -11,7 +11,7 @@ export const getOrderSchema = z.object({
 export type GetOrderInput = z.infer<typeof getOrderSchema>;
 
 export async function getOrder({ id }: GetOrderInput): Promise<Order> {
-  const response = await privateApi.get(`${server.path.order.root}/${id}`);
+  const response = await privateApi.get(api.orders.single(id));
   return response.data;
 }
 

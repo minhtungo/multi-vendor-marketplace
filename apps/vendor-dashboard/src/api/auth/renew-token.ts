@@ -1,5 +1,5 @@
 import { publicApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import type { ApiResponse } from '@repo/types/api';
 
 export async function renewToken(): Promise<
@@ -7,7 +7,7 @@ export async function renewToken(): Promise<
     accessToken: string;
   }>
 > {
-  return publicApi.put(server.path.auth.renewToken, null, {
+  return publicApi.put(api.auth.renewToken, null, {
     withCredentials: true,
   });
 }

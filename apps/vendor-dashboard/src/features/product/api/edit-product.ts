@@ -1,5 +1,5 @@
 import { privateApi } from '@/api/api-client';
-import { server } from '@/configs/server';
+import { api } from '@/configs/server';
 import { getProductQueryOptions } from '@/features/product/api/get-product';
 import { getProductsQueryOptions } from '@/features/product/api/get-products';
 import type { Product } from '@repo/types/product';
@@ -25,7 +25,7 @@ export type EditProductInput = z.infer<typeof editProductSchema>;
 
 export async function editProduct(id: string, data: EditProductInput): Promise<Product> {
   const parsedData = editProductSchema.parse(data);
-  const response = await privateApi.put(`${server.path.product.root}/${id}`, parsedData);
+  const response = await privateApi.put(api.products.single(id), parsedData);
   return response.data;
 }
 
